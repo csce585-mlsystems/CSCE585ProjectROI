@@ -1,1 +1,1 @@
-# MechanicAI
+# CSCE585 Repository
