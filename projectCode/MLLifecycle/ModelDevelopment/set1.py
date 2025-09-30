@@ -2,6 +2,8 @@
 
 # Body of neccessary imports
 import tensorflow as tf
+import matplotlib
+from matplotlib import pyplot as plt
 
 # end of body of neccessary imports
 
