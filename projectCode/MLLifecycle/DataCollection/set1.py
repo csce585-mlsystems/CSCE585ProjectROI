@@ -1,4 +1,4 @@
-# Purpose: This file will contain code that helps with <insert subsystem here>
+# Purpose: This file will contain code that helps with Data Collection
 
 # Body of neccessary imports
 
