@@ -5,8 +5,10 @@ FILE STRUCTURE FOR THIS DIRECTORY THUS FAR:
 MLLifecycle/
 | DataCollection/
 | | DataSets/
+| | extraInfo.md
 | | set1.py
 | DataPreparation/
+| | guide.md
 | | set1.py
 | ModelDevelopment/
 | | set1.py
