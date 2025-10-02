@@ -37,7 +37,6 @@ Please select one or multiple tags that apply.
 - Qualitative Evaluation: a) User Experience: Want to ensure that users are given appropriate information that supports their journey in obtaining another avenue to passive income.   
 - Related/Existing Solution(s): 1) [Streetbeat](https://streetbeat.com/en) , 2) [Fidelity Go](https://www.fidelity.com/managed-accounts/fidelity-go/overview?s_tnt=192066%3A0%3A0&adobe_mc_sdid=SDID%3D3A5FD1DD436AA6D6-57B7F8BD62D99482%7CMCORGID%3DEDCF01AC512D2B770A490D4C%40AdobeOrg%7CTS%3D1757906167&adobe_mc_ref=https%3A%2F%2Fwww.google.com%2F), and 3) [Betterment](https://www.betterment.com/investing?nis=6&ch=1)
 
-Note: This has no impact on your grade as long as you properly follow the procedure (e.g., problem identification, motivation, method, discussion, results, conclusion). Choosing [`Novel contribution`] will not give you any advantage over [`Replication of existing work`].  
 
 ## References  
 ### `BibTeX` of all references used in the project. Can be included as a `references.bib` file in the repo.  
