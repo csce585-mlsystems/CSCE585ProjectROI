@@ -148,6 +148,7 @@ plot_preds(x,y,f,quad_model, 'After Training')
 
 ## NOTE: Below references an alternative approach. This ranges from getting data to providing statistcis for model eval. Does not include data visualization portion. 
 """
+# Modificaitons needed: a) Need to find place where to put modified dataset, b) Need to ensure that a training data set is created from the dataset(s) that we have[need to make sure an additional row or column is provided for the classification], (cont here if applicable) 
 # TensorFlow and tf.keras
 import tensorflow as tf
 
@@ -157,13 +158,21 @@ import matplotlib.pyplot as plt
 
 print(tf.__version__)
 
-fashion_mnist = tf.keras.datasets.fashion_mnist
+# 1) Import Dataset
+#fashion_mnist = tf.keras.datasets.fashion_mnist
 
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+train_stocks = ; train_labels = ;
+test_stocks = ; test_labels = ;
 
-class_names = ['T-shirt/top', 'Trourser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle Boot']
+# end fo
+# 2) Provide class names for ML Model to make predictions
+#class_names = ['T-shirt/top', 'Trourser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle Boot']
+ class_names = ['Apple', 'Google', 'Amazon']
 
+# end of 2)
 
+# 3) Exploring the data
 len(train_labels)
 
 test_images.shape
@@ -189,7 +198,8 @@ for i in range(25):
     plt.xlabel(class_names[train_labels[i]])
 
 #plt.show()
-
+# end of 3)
+# 4) Creating the Model[can be created using keras OR created manually by inherting the tf.Module object][aka the Neural Network]
 model = tf.keras.Sequential([
 tf.keras.layers.Flatten(input_shape=(28,28)),
 tf.keras.layers.Dense(128,activation='relu'),
@@ -198,8 +208,10 @@ tf.keras.layers.Dense(10)
 
 model.compile(optimizer='adam',
 loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-metrics=['accuracy']) #<-- NOTE: Metrics here, can probably be modified
+metrics=['accuracy']) #<-- NOTE: Metrics here, can probably be modified[UPDATE: No need, accuracy is what is important right now]
 
+# end of 4)
+# 5) Evaluating the Model
 model.fit(train_images, train_labels, epochs=10)
 
 test_loss, test_acc = model.evaluate(test_images, test_labels,verbose=2)
@@ -210,13 +222,15 @@ print('\nTest accuracy:', test_acc)
 probability_model = tf.keras.Sequential([model, 
 tf.keras.layers.Softmax()])
 
+# a) Obtaining the accuarcy of the predictions
 predictions = probability_model.predict(test_images)
 
 predictions[0]
 
 
-np.argmax(predictions[0])
+np.argmax(predictions[0]) #<-- Returns the prediction that Neural Network was most comfortable with. 
 
+# 6) Verifying and Visualzing the Predictions
 def plot_image(i, predictions_array, true_label, img):
     true_label, img = true_label[i], img[i]
     plt.grid(False)
@@ -252,6 +266,7 @@ plt.subplot(1,2,2)
 plot_image(i,predictions[i],test_labels)
 plt.show()
 
+# end of 6)
 
 
 """
