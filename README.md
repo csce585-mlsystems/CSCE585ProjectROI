@@ -8,7 +8,7 @@ NOODOOEODELDELDEODEODEOSOS
 # Formal Version of README.md file[Will replace the above]
 
 # Project Title  
-## Title of the Project  
+## Generating Passive Income For Young Adults Through a Value Investing Machine Learning Model  
 
 ## Group Info  
 - Ardoine Docteur
