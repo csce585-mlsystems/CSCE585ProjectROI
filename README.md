@@ -19,12 +19,11 @@ NOODOOEODELDELDEODEODEOSOS
   - Email: mihetu@email.sc.edu  
 
 ## Project Summary/Abstract  
-### A short summary of the project (3–5 sentences maximum).  
 This project is a machine learning model that helps young adults generate passive income through the strategy of value investing.
 By combining financial data from sources such as Yahoo Finance, Alpha Vantage, and The Federal Reserve Economic Database (FRED), the model will analyze value metrics such as the Price to Earnings (P/E) ratio, the Price to Book (P/B) ratio, the Debt to Equity (D/E) ratio, and the Free Cash Flow (FCF) yield. The system will take in user input such as investment amount, desired return amount, and a time frame to generate stock reccomendations. It will then compare those recommendations to benchmarks like the S&P 500 and Russell 1000 Value Index to measure performance.
 
 ## Problem Description  
-- Many young adults want to start investing but don’t really know where to start or simply don't feel confident enough in their decisions to try. The stock market can seem confusing and risky, especially to beginners. Our project makes it that much easier for new investors by using a machine learning model to give users simple, data driven, and safer investment suggestions.
+Many young adults want to start investing but don’t really know where to start or simply don't feel confident enough in their decisions to try. The stock market can seem confusing and risky, especially to beginners. Our project makes it that much easier for new investors by using a machine learning model to give users simple, data driven, and safer investment suggestions.
 - Motivation  
   - Motivation 1  
   - Motivation 2  
