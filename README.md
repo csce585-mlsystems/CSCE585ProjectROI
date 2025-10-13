@@ -25,15 +25,13 @@ By combining financial data from sources such as Yahoo Finance, Alpha Vantage, a
 ## Problem Description  
 Many young adults want to start investing but don’t really know where to start or simply don't feel confident enough in their decisions to try. The stock market can seem confusing and risky, especially to beginners. Our project makes it that much easier for new investors by using a machine learning model to give users simple, data driven, and safer investment suggestions.
 - Motivation  
-  - Motivation 1  
-  - Motivation 2  
-  - Motivation 3  
+  - Young adults want to accumulate a passive income overtime but do not know where to start. 
+  - People do not have time to research in depth and learn what everything is when it comes to investing.  
+  - Using ML will aid the user in making a decision in what to invest in by providing a suggestion backed with easy to understand data. This will help the user understand what exactly they are looking at.  
 - Challenges  
-  - Challenge 1  
-  - Challenge 2  
-  - Challenge 3  
-
-⚠️ Note: Please do not include more than 3 bullet points per section.  
+  - Collecting and cleaning accurate and up to date financial data from many different sources.  
+  - Making sure that the model is properly suggesting the undervalued stocks.
+  - Coming up with a clear way for users to input their informattion and understand their data.
 
 ## Contribution  
 - [`Replication of existing work`]  
