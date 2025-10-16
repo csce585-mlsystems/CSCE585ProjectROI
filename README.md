@@ -34,15 +34,17 @@ Many young adults want to start investing but don’t really know where to start
   - Coming up with a clear way for users to input their informattion and understand their data.
 
 ## Contribution  
-- [`Replication of existing work`]  
-- [`Extension of existing work`]  
-- [`Novel contribution`]  
+ 
 
 Please select one or multiple tags that apply. Example:  
-### [`Replication of existing work`], [`Extension of existing work`]  
-We use paper_1 [citation] to reproduce their results. We improve their method as follows:  
-- Contribution 1  
-- Contribution 2  
+### ['Replication Of Existing Work'] [`Extension of existing work`]  
+We build upon Machine Learning Financial Analysis [Reference 3] to reproduce their work regarding calcualting out of sample predictions based on historical data. We replicate their method as follows:  
+- Extracting non linear relationships from historical data 
+- Creating out of sample inferences based on data
+We also aim to increase financial literacy amoung users by explaining the investment process. We improve upon the process as follows:
+- Creating a comprehensible user interface
+- A summary contnent box to explain the users return of investment(ROI)
+- Education resource to explain industry spefic terms 
 
 Note: This has no impact on your grade as long as you properly follow the procedure (e.g., problem identification, motivation, method, discussion, results, conclusion). Choosing [`Novel contribution`] will not give you any advantage over [`Replication of existing work`].  
 
