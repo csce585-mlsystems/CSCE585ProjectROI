@@ -27,24 +27,26 @@ Many young adults want to start investing but don’t really know where to start
 ## Contribution  
  
 
-Please select one or multiple tags that apply. Example:  
-### ['Replication Of Existing Work'] [`Extension of existing work`]  
-We build upon Machine Learning Financial Analysis [Reference 3] to reproduce their work regarding calcualting out of sample predictions based on historical data. We replicate their method as follows:  
-- Extracting non linear relationships from historical data 
-- Creating out of sample inferences based on data
-We also aim to increase financial literacy amoung users by explaining the investment process. We improve upon the process as follows:
-- Creating a comprehensible user interface
-- A summary contnent box to explain the users return of investment(ROI)
-- Education resource to explain industry spefic terms 
+### ['Replication Of Existing Work'],[`Extension of existing work`]  
+We build upon Machine Learning Financial Analysis [Reference 3] to reproduce their work regarding the application of financial ratios and market indicators to predict undervalued stocks and generate above average returns. Specifically, we replicate their method of using metrics such as P/E, P/B, D/E, FCF to evaluate company value and forecast future performance.
+
+We extend this work in the following ways: 
+
+- Integrating APIs to automatically collect and clean real time financial and economic data
+- Combining traditional value metrics with machine learning models to identify nonlinear patterns and improve prediction accuracy
+- Comparing model performance against market benchmarks such as the S&P 500 and Russell 1000 Value Index to test investment effectiveness
+- Designing a beginner friendly interface that provides clear investment recommendations and visualizations for beginners
+- Including educational explanations that define financial terms and guide users through understanding why certain stocks are chosen over others
 
 Note: This has no impact on your grade as long as you properly follow the procedure (e.g., problem identification, motivation, method, discussion, results, conclusion). Choosing [`Novel contribution`] will not give you any advantage over [`Replication of existing work`].  
 
 ## References  
 ### `BibTeX` of all references used in the project. Can be included as a `references.bib` file in the repo.  
-[1] Yan, K., & Li, Y. (2024). Machine learning-based analysis of Volatility Quantitative Investment Strategies for American Financial Stocks. Quantitative Finance and Economics, 8(2), 364–386. https://doi.org/10.3934/qfe.2024014 
+[1] Yan, K., & Li, Y. (2024). Machine learning-based analysis of Volatility Quantitative Investment Strategies for American Financial Stocks. Quantitative Finance and Economics, 8(2), 364–386. https://doi.org/10.3934/qfe.2024014
+
 [2]Kirkpatrick, T., & LaGrange, C. (n.d.). Robotic Surgery: Risks vs. Rewards. PSNet. https://psnet.ahrq.gov/web-mm/robotic-surgery-risks-vs-rewards#:~:text=RAS%20shares%20the%20same%20risks,pelvis%20adequately%20to%20perform%20RALP. 
-[3] Cao, K., & You, H. (2022, September 28). Fundamental Analysis Via Machine Learning: Financial Analysts Journal: Vol 80, no 2. Taylor & Francis Online. https://www.tandfonline.com/doi/abs/10.1080/0015198X.2024.2313692 
----
+
+[3] Cao, K., & You, H. (2022, September 28). Fundamental Analysis Via Machine Learning: Financial Analysts Journal: Vol 80, no 2. Taylor & Francis Online. https://www.tandfonline.com/doi/abs/10.1080/0015198X.2024.2313692
 
 # < The following is only applicable for the final project submission >  
 
