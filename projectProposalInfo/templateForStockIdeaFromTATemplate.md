@@ -1,47 +1,53 @@
-
 # Project Title  
-## A Guided Investment Platform for First-Time Investors 
+## Generating Passive Income For Young Adults Through a Value Investing Machine Learning Model  
 
 ## Group Info  
-- Student_1 Ardoine Docteur
-  - Email: adocteur@email.sc.edu  
-- Student_2 Michelle Ihetu
-  - Email: MIHETU@email.sc.edu  
-- Student_3 Ava Patel
-  - Email: Avamp@email.sc.edu  
+- Ardoine Docteur
+  - Email: adocteur@email.sc.edu   
+- Ava Patel
+  - Email: avamp@email.sc.edu  
+- Michelle Ihetu
+  - Email: mihetu@email.sc.edu  
 
 ## Project Summary/Abstract  
-### A short summary of the project (3–5 sentences maximum).  
+This project is a machine learning model that helps young adults generate passive income through the strategy of value investing.
+By combining financial data from sources such as Yahoo Finance, Alpha Vantage, and The Federal Reserve Economic Database (FRED), the model will analyze value metrics such as the Price to Earnings (P/E) ratio, the Price to Book (P/B) ratio, the Debt to Equity (D/E) ratio, and the Free Cash Flow (FCF) yield. The system will take in user input such as investment amount, desired return amount, and a time frame to generate stock reccomendations. It will then compare those recommendations to benchmarks like the S&P 500 and Russell 1000 Value Index to measure performance.
 
 ## Problem Description  
-- Problem Statement: Many young adults aspire to obtain a source of passive income yet do not know how to invest money. Making serious financial decisions requires conquering huge knowledge curve. 
+Many young adults want to start investing but don’t really know where to start or simply don't feel confident enough in their decisions to try. The stock market can seem confusing and risky, especially to beginners. Our project makes it that much easier for new investors by using a machine learning model to give users simple, data driven, and safer investment suggestions.
 - Motivation  
-  - Motivation 1: Aspire to open up options for passive income for people. 
+  - Young adults want to accumulate a passive income overtime but do not know where to start. 
+  - People do not have time to research in depth and learn what everything is when it comes to investing.  
+  - Using ML will aid the user in making a decision in what to invest in by providing a suggestion backed with easy to understand data. This will help the user understand what exactly they are looking at.  
 - Challenges  
-  - Challenge 1: Due to Cloud ML, challenges include: Latency, Data Privacy and Security, Network Dependency  
-- Proposed solution: Creating an AI Agentic System that contains a ML Model responsible for predicting the highest rate of return which will help users understand how to pick stocks 
+  - Collecting and cleaning accurate and up to date financial data from many different sources.  
+  - Making sure that the model is properly suggesting the undervalued stocks.
+  - Coming up with a clear way for users to input their informattion and understand their data.
 
 ## Contribution  
-- [`Replication of existing work`]  
-- [`Extension of existing work`]  
-- [`Novel contribution`]  
+ 
 
-Please select one or multiple tags that apply. 
+### ['Replication Of Existing Work'],[`Extension of existing work`]  
+We build upon Machine Learning Financial Analysis [Reference 3] to reproduce their work regarding the application of financial ratios and market indicators to predict undervalued stocks and generate above average returns. Specifically, we replicate their method of using metrics such as P/E, P/B, D/E, FCF to evaluate company value and forecast future performance.
 
-### Novel Contribution
-- Type of ML Problem: Supervised Learning: Classification
-- Type of ML Used: Cloud ML
-- Proposed algorithms to assist in solution: a) Linear Regression, b) Decision Trees, and/or c) Support Vector Machines. 
-- Dataset(s) used: 1) https://www.kaggle.com/datasets/imaadmahmood/global-finance-and-economic-indicators-dataset-2024, 2) https://archive.ics.uci.edu/dataset/390/stock+portfolio+performance, 3) https://www.kaggle.com/datasets/smayanj/stock-market-dataset. Dataset(s) will be used to provide accurate predictions to have the user gain the highest ROI. 
-- Quantitative Evaluation:  a) Accuracy: # of times the agent is accurate when identifying an issue. b) Time: # of times the agent is accurate when providing a solution. 
-- Qualitative Evaluation: a) User Experience: Want to ensure that users are given appropriate information that supports their journey in obtaining another avenue to passive income.   
-- Related/Existing Solution(s): 1) [Streetbeat](https://streetbeat.com/en) , 2) [Fidelity Go](https://www.fidelity.com/managed-accounts/fidelity-go/overview?s_tnt=192066%3A0%3A0&adobe_mc_sdid=SDID%3D3A5FD1DD436AA6D6-57B7F8BD62D99482%7CMCORGID%3DEDCF01AC512D2B770A490D4C%40AdobeOrg%7CTS%3D1757906167&adobe_mc_ref=https%3A%2F%2Fwww.google.com%2F), and 3) [Betterment](https://www.betterment.com/investing?nis=6&ch=1)
+We extend this work in the following ways: 
 
+- Integrating APIs to automatically collect and clean real time financial and economic data
+- Combining traditional value metrics with machine learning models to identify nonlinear patterns and improve prediction accuracy
+- Comparing model performance against market benchmarks such as the S&P 500 and Russell 1000 Value Index to test investment effectiveness
+- Designing a beginner friendly interface that provides clear investment recommendations and visualizations for beginners
+- Including educational explanations that define financial terms and guide users through understanding why certain stocks are chosen over others
+
+Note: This has no impact on your grade as long as you properly follow the procedure (e.g., problem identification, motivation, method, discussion, results, conclusion). Choosing [`Novel contribution`] will not give you any advantage over [`Replication of existing work`].  
 
 ## References  
-### `BibTeX` of all references used in the project. Can be included as a `references.bib` file in the repo.  
+### BibTeX entries for all sources used in this project are available in the [references.bib](docs/references.bib) file.
 
----
+[1] Yan, K., & Li, Y. (2024). Machine learning-based analysis of Volatility Quantitative Investment Strategies for American Financial Stocks. Quantitative Finance and Economics, 8(2), 364–386. https://doi.org/10.3934/qfe.2024014
+
+[2]Kirkpatrick, T., & LaGrange, C. (n.d.). Robotic Surgery: Risks vs. Rewards. PSNet. https://psnet.ahrq.gov/web-mm/robotic-surgery-risks-vs-rewards#:~:text=RAS%20shares%20the%20same%20risks,pelvis%20adequately%20to%20perform%20RALP. 
+
+[3] Cao, K., & You, H. (2022, September 28). Fundamental Analysis Via Machine Learning: Financial Analysts Journal: Vol 80, no 2. Taylor & Francis Online. https://www.tandfonline.com/doi/abs/10.1080/0015198X.2024.2313692
 
 # < The following is only applicable for the final project submission >  
 
