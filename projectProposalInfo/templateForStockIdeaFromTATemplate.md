@@ -1,5 +1,4 @@
-# Project Title  
-## Generating Passive Income For Young Adults Through a Value Investing Machine Learning Model  
+# Generating Passive Income For Young Adults Through a Value Investing Machine Learning Model  
 
 ## Group Info  
 - Ardoine Docteur
