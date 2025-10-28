@@ -1,28 +1,126 @@
-# constants throughout proj
-
-# 
+# constants.py
 HOST = "127.0.0.1"
 PORT = 5000
 DEBUG = True
 
-API_BASE = "/api/state0"   
-
-MESSAGES = {
-    "signup_success": "Account created!",
-    "login_success": "Welcome!",
-    "user_exists": "Username already exists!",
-    "missing_fields": "All fields are required.",
-    "not_found": "User not found. Please sign up first.",
-    "incorrect_password": "Incorrect password.",
-    "signup_failed": "Sign up failed.",
-    "login_failed": "Login failed.",
-}
-
 # ui default
 UI = {
-    "font_family": "'Georgia', 'Times New Roman', serif",
-    "background_color": "#f9f9f9",
-    "text_color": "#111",
-    "border_radius": "20px",
-    "box_shadow": "0 6px 12px rgba(0,0,0,0.1)",
+    "font_family": "system-ui, sans-serif",
+    "background_color": "#3b3b3b",
+    "text_color": "#fff",
 }
+
+# whole page background 
+PAGE_WRAPPER = {
+    "background": "#3b3b3b",
+    "position": "fixed",
+    "inset": "0",
+    "display": "flex",
+    "flexDirection": "column",
+    "justifyContent": "center",
+    "alignItems": "center",
+}
+
+# small message (e.x, “Account created!”)
+MESSAGE_STYLE = {
+    "color": UI["text_color"],
+    "marginBottom": "40px",
+    "fontSize": "1rem",
+    "fontWeight": 500,
+}
+
+# blueprint bases (add more states later)
+API_BASE_STATE0 = "/api/state0"
+API_BASE_STATE1 = "/api/state1"
+# state 2,3,4,...
+
+# endpoints for state 0 
+LOGIN_ROUTE  = f"{API_BASE_STATE0}/login"
+SIGNUP_ROUTE = f"{API_BASE_STATE0}/signup"
+
+# shared styles (dark mode) 
+STYLE_CARD = {
+    "maxWidth": "420px",
+    "width": "100%",
+    "margin": "0 auto",
+    "display": "flex",
+    "flexDirection": "column",
+    "alignItems": "center",
+    "justifyContent": "center",
+    "fontFamily": UI["font_family"],
+    "color": UI["text_color"],
+    "background": "#2e2e2e",
+    "padding": "40px",
+    "borderRadius": "16px",
+    "boxShadow": "0 8px 16px rgba(0,0,0,0.3)",
+    "textAlign": "center",
+}
+
+STYLE_INPUT = {
+    "width": "90%",
+    "padding": "12px",
+    "margin": "10px 0",
+    "borderRadius": "10px",
+    "border": "none",
+    "fontSize": "1rem",
+    "background": "#3a3a3a",
+    "color": "#fff",
+    "outline": "none",
+    "textAlign": "left",
+}
+
+STYLE_BUTTON = {
+    "marginTop": "16px",
+    "width": "90%",
+    "padding": "12px",
+    "borderRadius": "30px",
+    "border": "none",
+    "fontWeight": 600,
+    "fontSize": "1rem",
+    "background": "#000",
+    "color": "#fff",
+}
+
+STYLE_BUTTON_SECONDARY = {
+    "marginTop": "12px",
+    "width": "90%",
+    "padding": "12px",
+    "borderRadius": "30px",
+    "border": "none",
+    "fontWeight": 500,
+    "fontSize": "0.95rem",
+    "background": "transparent",
+    "color": "#fff",
+}
+
+# state 0 
+STATE0_BUTTONS = {
+    "sign_in": {
+        "text": "Sign In",
+        "action": "POST username + password",
+        "route": LOGIN_ROUTE,
+        "success": "go to next_state",
+        "fails_if": "missing fields / wrong creds",
+    },
+    "sign_up": {
+        "text": "Sign Up",
+        "action": "login -> signup (no API)",
+        "route": None,
+        "success": "shows CreateAccountView",
+    },
+    "create_account": {
+        "text": "Create Account",
+        "action": "POST username, email, phone, password",
+        "route": SIGNUP_ROUTE,
+        "success": "on 201, go back to login",
+        "fails_if": "missing fields / wrong pass / username in use",
+    },
+    "back_to_login": {
+        "text": "Back to Login",
+        "action": "signup -> login (no API)",
+        "route": None,
+        "success": "shows login again",
+    },
+}
+
+

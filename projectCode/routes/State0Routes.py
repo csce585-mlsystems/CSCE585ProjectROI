@@ -1,32 +1,33 @@
 # state0routes.py
-
+# backend routes for state 0 (login + signup)
 from flask import Blueprint, request, jsonify
+from constants import API_BASE_STATE0
 
-state0_bp = Blueprint("state0", __name__, url_prefix="/api/state0")
+state0_bp = Blueprint("state0", __name__, url_prefix=API_BASE_STATE0)
 
-# fake database for testing.
-# stored as: USERS = { "ava": {"password": "pswd", "email": "email@email.com", "phone": "123-1234"} }
+# fake db -> resets on server restart (good enough for testing)
+# USERS = { "ava": {"password": "pass", "email": "email@email.com", "phone": "123-4567"} }
 USERS = {}
 
 # SIGN UP
 @state0_bp.post("/signup")
 def signup():
-    """Create a new user account"""
+    """create new acc"""
     # get json
     data = request.get_json(silent=True) or {}
 
     # inputted values
     username = (data.get("username") or "").strip()
     password = (data.get("password") or "").strip()
-    email = (data.get("email") or "").strip()
-    phone = (data.get("phone") or "").strip()
+    email    = (data.get("email") or "").strip()
+    phone    = (data.get("phone") or "").strip()
 
     # make sure inputted info
     if not username or not password or not email or not phone:
-        return jsonify({"message": "Username, password, email, and phone are required!"}), 400
+        return jsonify({"message": "Username, password, email, and phone number are required!"}), 400
 
     if username in USERS:
-        return jsonify({"message": "Username already exists!"}), 409
+        return jsonify({"message": "Username already exists! Please pick a new one."}), 409
 
     # Save the user in our fake database
     USERS[username] = {"password": password, "email": email, "phone": phone}
@@ -43,7 +44,7 @@ def signup():
 # LOGIN
 @state0_bp.post("/login")
 def login():
-    """Log in an existing user"""
+    """log in existing user"""
     # get json
     data = request.get_json(silent=True) or {}
 
@@ -62,7 +63,7 @@ def login():
 
     # success messages
     return jsonify({
-        "message": "welcome",
+        "message": "Welcome!",
         "username": username,
         "email": user.get("email"),
         "phone": user.get("phone"),
