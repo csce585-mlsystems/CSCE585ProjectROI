@@ -14,10 +14,10 @@ from constants import (
 )
 
 # POST to our api
-async def api_post(url, payload):
+async def api_post(route, payload):
     try:
         async with httpx.AsyncClient() as client:
-            r = await client.post(url, json=payload, timeout=15)
+            r = await client.post(route, json=payload, timeout=15)
         try:
             return r.status_code, r.json()
         except Exception:

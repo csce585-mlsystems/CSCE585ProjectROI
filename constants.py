@@ -35,8 +35,8 @@ API_BASE_STATE1 = "/api/state1"
 # state 2,3,4,...
 
 # endpoints for state 0 
-LOGIN_ROUTE  = f"{API_BASE_STATE0}/login"
-SIGNUP_ROUTE = f"{API_BASE_STATE0}/signup"
+LOGIN_ROUTE  = "/api/state0/login"
+SIGNUP_ROUTE = "/api/state0/signup"
 
 # shared styles (dark mode) 
 STYLE_CARD = {
