@@ -2,6 +2,9 @@
 from flask import Flask
 from reactpy.backend.flask import configure
 from constants import HOST, PORT, DEBUG
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # proj code -> comp/routes -> state# -> .py
 from projectCode.components.State0.componentSet0 import RootView

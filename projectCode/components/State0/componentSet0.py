@@ -11,19 +11,24 @@ from constants import (
     STYLE_BUTTON_SECONDARY,
     PAGE_WRAPPER,
     MESSAGE_STYLE,
+    URL,
 )
 
 # POST to our api
 async def api_post(route, payload):
+    from constants import URL
+    full_url = URL.rstrip("/") + route
+    print("[api_post] POST ->", full_url, "payload:", payload)
     try:
         async with httpx.AsyncClient() as client:
-            r = await client.post(route, json=payload, timeout=15)
+            r = await client.post(full_url, json=payload, timeout=15)
         try:
             return r.status_code, r.json()
         except Exception:
-            return r.status_code, r.text
+            return r.status_code, (r.text or "")
     except Exception as ex:
-        return 0, str(ex)
+        return 0, f"{type(ex).__name__}: {ex}"
+
 
 # login 
 @component
@@ -39,7 +44,7 @@ def State0View(on_success=None, on_create_account=None):
     def on_p(e): set_password((e["target"]["value"] or "").strip())
 
     # let the user press Enter to submit
-    @event(prevent_default=True)
+    @event()
     def on_password_keydown(e):
         if e.get("key") == "Enter":
             asyncio.create_task(submit())
@@ -76,13 +81,26 @@ def State0View(on_success=None, on_create_account=None):
             html.input({"placeholder": "Username", "value": username, "onInput": on_u,
                         "autoComplete": "username", "style": STYLE_INPUT}),
             html.input({"placeholder": "Password", "type": "password", "value": password,
-                        "onInput": on_p, "onKeyDown": on_password_keydown,
+                        "onInput": on_p, "onChange": on_p, "onKeyDown": on_password_keydown,
                         "autoComplete": "current-password", "style": STYLE_INPUT}),
             html.button({"onClick": lambda _e: asyncio.create_task(submit()),
                          "disabled": not can_submit, "style": btn_primary},
                          "Sign In" if not loading else "Signing In..."),
-            html.button({"onClick": lambda _e: on_create_account() if on_create_account else None,
-                         "style": STYLE_BUTTON_SECONDARY}, "Sign Up"),
+            html.p(
+                {
+                    "onClick": lambda _e: on_create_account() if on_create_account else None,
+                    "style": {
+                        "alignSelf": "flex-start",
+                        "marginLeft": "5%",
+                        "marginTop": "12px",
+                        "fontSize": "0.9rem",
+                        "color": "#fff",
+                        "cursor": "pointer",
+                        "textDecoration": "underline",
+                    },
+                },
+                "Sign Up?",
+            ),
             html.p({"style": {"color": "crimson", "marginTop": "15px"}}, error)
             if error else html.span(""),
         ],
@@ -144,14 +162,27 @@ def CreateAccountView(on_success=None, on_go_back=None):
             html.input({"placeholder": "Phone", "type": "tel", "value": phone, "onInput": on_ph,
                         "autoComplete": "tel", "style": STYLE_INPUT}),
             html.input({"placeholder": "Password", "type": "password", "value": password, "onInput": on_p,
-                        "autoComplete": "new-password", "style": STYLE_INPUT}),
+                        "onChange": on_p, "autoComplete": "new-password", "style": STYLE_INPUT}),
             html.input({"placeholder": "Confirm Password", "type": "password", "value": confirm, "onInput": on_c,
-                        "autoComplete": "new-password", "style": STYLE_INPUT}),
+                        "onChange": on_c, "autoComplete": "new-password", "style": STYLE_INPUT}),
             html.button({"onClick": lambda _e: asyncio.create_task(submit()),
                          "disabled": not can_submit, "style": btn_primary},
                          "Create Account" if not loading else "Creating..."),
-            html.button({"onClick": lambda _e: on_go_back() if on_go_back else None,
-                         "style": STYLE_BUTTON_SECONDARY}, "Back to Login"),
+            html.p(
+                {
+                    "onClick": lambda _e: on_go_back() if on_go_back else None,
+                    "style": {
+                        "alignSelf": "flex-start",
+                        "marginLeft": "5%",
+                        "marginTop": "12px",
+                        "fontSize": "0.9rem",
+                        "color": "#fff",
+                        "cursor": "pointer",
+                        "textDecoration": "underline",
+                    },
+                },
+                "Back to Login?",
+            ),
             html.p({"style": {"color": "crimson", "marginTop": "15px"}}, error)
             if error else html.span(""),
         ],

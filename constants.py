@@ -1,7 +1,10 @@
 # constants.py
+import os
+
 HOST = "127.0.0.1"
 PORT = 5000
 DEBUG = True
+URL = "http://127.0.0.1:5000"
 
 # ui default
 UI = {
