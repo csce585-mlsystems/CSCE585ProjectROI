@@ -6,17 +6,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# proj code -> comp/routes -> state# -> .py
+# components + routes
 from projectCode.components.State0.componentSet0 import RootView
 from projectCode.routes.State0Routes import state0_bp
+from projectCode.routes.State1Routes import state1_bp
+from projectCode.routes.State2Routes import state2_bp
 
 def create_app():
     app = Flask(__name__)
-    app.register_blueprint(state0_bp)   # Registers /api/state0/*
-    configure(app, RootView)            
+    app.register_blueprint(state0_bp)    # /api/state0/*
+    app.register_blueprint(state1_bp)    # /api/state1/*
+    app.register_blueprint(state2_bp)    # /api/state2/*
+    
+    configure(app, RootView)
     return app
 
 if __name__ == "__main__":
     app = create_app()
     app.run(host=HOST, port=PORT, debug=DEBUG)
-

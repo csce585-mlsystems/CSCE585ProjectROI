@@ -11,6 +11,8 @@ UI = {
     "font_family": "system-ui, sans-serif",
     "background_color": "#3b3b3b",
     "text_color": "#fff",
+    "muted_text": "#cbd5e1",
+    "help_text": "#b3b3b3",
 }
 
 # whole page background 
@@ -35,11 +37,13 @@ MESSAGE_STYLE = {
 # blueprint bases (add more states later)
 API_BASE_STATE0 = "/api/state0"
 API_BASE_STATE1 = "/api/state1"
-# state 2,3,4,...
 
 # endpoints for state 0 
 LOGIN_ROUTE  = "/api/state0/login"
 SIGNUP_ROUTE = "/api/state0/signup"
+
+# endpoints for state 1
+RECOMMEND_ROUTE = "/api/state1/recommend"
 
 # shared styles (dark mode) 
 STYLE_CARD = {
@@ -126,4 +130,42 @@ STATE0_BUTTONS = {
     },
 }
 
+# state 1
+STYLE_CARD_WIDE = {
+    **STYLE_CARD,
+    "maxWidth": "720px",
+    "textAlign": "left",
+}
 
+STYLE_INPUT_FULL = {
+    **STYLE_INPUT,
+    "width": "100%",
+}
+
+STYLE_BTN_PRIMARY = {
+    **STYLE_BUTTON,
+    "width": "100%",
+    "borderRadius": "10px",
+}
+
+LABEL_STYLE = {
+    "color": UI["muted_text"],
+    "fontSize": "14px",
+    "marginBottom": "8px",
+}
+
+HELP_STYLE = {
+    "color": UI["help_text"],
+    "fontSize": "12px",
+    "marginTop": "6px",
+}
+
+STATE1_BUTTONS = {
+    "recommend": {
+        "text": "Generate Recommendations",
+        "route": RECOMMEND_ROUTE,
+        "method": "POST",
+    }
+}
+
+# state 2

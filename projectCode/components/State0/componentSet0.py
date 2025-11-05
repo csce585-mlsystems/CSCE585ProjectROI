@@ -1,5 +1,5 @@
 # componentSet0.py
-# login + signup screens
+from projectCode.components.State1.componentSet1 import State1View
 from reactpy import component, html, hooks, event
 import asyncio, httpx
 from constants import (
@@ -14,7 +14,6 @@ from constants import (
     URL,
 )
 
-# POST to our api
 async def api_post(route, payload):
     from constants import URL
     full_url = URL.rstrip("/") + route
@@ -29,21 +28,16 @@ async def api_post(route, payload):
     except Exception as ex:
         return 0, f"{type(ex).__name__}: {ex}"
 
-
-# login 
 @component
 def State0View(on_success=None, on_create_account=None):
-    # local state for inputs + ui
     username, set_username = hooks.use_state("")
     password, set_password = hooks.use_state("")
     error, set_error       = hooks.use_state(None)
     loading, set_loading   = hooks.use_state(False)
 
-    # input handlers
     def on_u(e): set_username((e["target"]["value"] or "").strip())
     def on_p(e): set_password((e["target"]["value"] or "").strip())
 
-    # let the user press Enter to submit
     @event()
     def on_password_keydown(e):
         if e.get("key") == "Enter":
@@ -106,7 +100,6 @@ def State0View(on_success=None, on_create_account=None):
         ],
     )
 
-# sign up 
 @component
 def CreateAccountView(on_success=None, on_go_back=None):
     username, set_username = hooks.use_state("")
@@ -188,11 +181,12 @@ def CreateAccountView(on_success=None, on_go_back=None):
         ],
     )
 
-# login <-> signup
 @component
 def RootView():
     screen, set_screen = hooks.use_state("login")
     message, set_message = hooks.use_state(None)
+    next_state, set_next_state = hooks.use_state(None)
+    dashboard_data, set_dashboard_data = hooks.use_state(None)
 
     def go_register():
         set_message(None)
@@ -202,6 +196,21 @@ def RootView():
         set_screen("login")
         set_message("Account created!")
 
+    def handle_success(state, data):
+        if state == "state1":
+            set_next_state("state1")
+        elif state == "state2":
+            set_dashboard_data(data)
+            set_next_state("state2")
+
+    if next_state == "state1":
+        from projectCode.components.State1.componentSet1 import State1View
+        return State1View(on_success=handle_success)
+
+    if next_state == "state2":
+        from projectCode.components.State2.componentSet2 import DashboardView
+        return DashboardView(data=dashboard_data)
+
     return html.div(
         {"style": PAGE_WRAPPER},
         [
@@ -210,7 +219,7 @@ def RootView():
                 {"style": {"width": "100%", "maxWidth": "480px"}},
                 [
                     (
-                        State0View(on_success=lambda *_: None, on_create_account=go_register)
+                        State0View(on_success=handle_success, on_create_account=go_register)
                         if screen == "login"
                         else CreateAccountView(
                             on_success=lambda *_: go_login(),
