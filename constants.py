@@ -1,4 +1,3 @@
-# constants.py
 import os
 
 HOST = "127.0.0.1"
@@ -6,18 +5,16 @@ PORT = 5000
 DEBUG = True
 URL = "http://127.0.0.1:5000"
 
-# ui default
 UI = {
     "font_family": "system-ui, sans-serif",
     "background_color": "#3b3b3b",
-    "text_color": "#fff",
+    "text_color": "#ffffff",
     "muted_text": "#cbd5e1",
     "help_text": "#b3b3b3",
 }
 
-# whole page background 
 PAGE_WRAPPER = {
-    "background": "#3b3b3b",
+    "background": UI["background_color"],
     "position": "fixed",
     "inset": "0",
     "display": "flex",
@@ -26,7 +23,15 @@ PAGE_WRAPPER = {
     "alignItems": "center",
 }
 
-# small message (e.x, “Account created!”)
+API_BASE_STATE0 = "/api/state0"
+API_BASE_STATE1 = "/api/state1"
+API_BASE_STATE2 = "/api/state2"
+
+LOGIN_ROUTE = f"{API_BASE_STATE0}/login"
+SIGNUP_ROUTE = f"{API_BASE_STATE0}/signup"
+RECOMMEND_ROUTE = f"{API_BASE_STATE1}/recommend"
+PORTFOLIO_ROUTE = f"{API_BASE_STATE2}/portfolio"
+
 MESSAGE_STYLE = {
     "color": UI["text_color"],
     "marginBottom": "40px",
@@ -34,18 +39,6 @@ MESSAGE_STYLE = {
     "fontWeight": 500,
 }
 
-# blueprint bases (add more states later)
-API_BASE_STATE0 = "/api/state0"
-API_BASE_STATE1 = "/api/state1"
-
-# endpoints for state 0 
-LOGIN_ROUTE  = "/api/state0/login"
-SIGNUP_ROUTE = "/api/state0/signup"
-
-# endpoints for state 1
-RECOMMEND_ROUTE = "/api/state1/recommend"
-
-# shared styles (dark mode) 
 STYLE_CARD = {
     "maxWidth": "420px",
     "width": "100%",
@@ -100,37 +93,29 @@ STYLE_BUTTON_SECONDARY = {
     "color": "#fff",
 }
 
-# state 0 
 STATE0_BUTTONS = {
     "sign_in": {
         "text": "Sign In",
         "action": "POST username + password",
         "route": LOGIN_ROUTE,
         "success": "go to next_state",
-        "fails_if": "missing fields / wrong creds",
     },
     "sign_up": {
         "text": "Sign Up",
         "action": "login -> signup (no API)",
-        "route": None,
-        "success": "shows CreateAccountView",
     },
     "create_account": {
         "text": "Create Account",
         "action": "POST username, email, phone, password",
         "route": SIGNUP_ROUTE,
         "success": "on 201, go back to login",
-        "fails_if": "missing fields / wrong pass / username in use",
     },
     "back_to_login": {
         "text": "Back to Login",
         "action": "signup -> login (no API)",
-        "route": None,
-        "success": "shows login again",
     },
 }
 
-# state 1
 STYLE_CARD_WIDE = {
     **STYLE_CARD,
     "maxWidth": "720px",
@@ -168,4 +153,62 @@ STATE1_BUTTONS = {
     }
 }
 
-# state 2
+SIDEBAR_STYLE = {
+    "width": "16.666%",
+    "minWidth": "240px",
+    "maxWidth": "300px",
+    "height": "100vh",
+    "background": "#2e2e2e",
+    "borderRight": "2px solid #111",
+    "boxShadow": "inset -10px 0 20px rgba(0,0,0,0.35)",
+    "padding": "24px 20px",
+    "display": "flex",
+    "flexDirection": "column",
+    "gap": "18px",
+    "position": "fixed",
+    "top": "0",
+    "left": "0",
+}
+
+CONTENT_STYLE = {
+    "position": "relative",
+    "height": "100vh",
+    "overflowY": "auto",
+    "background": "#3b3b3b",
+    "color": UI["text_color"],
+    "padding": "32px 48px 48px",
+    "marginLeft": "clamp(260px, 17%, 300px)",
+}
+
+CARD_STYLE = {
+    "background": "#2e2e2e",
+    "border": "1px solid #1e293b",
+    "borderRadius": "12px",
+    "padding": "18px",
+    "color": UI["muted_text"],
+    "width": "100%",
+}
+
+BTN_SIDEBAR = {
+    "display": "block",
+    "textAlign": "left",
+    "padding": "12px 16px",
+    "borderRadius": "12px",
+    "border": "none",
+    "cursor": "pointer",
+    "background": "transparent",
+    "color": "#d0d0d0",
+    "fontSize": "1rem",
+    "fontWeight": 500,
+    "width": "100%",
+    "boxSizing": "border-box",
+    "transition": "background 0.25s ease, color 0.25s ease",
+    "margin": "2px 0",
+}
+
+BTN_SIDEBAR_ACTIVE = {
+    **BTN_SIDEBAR,
+    "background": "#000",
+    "color": "#fff",
+    "fontWeight": 600,
+}
