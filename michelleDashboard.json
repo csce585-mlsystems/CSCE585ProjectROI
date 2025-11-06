@@ -1,0 +1,31 @@
+from reactpy import component, html, hooks, event
+import asyncio, httpx
+import os
+from constants import (
+    LOGIN_ROUTE,
+    SIGNUP_ROUTE,
+    STYLE_CARD,
+    STYLE_INPUT,
+    STYLE_BUTTON,
+    STYLE_BUTTON_SECONDARY,
+    PAGE_WRAPPER,
+    MESSAGE_STYLE,
+    URL,
+    UI, 
+    PAGE_WRAPPER,
+    MESSAGE_STYLE,
+    STYLE_CARD,
+    STYLE_INPUT,
+    STYLE_BUTTON,
+    STYLE_BUTTON_SECONDARY
+)
+
+DASHBOARD_BUTTONS = {
+
+    "DashBoard": {
+        "text":"Dashboard",
+        "action": "Financial Overview",
+        "route":
+    }
+
+}

@@ -1,0 +1,5 @@
+DASHBOARD_BUTTONS = {
+
+    "DashBoard":
+
+}
