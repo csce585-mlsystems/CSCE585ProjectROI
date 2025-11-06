@@ -25,8 +25,8 @@ def PageDashboard():
     return html.div(
         {"style": {"display": "flex", "flexDirection": "column", "gap": "18px"}},
         [
-            html.div({"style": header_style}, [H("Dashboard", 24), P("Here are insights based on your plan.")]),
-            html.div({"style": CARD_STYLE}, [H("Top Picks", 18), P("Populate from /api/state2/portfolio.")]),
+            html.div({"style": header_style}, [H("Dashboard", 24), P("blah blah blah dashboard junk.")]),
+            html.div({"style": CARD_STYLE}, [H("Top Picks", 18), P("plah blah blah generated suggestions.")]),
         ],
     )
 
