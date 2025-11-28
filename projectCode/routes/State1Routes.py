@@ -1,46 +1,91 @@
 # state1routes.py
 from flask import Blueprint, request, jsonify
 from constants import API_BASE_STATE1
-
-state1_bp = Blueprint("state1", __name__, url_prefix="/api/state1")
-
-# reccomendation generation
-@state1_bp.post("/recommend")
-def recommend():
-    data = request.get_json(silent=True) or {}
-
-    def parse_money(x):
-        if x is None:
-            return None
-        s = str(x).replace(",", "").replace("$", "").strip()
-        if not s:
-            return None
+import json, os
+state1_bp = Blueprint("state1", __name__, url_prefix=API_BASE_STATE1)
+# store user preferences
+preferencesFile = "preferences.json"
+def loadPrefs():
+    # read file
+    if os.path.exists(preferencesFile):
         try:
-            return float(s)
-        except:
-            return None
-
-    invest = parse_money(data.get("invest_amount"))
-    target = parse_money(data.get("target_amount"))
+            with open(preferencesFile, "r") as file:
+                return json.load(file)
+        except Exception:
+            return {}
+    return {}
+def savePrefs(data):
+    # write file
+    with open(preferencesFile, "w") as file:
+        json.dump(data, file, indent=2)
+def formatMoneySimple(value):
+    # turn "$1,000" into 1000.0
+    if value is None:
+        return None
+    text = str(value).replace(",", "").replace("$", "").strip()
+    if text == "":
+        return None
     try:
-        years = float(str(data.get("years", "")).strip())
-    except:
-        years = None
-
-    if not all([invest, target, years]) or invest <= 0 or target <= 0 or years <= 0:
-        return jsonify({"ok": False, "message": "Please provide positive values for all fields."}), 400
-
-    cagr = (target / invest) ** (1.0 / years) - 1.0
-
-    recs = [
-        {"ticker": "VTV", "name": "Vanguard Value ETF", "weight": 0.40},
-        {"ticker": "BRK.B", "name": "Berkshire Hathaway", "weight": 0.30},
-        {"ticker": "SCHD", "name": "Schwab U.S. Dividend Equity", "weight": 0.30},
+        return float(text)
+    except Exception:
+        return None
+@state1_bp.post("/recommend")
+def generateRecs():
+    # JSON from the goal screen
+    data = request.get_json(silent=True) or {}
+    # username
+    username = (data.get("username") or "").strip()
+    # inputs from user
+    startAmtInput = data.get("startAmt")
+    targetAmtInput = data.get("targetAmt")
+    timeFrameInput = data.get("timeFrame")           # numeric (years)
+    timeFrameDisplay = data.get("timeFrameDisplay")  # pretty label (ex: "6 Months")
+    # formatted numbers
+    startAmt = formatMoneySimple(startAmtInput)
+    targetAmt = formatMoneySimple(targetAmtInput)
+    try:
+        timeFrame = float(str(timeFrameInput).strip())
+    except Exception:
+        timeFrame = None
+    # simple validation
+    if (
+        startAmt is None or startAmt <= 0
+        or targetAmt is None or targetAmt <= 0
+        or timeFrame is None or timeFrame <= 0
+    ):
+        return jsonify({
+            "ok": False,
+            "message": "Please fill out all fields with positive numbers."
+        }), 400
+    # growth rate (can delete if we dont need)
+    growthRate = (targetAmt / startAmt) ** (1 / timeFrame) - 1
+    # placeholder recs (ML model will replace this)
+    recommendations = [
+        {"ticker": "ticker1", "name": "stock1", "abriv": "abriv1", "weight": 0.33},
+        {"ticker": "ticker2", "name": "stock2", "abriv": "abriv2", "weight": 0.33},
+        {"ticker": "ticker3", "name": "stock3", "abriv": "abriv3", "weight": 0.34},
     ]
-
+    # save prefs for this user
+    prefs = loadPrefs()
+    key = username or "lastUser"
+    prefs[key] = {
+        "username": key,
+        "startAmt": startAmt,
+        "targetAmt": targetAmt,
+        "timeFrame": timeFrame,
+        "timeFrameDisplay": timeFrameDisplay,
+        "growthRate": growthRate,
+    }
+    savePrefs(prefs)
+    # send cleaned inputs to the UI
     return jsonify({
         "ok": True,
-        "inputs": {"invest_amount": invest, "target_amount": target, "years": years},
-        "required_cagr": cagr,
-        "recommendations": recs
+        "inputs": {
+            "startAmt": startAmt,
+            "targetAmt": targetAmt,
+            "timeFrame": timeFrame,
+            "timeFrameDisplay": timeFrameDisplay,
+        },
+        "growthRate": growthRate,
+        "recommendations": recommendations,
     }), 200

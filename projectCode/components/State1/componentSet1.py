@@ -3,58 +3,78 @@ from reactpy import component, html, hooks
 import asyncio, httpx
 from constants import (
     URL,
-    PAGE_WRAPPER,
     UI,
-    RECOMMEND_ROUTE,
-    STYLE_CARD_WIDE,
-    STYLE_INPUT_FULL,
-    STYLE_BTN_PRIMARY,
-    LABEL_STYLE,
-    HELP_STYLE,
+    pageWrapper,
+    recommendRoute,
+    goalInputBox,
+    goalInputField,
+    generateRecsButton,
+    inputLabel,
+    inputHelp,
 )
-
-async def api_post(route, payload):
-    full_url = URL.rstrip("/") + route
+# send POST request to bsck recommendations
+async def postToBackend(route, payload):
+    fullUrl = URL.rstrip("/") + route
     try:
         async with httpx.AsyncClient() as client:
-            r = await client.post(full_url, json=payload, timeout=20)
+            response = await client.post(fullUrl, json=payload, timeout=20)
         try:
-            return r.status_code, r.json()
+            return response.status_code, response.json()
         except Exception:
-            return r.status_code, (r.text or "")
+            return response.status_code, response.text
     except Exception as ex:
         return 0, f"{type(ex).__name__}: {ex}"
-
-def FieldMoney(label, value, setter, placeholder, help_text):
+# keep $ formatting clean
+def formatMoney(value):
+    text = str(value).strip().replace("$", "")
+    if not text:
+        return ""
+    return "$" + text
+# money field
+def moneyAmountField(label, value, setter, placeholder, helpTextText):
+    def handleChange(event):
+        newValue = formatMoney(event["target"]["value"])
+        setter(newValue)
     return html.div(
         {"style": {"marginBottom": "18px"}},
         [
-            html.label({"style": LABEL_STYLE}, label),
-            html.input({
-                "type": "text",
-                "style": STYLE_INPUT_FULL,
-                "value": value,
-                "placeholder": "$" + placeholder if not value else value,
-                "on_change": lambda e: setter(format_money(e["target"]["value"])),
-            }),
-            html.div({"style": HELP_STYLE}, help_text),
+            html.label({"style": inputLabel}, label),
+            html.input(
+                {
+                    "type": "text",
+                    "style": goalInputField,
+                    "value": value,
+                    "placeholder": "$" + placeholder if not value else value,
+                    "onChange": handleChange,
+                }
+            ),
+            html.div({"style": inputHelp}, helpTextText),
         ],
     )
-
-def format_money(val):
-    s = str(val).strip().replace("$", "")
-    if not s:
-        return ""
-    return "$" + s
-
-def FieldDuration(duration, set_duration, duration_unit, set_duration_unit):
+# time frame (number & unit)
+def timeFrameField(timeFrame, setTimeFrame, timeFrameUnit, setTimeFrameUnit):
+    def handleUnitChange(event):
+        newUnit = event["target"]["value"]
+        setTimeFrameUnit(newUnit)
+    def handleTimeChange(event):
+        newTime = event["target"]["value"]
+        setTimeFrame(newTime)
     return html.div(
         {"style": {"marginBottom": "18px"}},
         [
             html.div(
-                {"style": {"display": "flex", "justifyContent": "space-between", "alignItems": "center"}},
+                {
+                    "style": {
+                        "display": "flex",
+                        "justifyContent": "space-between",
+                        "alignItems": "center",
+                    }
+                },
                 [
-                    html.label({"style": LABEL_STYLE}, "How long do you plan to invest?"),
+                    html.label(
+                        {"style": inputLabel},
+                        "How long are you investing for?",
+                    ),
                     html.select(
                         {
                             "style": {
@@ -65,8 +85,8 @@ def FieldDuration(duration, set_duration, duration_unit, set_duration_unit):
                                 "padding": "6px 8px",
                                 "fontSize": "0.9rem",
                             },
-                            "value": duration_unit,
-                            "on_change": lambda e: set_duration_unit(e["target"]["value"]),
+                            "value": timeFrameUnit,
+                            "onChange": handleUnitChange,
                         },
                         [
                             html.option({"value": "Years"}, "Years"),
@@ -76,92 +96,166 @@ def FieldDuration(duration, set_duration, duration_unit, set_duration_unit):
                     ),
                 ],
             ),
-            html.input({
-                "type": "number",
-                "style": STYLE_INPUT_FULL,
-                "value": duration,
-                "placeholder": "5",
-                "on_change": lambda e: set_duration(e["target"]["value"]),
-            }),
-            html.div({"style": HELP_STYLE}, "Longer time frames often allow for more growth potential."),
+            html.input(
+                {
+                    "type": "number",
+                    "style": goalInputField,
+                    "value": timeFrame,
+                    "placeholder": "5",
+                    "onChange": handleTimeChange,
+                }
+            ),
         ],
     )
+# convert months/days to years for annual comp. math
+def convertToYears(value, unit):
+    try:
+        number = float(value)
+    except Exception:
+        return 0
 
+    if unit == "Months":
+        return number / 12
+    if unit == "Days":
+        return number / 365
+    return number
+# format
+def buildTimeFrameDisplay(value, unit):
+    try:
+        number = float(value)
+    except Exception:
+        return None
+    if number == 1 and unit.endswith("s"):
+        labelUnit = unit[:-1]
+    else:
+        labelUnit = unit
+    # :g keeps it from showing .0 unless needed
+    return f"{number:g} {labelUnit}"
 @component
-def State1View(on_success=None):
-    invest, set_invest = hooks.use_state("")
-    target, set_target = hooks.use_state("")
-    duration, set_duration = hooks.use_state("")
-    duration_unit, set_duration_unit = hooks.use_state("Years")
-
-    loading, set_loading = hooks.use_state(False)
-    error, set_error = hooks.use_state(None)
-
+def State1View(onSuccess=None, username=None):
+    startAmount, setStartAmount = hooks.use_state("")
+    targetAmount, setTargetAmount = hooks.use_state("")
+    timeFrame, setTimeFrame = hooks.use_state("")
+    timeFrameUnit, setTimeFrameUnit = hooks.use_state("Years")
+    loading, setLoading = hooks.use_state(False)
+    error, setError = hooks.use_state(None)
+    # call backend to get recommendations
     async def submit():
-        set_loading(True); set_error(None)
+        setLoading(True)
+        setError(None)
         try:
+            timeFrameYears = convertToYears(timeFrame, timeFrameUnit)
+            timeFrameLabel = buildTimeFrameDisplay(timeFrame, timeFrameUnit)
             payload = {
-                "invest_amount": invest,
-                "target_amount": target,
-                "years": convert_to_years(duration, duration_unit),
+                "username": username,
+                "startAmt": startAmount,
+                "targetAmt": targetAmount,
+                "timeFrame": timeFrameYears,
+                "timeFrameDisplay": timeFrameLabel,
             }
-            status, data = await api_post(RECOMMEND_ROUTE, payload)
+            status, data = await postToBackend(recommendRoute, payload)
             if status == 200 and isinstance(data, dict) and data.get("ok"):
-                if on_success:
-                    on_success("state2", data)
+                if onSuccess:
+                    onSuccess("state2", data)
             else:
-                msg = data.get("message", "") if isinstance(data, dict) else str(data)
-                set_error(msg or "Request failed.")
-        except Exception as e:
-            set_error(str(e))
+                message = data.get("message") if isinstance(data, dict) else str(data)
+                setError(message or "Request failed.")
+        except Exception as ex:
+            setError(str(ex))
         finally:
-            set_loading(False)
-
-    def convert_to_years(value, unit):
-        try:
-            v = float(value)
-        except:
-            return 0
-        if unit == "Months":
-            return v / 12
-        elif unit == "Days":
-            return v / 365
-        return v
-
+            setLoading(False)
+    # generate button
+    def handleGenerateClick(_event):
+        asyncio.create_task(submit())
+    # handler for generate button
+    def handleGenerateKeyDown(event):
+        key = event.get("key")
+        if key in ("Enter", " "):
+            asyncio.create_task(submit())
+    # top header
     header = html.div(
         {"style": {"textAlign": "center", "marginBottom": "18px"}},
         [
-            html.h1({"style": {"color": UI["text_color"], "fontSize": "28px", "fontWeight": 800, "margin": 0}}, "Start Investing!"),
-            html.h2({"style": {"color": UI["text_color"], "fontSize": "22px", "fontWeight": 700, "marginTop": "10px"}}, "Let's Plan Your Investment"),
-            html.p({"style": {"color": UI["help_text"], "marginTop": "4px"}}, "Tell us your goals, and we'll find the right investments for you."),
+            html.h1(
+                {
+                    "style": {
+                        "color": UI["text"],
+                        "fontSize": "28px",
+                        "fontWeight": 800,
+                        "margin": 0,
+                    }
+                },
+                "Tell Us Your Goals",
+            ),
+            html.h2(
+                {
+                    "style": {
+                        "color": UI["text"],
+                        "fontSize": "22px",
+                        "fontWeight": 700,
+                        "marginTop": "10px",
+                    }
+                },
+                "We will use this to build your stock picks.",
+            ),
+            html.p(
+                {
+                    "style": {
+                        "color": UI["helpText"],
+                        "marginTop": "4px",
+                    }
+                },
+                "Enter your values and we'll generate some recs.",
+            ),
         ],
     )
-
-    btn_style = {**STYLE_BTN_PRIMARY, "cursor": "pointer"}
+    # main bttn
+    buttonStyle = {**generateRecsButton, "cursor": "pointer"}
     button = html.button(
         {
             "type": "button",
-            "role": "button",
-            "tabIndex": 0,
-            "style": btn_style,
-            "on_click": lambda _e: asyncio.create_task(submit()),
-            "on_keydown": lambda e: asyncio.create_task(submit()) if e.get("key") in ("Enter", " ") else None,
+            "style": buttonStyle,
+            "onClick": handleGenerateClick,
+            "onKeyDown": handleGenerateKeyDown,
         },
         "Generate Recommendations",
     )
-
+    # fields page
     elements = [
         header,
-        FieldMoney("How much would you like to invest?", invest, set_invest, "5,000", "This is the total amount you're ready to put into your portfolio."),
-        FieldMoney("What is your target return?", target, set_target, "20,000", "Tell us the final amount you'd like to have after your investment period."),
-        FieldDuration(duration, set_duration, duration_unit, set_duration_unit),
+        moneyAmountField(
+            "How much are you starting with?",
+            startAmount,
+            setStartAmount,
+            "5,000",
+            "Your initial investment.",
+        ),
+        moneyAmountField(
+            "What amount do you want to reach?",
+            targetAmount,
+            setTargetAmount,
+            "20,000",
+            "Your goal amount.",
+        ),
+        timeFrameField(timeFrame, setTimeFrame, timeFrameUnit, setTimeFrameUnit),
         button,
     ]
     if loading:
-        elements.append(html.p({"style": {"color": UI["muted_text"], "marginTop": "12px"}}, "Working on it..."))
+        elements.append(
+            html.p(
+                {"style": {"color": UI["lightText"], "marginTop": "12px"}},
+                "Loading...",
+            )
+        )
     if error:
-        elements.append(html.p({"style": {"color": "crimson", "marginTop": "12px"}}, error))
-
-    form = html.div({"style": STYLE_CARD_WIDE}, elements)
-
-    return html.div({"style": {**PAGE_WRAPPER, "fontFamily": UI["font_family"]}}, [form])
+        elements.append(
+            html.p(
+                {"style": {"color": "crimson", "marginTop": "12px"}},
+                error,
+            )
+        )
+    form = html.div({"style": goalInputBox}, elements)
+    return html.div(
+        {"style": {**pageWrapper, "fontFamily": UI["font"]}},
+        [form],
+    )
