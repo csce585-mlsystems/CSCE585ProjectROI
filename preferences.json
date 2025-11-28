@@ -1,0 +1,18 @@
+{
+  "mi": {
+    "username": "mi",
+    "startAmt": 12.0,
+    "targetAmt": 2222222.0,
+    "timeFrame": 0.4166666666666667,
+    "timeFrameDisplay": "5 Months",
+    "growthRate": 4387881315875.9497
+  },
+  "user": {
+    "username": "user",
+    "startAmt": 1.0,
+    "targetAmt": 12.0,
+    "timeFrame": 4.0,
+    "timeFrameDisplay": "4 Years",
+    "growthRate": 0.8612097182041991
+  }
+}
