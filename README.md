@@ -1,12 +1,3 @@
-# CSCE585Project
-This will be the repo referencing the ML Sys project from CSCE 585
-
-**Project Proposal Content is referenced in the ProjectProposalInfo folder**
-NOODOOEODELDELDEODEODEOSOS
-
-
-# Formal Version of README.md file[Will replace the above]
-
 # Project Title  
 ## Generating Passive Income For Young Adults Through a Value Investing Machine Learning Model  
 
@@ -34,22 +25,29 @@ Many young adults want to start investing but don’t really know where to start
   - Coming up with a clear way for users to input their informattion and understand their data.
 
 ## Contribution  
-- [`Replication of existing work`]  
-- [`Extension of existing work`]  
-- [`Novel contribution`]  
+ 
 
-Please select one or multiple tags that apply. Example:  
-### [`Replication of existing work`], [`Extension of existing work`]  
-We use paper_1 [citation] to reproduce their results. We improve their method as follows:  
-- Contribution 1  
-- Contribution 2  
+### ['Replication Of Existing Work'],[`Extension of existing work`]  
+We build upon Machine Learning Financial Analysis [Reference 3] to reproduce their work regarding the application of financial ratios and market indicators to predict undervalued stocks and generate above average returns. Specifically, we replicate their method of using metrics such as P/E, P/B, D/E, FCF to evaluate company value and forecast future performance.
+
+We extend this work in the following ways: 
+
+- Integrating APIs to automatically collect and clean real time financial and economic data
+- Combining traditional value metrics with machine learning models to identify nonlinear patterns and improve prediction accuracy
+- Comparing model performance against market benchmarks such as the S&P 500 and Russell 1000 Value Index to test investment effectiveness
+- Designing a beginner friendly interface that provides clear investment recommendations and visualizations for beginners
+- Including educational explanations that define financial terms and guide users through understanding why certain stocks are chosen over others
 
 Note: This has no impact on your grade as long as you properly follow the procedure (e.g., problem identification, motivation, method, discussion, results, conclusion). Choosing [`Novel contribution`] will not give you any advantage over [`Replication of existing work`].  
 
 ## References  
-### `BibTeX` of all references used in the project. Can be included as a `references.bib` file in the repo.  
+### BibTeX entries for all sources used in this project are available in the [references.bib](docs/references.bib) file.
 
----
+[1] Yan, K., & Li, Y. (2024). Machine learning-based analysis of Volatility Quantitative Investment Strategies for American Financial Stocks. Quantitative Finance and Economics, 8(2), 364–386. https://doi.org/10.3934/qfe.2024014
+
+[2]Kirkpatrick, T., & LaGrange, C. (n.d.). Robotic Surgery: Risks vs. Rewards. PSNet. https://psnet.ahrq.gov/web-mm/robotic-surgery-risks-vs-rewards#:~:text=RAS%20shares%20the%20same%20risks,pelvis%20adequately%20to%20perform%20RALP. 
+
+[3] Cao, K., & You, H. (2022, September 28). Fundamental Analysis Via Machine Learning: Financial Analysts Journal: Vol 80, no 2. Taylor & Francis Online. https://www.tandfonline.com/doi/abs/10.1080/0015198X.2024.2313692
 
 # < The following is only applicable for the final project submission >  
 

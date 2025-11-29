@@ -1,4 +1,4 @@
-# Routes for states of <StateName>
+# Routes for states of <State0>
 
 # Will insert flask code here for routes
 # Route #1: <Insert desc here>
