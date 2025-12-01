@@ -1,3 +1,5 @@
+# NOTE: In regards to testing out program, use following command. Refer to its comment for reference: $ find ProjectCode/components ProjectCode/routes -name "*.py" | xargs --delimiter="\n" grep -E "^(import|from)" #<-- NOTE: Use this code to find the files to: a) determine neccessary downloads for pip, and b) determine where to call model and send output etc from. 
+
 # Purpose: This file will contain code that helps with Model Development. 
 
 # Body of neccessary imports
@@ -6,6 +8,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np #<-- May be optional not sure as of 10/13/25. 
+import pdb as pb
 # import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout
@@ -283,6 +286,8 @@ plt.show()
 
 """
 def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion. 
+    inNoteBook = False
+    
     import numpy as np
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import Dense, Activation, Dropout
@@ -295,18 +300,26 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
     # "load mnist dataset"
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     # filePathToTrainingSetDir: str = "MLLifecycle/ModelDevelopment/TrainingSets" #<-- fill in later[complete] UPDATE as of 11/10/25: Replaced since I am using script.py for running pipeline. 
-    filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in later[complete]
+    """     
+filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in later[complete]
     filepathToTrainingSet: str = filePathToTrainingSetDir
     filePathToTrainingSet += f"/trainingSetStrat{1}.py" #<-- number will change based on strat being used.
     filePathToTestSetDir: str = "MLLifecycle/ModelDevelopment/TestingSets" #<-- fill in later[complete]
     filepathToTestSet: str = filePathToTestSetDir
     filePathToTestSet += f"/testSetStrat{1}.py" #<-- number will change based on strat being used.
-    train_stocks = pd.read_csv(f"{filepathToTrainingSet}"); train_labels = test_labels = ["will reference company names"] or train_stocks.loc["company"];#<-- References labels which are derived from custom engineered dataset. 
-    test_stocks = pd.read_csv(f"{filepathToTestSet}"); test_labels = train_stocks.loc["company"] or ["will reference company names"]; #<-- References labels which are derived from custom engineered dataset. 
+    """    
+    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    # print("---DEBUGGING CHECKPOINT #1: Ensuring that train_stocks & train_labels reference the right things---")
+    # pb.set_trace() [COMPLETE]
+    # train_stocks = pd.read_csv(f"{filePathToModelDir}"); train_labels = test_labels = train_stocks.loc["Company"] or ["will reference company names"];#<-- References labels which are derived from custom engineered dataset. 
+    train_stocks = pd.read_csv(f"{filePathToModelDir}"); train_labels = test_labels = train_stocks.loc[:,"Company"] #<-- References labels which are derived from custom engineered dataset. 
+    del train_stocks["Unnamed: 0"]
+    test_stocks = pd.read_csv(f"{filePathToModelDir}"); test_labels = train_stocks.loc[:,"Company"] # or ["will reference company names"]; #<-- References labels which are derived from custom engineered dataset. 
+    del test_stocks["Unnamed: 0"]
     x_train = train_stocks.loc[:,train_stocks.columns != "Optimality"]
-    y_train = train_labels.loc[:,"Optimality"]
+    y_train = train_labels
     x_test = test_stocks.loc[:,train_stocks.columns != "Optimality"]
-    y_test = test_labels.loc[:,train_stocks.columns != "Optimality"]
+    y_test = test_labels
     # ^^ Above ensures that prediction labels are y and x references the data used to make said decision. [UPDATE: Due to this, will need to make a change in data prep folder]
             
 
@@ -315,25 +328,50 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
 
     # "Convert to one-hot vector"[we converted the labels to one-hot vectors using to_categorical]
 
-    y_train = to_categorical(y_train)
-    y_test = to_categorical(y_test)
+    # resultantDataFrame = pd.concat([pd.DataFrame(x) for x in listOfSeriesToCreateDataFrame]).reset_index() #<-- used list comprehension to transform listOfSeries to resultantDataFrame. 
+    # print("---DEBUGGING CHECKPOINT #1: Ensuring that train_stocks & train_labels reference the right things---")
+    # pb.set_trace() [COMPLETE!]
+    # y_train = to_categorical([range(y_train.shape[0]) for x in y_train])
+    # y_test = to_categorical([ range(y_test.shape[0]) for x in y_test])
+    y_train = to_categorical(y_train.index)
+    y_test = to_categorical(y_test.index)
+    """
+    NOTE: Below is NOT needed
+    listOfHotEncodings = list(range(y_train.shape[0]))
+    # y_train = to_categorical([ dict[x] for x in y_train])
+    for i in range(y_train.shape[0]):
+        # listOfHotEncodings[i] = 2**(y_train.shape[0]) - 2**i #<-- Uses one hot encoding by using decimal value that refs binary value. 1 = 0001, 2 = 0010, 4 = 0100, 8 = 1000 and so forth. 
+        listOfHotEncodings[i] = 2**i #<-- Uses one hot encoding by using decimal value that refs binary value. 1 = 0001, 2 = 0010, 4 = 0100, 8 = 1000 and so forth. 
+
+    y_train = listOfHotEncodings
+    # y_test = to_categorical([ range(y_test.shape[0]) for x in y_test])
+    for i in range(y_test.shape[0]):
+        # listOfHotEncodings[i] = 2**(y_test.shape[0]) - 2**i #<-- Uses one hot encoding by using decimal value that refs binary value. 1 = 0001, 2 = 0010, 4 = 0100, 8 = 1000 and so forth. 
+        listOfHotEncodings[i] = 2**i #<-- Uses one hot encoding by using decimal value that refs binary value. 1 = 0001, 2 = 0010, 4 = 0100, 8 = 1000 and so forth. 
+    y_test = listOfHotEncodings
+    """
+    
+    # NOTE: Currently here as far as debugging. [ALSO, whilst working make sure that you know that: NOTE: Need to find a dataset that references ranked optimality of stocks based on value investing strategy to use as a benchmark for model results. ]
 
     # ----May snippet below may be optional?---
     # "image dimensions(assumed square)"
-    image_size = x_train.shape[1]
-    input_size = image_size * image_size
+    # image_size = x_train.shape[1]
+    # input_size = image_size * image_size
+    input_size = len(train_stocks.columns) # #<-- UPDATE: input_size is NOT optional. Set this assuming that input_dim is number of dims/attributes for each feature which refers to number of columns.  However, I believe this is 
 
     # "Resize and Normalize"
+    """ 
     x_train = np.reshape(x_train, [-1,input_size])
     x_train = x_train.astype('float32')/255
     x_test = np.reshape(x_test, [-1,input_size])
     x_test = x_test.astype('float32')/255
-
+    """
     # ----May snippet above may be optional?[UPDATE: Above is required, need to come up with normalization process]---
     # "Network Parameters"
     # NOTE: The following will reference a list of tuple(s) that will be used to facilitate first experiment. 
     listOfExperimentSetupFuncs = ["""Plan to insert functions for doing experiment(s) setup here"""]
     global batch_size, hidden_units, dropout
+    global model #<-- Have this here, so experimental setup functions can tweak model as needed. 
     batch_size = 128
     # batch_size = experiment1Tuples[0][0] 
     hidden_units = 256
@@ -341,15 +379,17 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
     dropout = 0.45
     # dropout  = experiment1Tuples[0][2]
     isExperimentSetup3Active = False
+    model = Sequential()
     def experimentSetup0():
        # This will reference the default settings irrespective to experiments. 
         print("---Undergoing Experiment Setup #0---")
-        model = Sequential()
-        model.add(Dense(hidden_units,input_dim=input_size))
+        # model.add(Dense(hidden_units,input_dim=input_size))
+        model.add(Dense(hidden_units,input_shape=(input_size-1,)))
+        # NOTE: Above is causing following error: "ValueError: Exception encountered when calling Sequential.call(). Invalid input shape for input Tensor("data:0", shape=(5,), dtype=float32). Expected shape (None, 6), but input has incompatible shape (5,)" [UPDATE: Error is originating from fact that x_trainCopy and x_testCopy 's shapes are (5,) and (5,)]
         model.add(Activation('relu')) #<-- This is used to add activation function to model[UPDATE: May need to replace Activation('relu') by making them default...not sure to facilitate experimentSetup3 OR I can simply see what happens when the 2nd to LAST acivation is changed] 
         model.add(Dropout(dropout))
         model.add(Dense(hidden_units))
-        model.add(Activation('relu')) if experimentSetup3() == None else experimentSetup3 #<-- This changes the Activation function, adhering to experimentSetup0![Thus, as of 11/23/25: There are two experiments ready to go for Milestone 1]
+        model.add(Activation('relu')) if experimentSetup3() == None else experimentSetup3() #<-- This changes the Activation function, adhering to experimentSetup0![Thus, as of 11/23/25: There are two experiments ready to go for Milestone 1]
         model.add(Dropout(dropout))
         model.add(Dense(num_labels))
         print("---End of Experiment Setup #0---")
@@ -358,10 +398,11 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
     def experimentSetup1():
         # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout[pn: make sure to have a subset of the powerset of params be modified in this exp. ]
         print("---Undergoing Experiment Setup #1---")
+        setN = 0 #<-- Change number for this to get values from resp sets. 
         experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
-        batch_size = experiment1Tuples[0][0] 
-        hidden_units = experiment1Tuples[0][1]
-        dropout = experiment1Tuples[0][2]
+        batch_size = experiment1Tuples[setN][0] 
+        hidden_units = experiment1Tuples[setN][1]
+        dropout = experiment1Tuples[setN][2]
         
         print("---End of Experiment Setup #1---")
         return
@@ -388,11 +429,12 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
 
     def experimentSetup3():
         # Goal of exp: Want to see model performance based on type of activation function from a subset of all possible activation functions. 
-        print("---Undergoing Experiment Setup #3---")
+        print("---Undergoing Experiment Setup #3---" if isExperimentSetup3Active else "---Experiment Setup #3 was skipped---")
         activationFuncs = ['elu', 'sigmoid', 'tanh' ]
         # model.add(Activation(activationFuncs[0])) #<-- May need this since I have a classification problem that I'm wokring on. [UPDATE: Made this a return value instead] 
 
-        print("---End of Experiment Setup #3---")
+        print("---End of Experiment Setup #3---" if isExperimentSetup3Active else "---End of Experiment Setup #3 was skipped---")
+
         return model.add(Activation(activationFuncs[0])) if isExperimentSetup3Active == True else None #<-- May need this since I have a classification problem that I'm wokring on. 
 
     def experimentSetup4():
@@ -402,7 +444,6 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
 
 
     # "Model is a 3-layer ML with ReLU and dropout after each layer": 
-    global model #<-- Have this here, so experimental setup functions can tweak model as needed. 
     #model = Sequential()
     #model.add(Dense(hidden_units,input_dim=input_size))
     #model.add(Activation('relu')) #<-- This is used to add activation function to model
@@ -419,6 +460,8 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
     # "Loss Function for one-hot vector"
     # "Use of adam optimizer"
     # "Accuracy is good metric for classification tasks": 
+    # print("---DEBUGGING CHECKPOINT #2: Making attempt to test before running Experiment 0---")
+    # pb.set_trace()#[experimentSetup0 was successful]
     
     experimentSetup0() 
     # "This is the output for one-hot vector"
@@ -430,14 +473,40 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
     metrics=['accuracy'])
 
     # "Train the network"
-    train_history = model.fit(x_train,y_train,epochs=20, batch_size=batch_size)
+    # BUG: There is a bug that occurs here that prods the following message: ValueError: Unrecognized data type: x=  [Apparently, there is an unrecognized data type in x_train variable]
+    x_train.loc[:,"Company"] = pd.Series([2**i for i in range(x_train.shape[0])]) 
+    x_test.loc[:,"Company"] = pd.Series([2**i for i in range(x_train.shape[0])]) 
+    x_train = x_train.astype("float64")
+    x_test = x_test.astype("float64")
+    x_train.loc[:,"Company"] = x_train.loc[:,"Company"].astype("int32")
+    x_test.loc[:,"Company"] = x_test.loc[:,"Company"].astype("int32")
+    # y_train = pd.Series(y_train)
+    # y_test = pd.Series(y_test)
+    # NOTE: Body of Problem is coming from x_train and x_test!
+    x_trainCopy = tf.data.Dataset.from_tensor_slices((x_train.values.astype(np.float32),tf.convert_to_tensor(y_train).numpy().astype(np.float32)))
+    x_testCopy = tf.data.Dataset.from_tensor_slices((x_test.values.astype(np.float32),tf.convert_to_tensor(y_test).numpy().astype(np.float32)))
+    # NOTE: Body of Problem is coming from x_train and x_test!
+    # x_train = x_trainCopy 
+    # x_test = x_testCopy 
+
+    # print("---DEBUGGING CHECKPOINT #3: Making attempt to test before training network---")
+    # pb.set_trace()
+    # UPDATE: FINISHED MODEL!!
+    train_history = model.fit(x_train,y_train,epochs=20, batch_size=batch_size) #<-- Removing this since I converted dataframe into tensorflow version of dataframe. [UPDATE: Have a problem now coming from mismatching shapes for x_train and y_train. Error is as follows: "ValueError: Arguments `target` and `output` must have the same shape. Received: target.shape=(None, 1), output.shape=(None, 4)"]
+    # train_history = model.fit(x_trainCopy,epochs=20, batch_size=batch_size) #<-- Removing this since I converted dataframe into tensorflow version of dataframe. 
     acc = model.evaluate(x_test, y_test, batch_size=batch_size,verbose=0)
-    print("\nTest accuracy: %.1f%%" % (100.0 * acc))
+    # acc = model.evaluate(x_testCopy)
+    print("---DEBUGGING CHECKPOINT #4: Obtaining Test Accuracy---")
+    pb.set_trace()
+    # print("\nTest accuracy: %.1f%%" % (100.0 * acc))
+    print("\nTest accuracy: %.1f%%" % (100.0 * acc[1]))
+    test_stocks["Company"] = test_stocks.index; test_stocks.loc[:,"Company"] = test_stocks.loc[:,"Company"].astype("int32")
 
     # 6) Verifying and Visualzing the Predictions
     # a) Obtaining accuarrcy of the predictions: 
     
-    predictions = model.predict(test_stocks) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
+    # predictions = model.predict(test_stocks) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
+    predictions = model.predict(x_test) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
     
     predictions[0]
     
@@ -473,6 +542,7 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
         return
 
     # Below can potentially be done iteratively?
+    """ 
     i = 0
     plt.figure(figsize=(6,3))
     plt.subplot(1,2,1)
@@ -480,7 +550,8 @@ def attempt3(): #<-- NOTE: This attempt is what will be used for Model Portion.
     plt.subplot(1,2,2)
     plot_value_array(i,predictions[i],test_labels)
     plt.show()
-    # End of Body of original idea for plotting model's output: 
+    """
+    # End of Body of original idea for plotting model's output: [UPDATE: Commented out this stuff above]
 
 
     # Alternate way of doing plotting above[for clarity, alternative is referenced BELOW]. 
