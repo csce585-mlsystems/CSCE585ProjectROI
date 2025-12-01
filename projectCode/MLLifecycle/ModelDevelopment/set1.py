@@ -1,3 +1,4 @@
+# NOTE: As of 11/30/25, MODEL DEV AND TRAINING IS COMPELTE! Need to transfer this to 
 # NOTE: In regards to testing out program, use following command. Refer to its comment for reference: $ find ProjectCode/components ProjectCode/routes -name "*.py" | xargs --delimiter="\n" grep -E "^(import|from)" #<-- NOTE: Use this code to find the files to: a) determine neccessary downloads for pip, and b) determine where to call model and send output etc from. 
 
 # Purpose: This file will contain code that helps with Model Development. 
@@ -11,7 +12,7 @@ import numpy as np #<-- May be optional not sure as of 10/13/25.
 import pdb as pb
 # import numpy as np
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation, Dropout
+from tensorflow.keras.layers import Dense, Activation, Dropout, Input
 from tensorflow.keras.utils import to_categorical, plot_model
 from tensorflow.keras.datasets import mnist
 
@@ -379,12 +380,19 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     dropout = 0.45
     # dropout  = experiment1Tuples[0][2]
     isExperimentSetup3Active = False
+    # model = Sequential()
     model = Sequential()
     def experimentSetup0():
        # This will reference the default settings irrespective to experiments. 
         print("---Undergoing Experiment Setup #0---")
         # model.add(Dense(hidden_units,input_dim=input_size))
-        model.add(Dense(hidden_units,input_shape=(input_size-1,)))
+        # model.add(Dense(hidden_units,input_shape=(input_size-1,)))
+        # print("---DEBUGGING CHECKPOINT: Checking model's reactions---")
+        # pb.set_trace()
+        # model.add(Input((input_size,)))
+        model.add(Input((x_train.shape[1],)))
+        # model.add(Dense(hidden_units,input_shape=(input_size,)))
+        model.add(Dense(hidden_units))
         # NOTE: Above is causing following error: "ValueError: Exception encountered when calling Sequential.call(). Invalid input shape for input Tensor("data:0", shape=(5,), dtype=float32). Expected shape (None, 6), but input has incompatible shape (5,)" [UPDATE: Error is originating from fact that x_trainCopy and x_testCopy 's shapes are (5,) and (5,)]
         model.add(Activation('relu')) #<-- This is used to add activation function to model[UPDATE: May need to replace Activation('relu') by making them default...not sure to facilitate experimentSetup3 OR I can simply see what happens when the 2nd to LAST acivation is changed] 
         model.add(Dropout(dropout))
@@ -398,7 +406,9 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     def experimentSetup1():
         # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout[pn: make sure to have a subset of the powerset of params be modified in this exp. ]
         print("---Undergoing Experiment Setup #1---")
-        setN = 0 #<-- Change number for this to get values from resp sets. 
+        print("---DEBUGGING CHECKPOINT #6: Testing out experimentSetup1---")
+        pb.set_trace()
+        setN = 1 #<-- Change number for this to get values from resp sets. 
         experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
         batch_size = experiment1Tuples[setN][0] 
         hidden_units = experiment1Tuples[setN][1]
@@ -464,6 +474,7 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     # pb.set_trace()#[experimentSetup0 was successful]
     
     experimentSetup0() 
+    experimentSetup1() 
     # "This is the output for one-hot vector"
     model.add(Activation('softmax')) #<-- May need this since I have a classification problem that I'm wokring on. 
     model.summary()
@@ -489,15 +500,15 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     # x_train = x_trainCopy 
     # x_test = x_testCopy 
 
-    # print("---DEBUGGING CHECKPOINT #3: Making attempt to test before training network---")
-    # pb.set_trace()
+    print("---DEBUGGING CHECKPOINT #3: Making attempt to test before training network---")
+    pb.set_trace()
     # UPDATE: FINISHED MODEL!!
     train_history = model.fit(x_train,y_train,epochs=20, batch_size=batch_size) #<-- Removing this since I converted dataframe into tensorflow version of dataframe. [UPDATE: Have a problem now coming from mismatching shapes for x_train and y_train. Error is as follows: "ValueError: Arguments `target` and `output` must have the same shape. Received: target.shape=(None, 1), output.shape=(None, 4)"]
     # train_history = model.fit(x_trainCopy,epochs=20, batch_size=batch_size) #<-- Removing this since I converted dataframe into tensorflow version of dataframe. 
     acc = model.evaluate(x_test, y_test, batch_size=batch_size,verbose=0)
     # acc = model.evaluate(x_testCopy)
-    print("---DEBUGGING CHECKPOINT #4: Obtaining Test Accuracy---")
-    pb.set_trace()
+    # print("---DEBUGGING CHECKPOINT #4: Obtaining Test Accuracy---")
+    # pb.set_trace() [COMPLETE!]
     # print("\nTest accuracy: %.1f%%" % (100.0 * acc))
     print("\nTest accuracy: %.1f%%" % (100.0 * acc[1]))
     test_stocks["Company"] = test_stocks.index; test_stocks.loc[:,"Company"] = test_stocks.loc[:,"Company"].astype("int32")
@@ -555,24 +566,26 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
 
 
     # Alternate way of doing plotting above[for clarity, alternative is referenced BELOW]. 
+    print("---DEBUGGING CHECKPOINT #5: Tesiting plotting!---")
+    pb.set_trace() # [COMPLETE!]
     # Body of plotting model[Link for plotting is here: https://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/] 
 
     ## Listing all data in history: 
-    print(train_history.train_history.keys())
+    print(train_history.history.keys())
 
     ## summarize train_history for accuracy
-    print(train_history.train_history['accuracy'])
-    print(train_history.history['val_accuracy'])
+    plt.plot(train_history.history['accuracy'])
+    # print(train_history.history['val_accuracy']) #<-- NOTE: val_accuracy and val_loss are NOT part of the history object's keys.  
     plt.title('model accuracy')
-    plt.ylabel('accuarcy')
+    plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
     ## summarize history for loss
-    print(train_history.train_history['loss'])
-    print(train_history.train_history['val_loss'])
+    plt.plot(train_history.history['loss'])
+    # print(train_history.history['val_loss']) #<-- NOTE: val_accuracy and val_loss are NOT part of the history object's keys. 
     plt.title('model loss')
-    plt.ylabel('accuarcy')
+    plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
