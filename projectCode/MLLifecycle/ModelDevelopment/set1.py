@@ -409,31 +409,45 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
         print("---DEBUGGING CHECKPOINT #6: Testing out experimentSetup1---")
         pb.set_trace()
         setN = 1 #<-- Change number for this to get values from resp sets. 
-        experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
+        experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), (128,256,0.3), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
         batch_size = experiment1Tuples[setN][0] 
         hidden_units = experiment1Tuples[setN][1]
         dropout = experiment1Tuples[setN][2]
         
         print("---End of Experiment Setup #1---")
         return
+    global listVerOfX_train
+    listVerOfX_train = x_train.columns[:len(x_train.columns)-1].to_list()
     def experimentSetup2(numQuantLvls = 2):
         # Goal of exp: Want to see model performance based on degree of quantanization of data
         print("---Undergoing Experiment Setup #2---")
         # NOTE: Below will involve replacing 255 with a different number based on degree of quantanization of data. 
         # UPDATE: Only thing left is pulling maximum value from x_train and min value from train and test respectively. 
-        widthsOfQuant = []
-        
-        widthsOfQuant[0] = (x_trainMax - x_trainMin)/(numQuantLvls - 1)
-        x_train = np.reshape(x_train, [-1,input_size])
-        x_trainMax = 0;
-        x_trainMin = 0;
-        
-        x_test = np.reshape(x_test, [-1,input_size])
-        x_testMax = 0;
-        x_testMin = 0;
-        widthsOfQuant[1] = (x_testMax - x_testMin)/(numQuantLvls - 1); 
-        x_train = x_train.astype('float32')/widthsOfQuant[0]
-        x_test = x_test.astype('float32')//widthsOfQuant[1]
+        # Using for loop to iterate through each column to apply this quantinization to each column. 
+        global x_train, x_test
+        print("---DEBUGGING CHECKPOINT #6: Ensuring that quantinization is doing at least something---")
+        pb.set_trace()
+        for i in listVerOfX_train:
+            x_trainMax = x_train[i].max()
+            x_trainMin = x_train[i].min()
+            x_testMax = x_test[i].max()
+            x_testMin = x_test[i].min()
+            
+            # widthsOfQuant = []
+            # widthsOfQuant[0] = (x_trainMax - x_trainMin)/(numQuantLvls - 1),
+            # widthsOfQuant[1] = (x_testMax - x_testMin)/(numQuantLvls - 1)
+            widthsOfQuant = [(x_trainMax - x_trainMin)/(numQuantLvls - 1),(x_testMax - x_testMin)/(numQuantLvls - 1)]
+            # x_train = np.reshape(x_train, [-1,input_size])
+            # x_trainMax = 0;
+            # x_trainMin = 0;
+            
+            # x_test = np.reshape(x_test, [-1,input_size])
+            # x_testMax = 0;
+            # x_testMin = 0;
+            # widthsOfQuant[1] = (x_testMax - x_testMin)/(numQuantLvls - 1); 
+            x_train.loc[:,i] = x_train.loc[:,i]/widthsOfQuant[0]
+            x_test.loc[:,i] = x_test.loc[:,i]/widthsOfQuant[0]
+            # x_test = x_test.astype('float32')//widthsOfQuant[1]
         print("---End of Experiment Setup #2---")
         return
 
@@ -474,7 +488,8 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     # pb.set_trace()#[experimentSetup0 was successful]
     
     experimentSetup0() 
-    experimentSetup1() 
+    # experimentSetup1() 
+    experimentSetup2() 
     # "This is the output for one-hot vector"
     model.add(Activation('softmax')) #<-- May need this since I have a classification problem that I'm wokring on. 
     model.summary()

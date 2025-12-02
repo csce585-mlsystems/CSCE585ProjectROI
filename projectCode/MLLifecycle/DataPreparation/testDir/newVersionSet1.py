@@ -339,7 +339,8 @@ class subsys2:
                 dataFrameReffingCompanyData["Share Price" if currCompany == None else ("Share Price",currCompany)] < 0.67*dataFrameReffingCompanyData["Tangible Book Value" if currCompany == None else ("Tangible Book Value",currCompany)]
                 ]"""
                 # NOTE: No errors occur until up to THIS point. Following error is prod by the boolExps: pandas.errors.IndexingError: Too many indexers
-            """             boolExps: list[bool] = [
+            """       
+                        boolExps: list[bool] = [
                     dataFrameReffingCompanyData.loc["P/B" if currCompany == None else ("P/B",currCompany)] <= 1.0,
                 dataFrameReffingCompanyData.loc["P/E" if currCompany == None else ("P/E",currCompany)] <= 0.4*highestP_EOvrFiveYrs,
                 dataFrameReffingCompanyData.loc["Share Price" if currCompany == None else ("Share Price",currCompany)] < 0.67*dataFrameReffingCompanyData["Tangible Book Value" if currCompany == None else ("Tangible Book Value",currCompany)]
