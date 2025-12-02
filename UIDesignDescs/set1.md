@@ -12,7 +12,7 @@ Idea: Guided Investment Platform for those who want to obtain passive income.
 - [State 5: Settings Page]  User is met with an n x m matrix that I will refer to as A. Let $n \ge 3 \land m = 2$. Then $\forall i \le (n-2)($, A(i) will reference fieldID-inputFields[with type checkbox] pairs for AT LEAST changing status of notis, (cont here for other things users should be able to disable), respectively. A(n-1) will reference a button that allows user to delete their account. A(n) will reference a button that allows user to save their configuration. NOTE: At this point, the minimal features are here. Add more to the grid if neccessary.
 - [State 6: Settings Page]  User is met with an n x m matrix that I will refer to as A. (cont here with desc)
 - [State 7: Stocks Choice Category Page]  User is met with an n x m matrix that I will refer to as A. (cont here with desc)
-- [State 8: Stocks Graph Page]  User is met with an n x m matrix that I will refer to as A. (cont here with desc)
+ [State 8: Stocks Graph Page]  User is met with an n x m matrix that I will refer to as A. (cont here with desc)
 - [State 9: ML Soln's Predictions Page]  User is met with an n x m matrix that I will refer to as A. (cont here with desc)
 - (cont here by adding states brainstormed taht include states that reference a stocks metrics)
 
