@@ -280,3 +280,48 @@ def main(companies: list[str] = []):
         resultantDataFrame.to_csv(f"{filePathToModelDir}")
     # End of Body of handling edge case where all of them are same optimality
 main()
+def dataPrepDeriv(companies: list[str] = []):
+    print("---Starting Data Prep Process---")
+    # print("---DEBUGGING CHECKPOINT #1: Investigating companySeries value---")
+    # pb.set_trace()
+    if len(companies) == 0:
+        companies: list[str] = ["GOOG","AAPL", "AMZN", "MSFT"] 
+    
+    listOfSeriesToCreateDataFrame = []
+    for i in range(len(companies)):
+        print(f"----Adding company {companies[i]} to engineered dataset----")
+        # """
+        # NOTE: Will uncomment, once everything with the functions used here is situated[add a checklist here: ]
+        print("---Starting Subsystem 1---")
+        # Call function referencing topmost subsystem #1 here:
+        a: str = ""; b: str = ""
+        subsys1().compA(company=companies[i])
+        subsys2().compA(param1=companies[i])
+        retSeries = True
+        if retSeries:
+            # ^^ NOTE: Above is returning a series each time[at least this is the assumption]
+            companySeries = subsys2().compA(param1=companies[i])
+            listOfSeriesToCreateDataFrame.append(companySeries)
+        else:
+            # ^^ NOTE: Above is NOT retruning a series
+            print("---Assumption that series is NOT returned---")
+        # Will replace above with this: subsys1(company_i)
+        print("---End of Subsystem 1---")
+        print(f"----End of Adding company {companies[i]} to engineered dataset----")
+    
+    resultantDataFrame = pd.concat([pd.DataFrame(x) for x in listOfSeriesToCreateDataFrame]).reset_index() #<-- used list comprehension to transform listOfSeries to resultantDataFrame.
+    del resultantDataFrame['index']
+    print(resultantDataFrame) #<-- THis dataframe will reference the dataframe that adheres to the follwowing object:
+    # company(CompanyName, "P/B", "P/E", "NCAV", "Date For Eval", "Optimality", (cont here if applicable))[NOTE: Will be wise to make a Entity via ERDs for documentation when writing paper at end]
+    inNoteBook = False
+    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    # Body of handling edge case where all of them are same optimality
+    resultantDataFrame.to_csv(f"{filePathToModelDir}")
+    if((resultantDataFrame["Optimality"] == 0).all() == True):
+        # Setting optimality column to be based on alphabetical ordering
+        resultantDataFrame.sort_values(by='Company',inplace=True)
+        resultantDataFrame = resultantDataFrame.set_index(np.arange(4))
+        resultantDataFrame.loc[:,"Optimality"] = pd.Series(np.arange(resultantDataFrame["Optimality"].shape[0]))
+        # End of Setting optimality column to be based on alphabetical ordering
+        resultantDataFrame.to_csv(f"{filePathToModelDir}")
+    # End of Body of handling edge case where all of them are same optimality

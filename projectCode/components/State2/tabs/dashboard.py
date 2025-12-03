@@ -59,32 +59,6 @@ from constants import (
 # Body of function that automatically fills in contents of placeHolderPicks using contents derived from model's output: 
 
 
-def fillPicks(modelPrediction):
-    # Goal: a) Obtain companies chosen by user, [NOTE: Within these steps, will need to figure out how to initiate data engineering pipeline process to create said model to obtain prediction ]b) Call model to make prediction, c) Obtain model's prediction, d) Process model's prediction for user consumption.  
-    """
-    new_model = tf.keras.models.load_model('my_model.keras')
-    predictions = new_model.predict()
-    
-    NOTE: Below will be used to do conversion, ensuring that palceHolder Picks is populated [PN: May also require presence of test_stocks and ]
-        test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users. 
-    np.argsort(predictions[0]) #<-- NOTE: argsort sorts argument indices in ascending order! [UPDATE: There is also an edge case, if preds coincidentally are the same, then the next maximum should be pulled instead]
-    np.argsort(predictions[1])
-    np.argsort(predictions[2])
-    np.argsort(predictions[3])
-
-    test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"]
-    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]]["Company"]
-    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]]["Company"]
-    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]][0] ]["Company"]
-
-
-    
-    np.argmax(predictions[0])
-    [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
-    [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]
-    [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]]
-    """
-    return
 
 
 
@@ -114,6 +88,57 @@ placeholderPicks = [
         "risk": "High",
     },
 ]
+def fillPicks(modelPrediction):
+    # Goal: a) Obtain companies chosen by user, [NOTE: Within these steps, will need to figure out how to initiate data engineering pipeline process to create said model to obtain prediction ]b) Call model to make prediction, c) Obtain model's prediction, d) Process model's prediction for user consumption.  
+    # Using if-else below to constrain amt of admissible predictions for demo purposes.
+    if(len(modelPrediction) > 4):
+        """
+        new_model = tf.keras.models.load_model('my_model.keras')
+        predictions = new_model.predict()
+        
+        NOTE: Below will be used to do conversion, ensuring that palceHolder Picks is populated [PN: May also require presence of test_stocks and ]
+            test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users. 
+        np.argsort(predictions[0]) #<-- NOTE: argsort sorts argument indices in ascending order! [UPDATE: There is also an edge case, if preds coincidentally are the same, then the next maximum should be pulled instead]
+        np.argsort(predictions[1])
+        np.argsort(predictions[2])
+        np.argsort(predictions[3])
+
+        test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"]
+        test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]]["Company"]
+        test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]]["Company"]
+        test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]][0] ]["Company"]
+
+
+        
+        np.argmax(predictions[0])
+        [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
+        [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]
+        [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]]
+
+        UPDATE: Decided to have model's predictions as a dataframe referencing the test_stock data AND the model's predictions as columns. Thus, above will only occur within backend of model. 
+        
+        """
+    else:
+        # """
+        tickerRealNameTable = {
+        "AAPL": "Apple",
+        "GOOG": "Google",
+        "AMZN": "Amazon"
+        }
+        # ^^ Add more above later on!
+        filePathToModelPredFile = "" #<-- updating soon
+        dataFrameReffingModelPred = pd.DataFrame() or pd.read_csv(f"{filePathToModelPredFile}") #<-- will change soon to dataframe refrencing a dataframe referencing the test_stock data AND the model's predictions as columns!
+        for i in range(len(modelPrediction)):
+            # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
+            placeholderPicks[i].company = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
+            placeholderPicks[i].ticker = dataFrameReffingModelPred.loc[i, "Company"]
+            placeholderPicks[i].score = dataFrameReffingModelPred.loc[i, "Optimality"]
+        return
+        # NOTE: May add something that grabs top 3 companies for any set of companies given.
+        # NOTE: Nevertheles,s I believe this is all the code that is NEEDED. Currently
+        # working towards writing file that will be read in by pd.read_csv call above. 
+        # """
+
 # score bar for the Smart Score column
 def scoreBar(score):
     percent = max(0, min(score, 100))
