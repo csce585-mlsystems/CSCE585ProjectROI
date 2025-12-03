@@ -422,7 +422,7 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
         # Goal of exp: Want to see model performance based on degree of quantanization of data
         print("---Undergoing Experiment Setup #2---")
         # NOTE: Below will involve replacing 255 with a different number based on degree of quantanization of data. 
-        # UPDATE: Only thing left is pulling maximum value from x_train and min value from train and test respectively. 
+        # UPDATE: Only thing left is pulling maximum value from x_train and min value from train and test respectively. [COMPLETE!]
         # Using for loop to iterate through each column to apply this quantinization to each column. 
         global x_train, x_test
         print("---DEBUGGING CHECKPOINT #6: Ensuring that quantinization is doing at least something---")
@@ -463,6 +463,7 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
 
     def experimentSetup4():
         print("---Undergoing Experiment Setup #4---")
+        # Need to have an experiment that utilizes scaling analysis[UPDATE: May not be needed since Experiment #2 covers env for this already]
         print("---End of Experiment Setup #4---")
         return
 
@@ -499,7 +500,7 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     metrics=['accuracy'])
 
     # "Train the network"
-    # BUG: There is a bug that occurs here that prods the following message: ValueError: Unrecognized data type: x=  [Apparently, there is an unrecognized data type in x_train variable]
+    # BUG: There is a bug that occurs here that prods the following message: ValueError: Unrecognized data type: x=  [Apparently, there is an unrecognized data type in x_train variable][UPDATE: COMPLETE!]
     x_train.loc[:,"Company"] = pd.Series([2**i for i in range(x_train.shape[0])]) 
     x_test.loc[:,"Company"] = pd.Series([2**i for i in range(x_train.shape[0])]) 
     x_train = x_train.astype("float64")
@@ -535,6 +536,98 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     predictions = model.predict(x_test) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
     
     predictions[0]
+    # NOTE: Below will reference ways to transform predictions into string format to be able to utilzied for user consumption
+
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([predictions[0]])]["Company"].values[0])
+    print("----")
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[1] if predictions[1].tolist().index(x) != np.argmax([predictions[0]])])]["Company"].values[0])
+    print("----")
+    
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[2] if predictions[2].tolist().index(x) != np.argmax([predictions[0]]) and predictions[2].tolist().index(x) != np.argmax([predictions[1]])])]["Company"].values[0])
+    print("----")
+    
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[3] if predictions[3].tolist().index(x) != np.argmax([predictions[0]]) and predictions[3].tolist().index(x) != np.argmax([predictions[1]]) and predictions[3].tolist().index(x) != np.argmax([predictions[2]])])]["Company"].values[0])
+    print("----")
+    
+    
+    # UPDATE: Above works, BUT the problem is that each prediction MUST be unique, and the predictions should be limited based on the value(s) of the previous prediction. 
+    # Attempt #1 At solution: 
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"].values[0])
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[1])]["Company"].values[0])
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[2])]["Company"].values[0])
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[3])]["Company"].values[0])
+    
+    # End of Attempt #1 At solution: 
+    # Attempt #2 At solution: 
+    np.argsort(predictions[0])
+    np.argmax(predictions[0])
+    [x for x in np.argsort(predictions[1]) if x != np.argmax(predictions[0])]
+    np.argsort(predictions[1][np.argsort(predictions[0])[0]])
+    [x for x in np.argsort(predictions[1]) if x != np.argmax(predictions[0])]
+    np.argsort(predictions[2])
+    [x for x in np.argsort(predictions[2]) if x != np.argmax(predictions[0]) and x!= np.argmax(predictions[1])]
+    np.argsort(predictions[3])
+    [x for x in np.argsort(predictions[3]) if x != np.argmax(predictions[0]) and x != np.argmax(predictions[1]) and x != np.argmax(predictions[2])]
+    
+    
+    np.argmax(predictions[0])
+    np.argmax([x for x in predictions[1] if predictions[1].tolist().index(x) not in [np.argmax(predictions[0])]])
+    np.argmax([x for x in predictions[2] if predictions[2].tolist().index(x) not in [np.argmax(predictions[0]), np.argmax(predictions[1])]])
+    np.argmax([x for x in predictions[3] if predictions[3].tolist().index(x) not in [np.argmax(predictions[0]), np.argmax(predictions[1]), np.argmax(predictions[2])]])
+    # (cont here!)[UPDATE: Need to use np.argsort to ensure none of the labels chosen result in one label being chosen more than once! Refer to this link for assistance: https://www.geeksforgeeks.org/python/how-to-get-the-n-largest-values-of-an-array-using-numpy/][Attempt to acheive solution is below] [NOTE: Basic idea is this: np.argmax(predictions[2][:np.argmax(predictions[1])])]
+    # End of Attempt #2 At solution: 
+    test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users. 
+    # Attempt #3 At solution: 
+    np.argsort(predictions[0]) #<-- NOTE: argsort sorts argument indices in ascending order! [UPDATE: There is also an edge case, if preds coincidentally are the same, then the next maximum should be pulled instead]
+    np.argsort(predictions[1])
+    np.argsort(predictions[2])
+    np.argsort(predictions[3])
+
+    test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]][0] ]["Company"]
+
+
+    
+    np.argmax(predictions[0])
+    [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
+    [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]
+    [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]] 
+    
+    # UPDATE: Above works greatly when 4 companies are utilized. Now, focus shifts to programmatically adhering to situation for any finite amount of companies. 
+    conditions = []
+    i = 1
+    test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users. 
+    print("--DEBUGGING CHECKPOINT: CHecking if algo works for any finite num of predictions---") # UPDATE: This process will be done after finishing up everything else. 
+    pb.set_trace()
+    while i < (len(predictions)):   
+        # GOAL: a) Ensure that each prediction is unique, so a desired order can be implemented. 
+        lambda x: x != np.argsort(predictions[i - 1])[-1]
+        conditions.append(lambda x: x != np.argsort(predictions[i - 1])[-1]) #<-- NOTE: Leaving x und   ef on purpose since it'll be defined in list comprehension below. 
+        # conditions.append(x != np.argsort(predictions[i - 1])[-1]) #<-- NOTE: Leaving x undef on purpose since it'll be defined in list comprehension below. 
+        # [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
+        print([x for x in np.argsort(predictions[i]) if conditions][-1])
+        print("----")
+        print(test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if conditions][-1]]["Company"])
+        print("----")
+        i += 1
+        
+
+
+
+    # End of Attempt #3 At solution: 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # NOTE: Above will reference ways to transform predictions into string format to be able to utilzied for user consumption
     
     
     np.argmax(predictions[0]) #<-- Returns the prediction that Neural Network was most comfortable with. 
@@ -610,6 +703,29 @@ filePathToTrainingSetDir: str = "./ModelDevelopment/TrainingSets" #<-- fill in l
     # End of Body of plotting model 
     # b) Printing Model Summary, which can be good to go into detail about: 
     model.summary()
+    # Body of saving model to a file to be used later
+    """
+    Example of doing so used for reference: 
+        # "Create and train a enw model instance": 
+        model = create_model()
+        model.fit(train_images, train_labels, epochs=5)
+
+        # "Save the entire model as a '.keras' zip archive. 
+        model.save('baseline_stockMLModel.keras')
+
+        # "Reload a fresh Keras Model from the `.keras` zip archive": 
+
+        new_model = tf.keras.models.load_model('my_model.keras')
+
+
+
+    """
+    
+    
+    
+    
+    
+    # End of Body of saving model to a file to be used later
 
 
 

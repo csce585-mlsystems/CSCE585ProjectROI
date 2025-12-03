@@ -1,3 +1,21 @@
+
+# Body of imports required for loading and using model
+import tensorflow as tf
+import matplotlib
+from matplotlib import pyplot as plt
+import pandas as pd
+import numpy as np #<-- May be optional not sure as of 10/13/25. 
+import pdb as pb
+# import numpy as np
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense, Activation, Dropout, Input
+# from tensorflow.keras.utils import to_categorical, plot_model
+# from tensorflow.keras.datasets import mnist
+import tensorflow.keras
+
+# NOTE: May or may not need all these imports, BUT they are here just in case!
+
+# End of Body of imports required for loading and using model
 # dashboard tab
 from reactpy import component, html
 from constants import (
@@ -38,6 +56,41 @@ from constants import (
     dashboardStack,
 )
 # placeholder picks (ML model will replace)
+# Body of function that automatically fills in contents of placeHolderPicks using contents derived from model's output: 
+
+
+def fillPicks(modelPrediction):
+    # Goal: a) Obtain companies chosen by user, [NOTE: Within these steps, will need to figure out how to initiate data engineering pipeline process to create said model to obtain prediction ]b) Call model to make prediction, c) Obtain model's prediction, d) Process model's prediction for user consumption.  
+    """
+    new_model = tf.keras.models.load_model('my_model.keras')
+    predictions = new_model.predict()
+    
+    NOTE: Below will be used to do conversion, ensuring that palceHolder Picks is populated [PN: May also require presence of test_stocks and ]
+        test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users. 
+    np.argsort(predictions[0]) #<-- NOTE: argsort sorts argument indices in ascending order! [UPDATE: There is also an edge case, if preds coincidentally are the same, then the next maximum should be pulled instead]
+    np.argsort(predictions[1])
+    np.argsort(predictions[2])
+    np.argsort(predictions[3])
+
+    test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]][0] ]["Company"]
+
+
+    
+    np.argmax(predictions[0])
+    [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
+    [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]
+    [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]]
+    """
+    return
+
+
+
+
+
+# End of Body of function that automatically fills in contents of placeHolderPicks using contents derived from model's output: 
 placeholderPicks = [
     {
         "company": "Stock 1",
