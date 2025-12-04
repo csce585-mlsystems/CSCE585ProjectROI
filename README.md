@@ -61,13 +61,69 @@ For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package ma
 ## Directory Structure  
 Example:  
 ```
-|- data (mandatory)
-|- src (mandatory)
-|   |- model.py
-|   |- example.py
-|- train.py
-|- run.py (mandatory)
-|- result.py (mandatory)
+.
+├── README.md
+├── UIDesignDescs
+│   └── set1.md
+├── UXResearch
+│   └── purpose.md
+├── __pycache__
+│   ├── constants.cpython-311.pyc
+│   └── constants.cpython-313.pyc
+├── app.py
+├── constants.py
+├── currentDependencies.md
+├── docs
+│   ├── p0
+│   │   ├── P0.pdf
+│   │   └── SlidesP0.pdf
+│   ├── p1
+│   │   ├── SlidesP1.pdf
+│   │   └── p1.txt
+│   ├── p2
+│   │   └── p2.txt
+│   └── references.bib
+├── milestones
+│   ├── milestone0
+│   │   └── powerpointTemplate.tex
+│   ├── milestone1
+│   │   ├── Experiments
+│   │   ├── p1Document.md
+│   │   └── powerpointTemplate.tex
+│   ├── milestone2
+│   │   ├── draftPaper.tex
+│   │   ├── guide.md
+│   │   ├── initialExperiments.ipynb
+│   │   ├── initialExperimentsFinalCopyP2Version.ipynb
+│   │   └── powerpointTemplate.tex
+│   └── powerpointTemplate.tex
+├── preferences.json
+├── projectCode
+│   ├── MLLifecycle
+│   │   ├── DataCollection
+│   │   ├── DataPreparation
+│   │   ├── ModelDevelopment
+│   │   ├── ModelTraining
+│   │   └── summaryOfFiles.md
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-311.pyc
+│   │   └── __init__.cpython-313.pyc
+│   ├── components
+│   │   ├── State0
+│   │   ├── State1
+│   │   ├── State2
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   ├── requirements.md
+│   └── routes
+│       ├── State0Routes.py
+│       ├── State1Routes.py
+│       ├── State2Routes.py
+│       ├── __init__.py
+│       └── __pycache__
+├── requirements.txt
+└── users.json
 ```
 
 ⚠️ Notes:  
