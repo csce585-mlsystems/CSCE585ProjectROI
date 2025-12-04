@@ -1,7 +1,7 @@
 # constants.py
 # basic app config
 HOST = "127.0.0.1"
-PORT = 5000
+PORT = 5001
 DEBUG = True
 URL = "http://127.0.0.1:5000"
 # colors + fonts for whole program

@@ -158,7 +158,7 @@ def load_model_picks(max_picks=3):
             raw_score = 0.0
 
         # clamp/scale score to something that looks like 0–100
-        score = int(max(0, min(raw_score, 100)))
+        score = int((raw_score / df[score_col].max()) * 100)
 
         picks.append(
             {
