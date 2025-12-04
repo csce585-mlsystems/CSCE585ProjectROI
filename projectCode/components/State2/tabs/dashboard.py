@@ -157,7 +157,7 @@ def fillPicks(modelPrediction = None):
         global tickerRealNameTable
                 # ^^ Add more above later on!
         local = True
-        demo = False
+        demo = True
         parentDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585" if demo == False else "." 
         writePathForModelPreds = f"{parentDir}/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "./ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
         filePathToModelPredFile = writePathForModelPreds #<-- updating soon
