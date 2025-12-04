@@ -1,10 +1,10 @@
-
 # Body of imports required for loading and using model
+import os
 import tensorflow as tf
 import matplotlib
 from matplotlib import pyplot as plt
 import pandas as pd
-import numpy as np #<-- May be optional not sure as of 10/13/25. 
+import numpy as np  # <-- May be optional not sure as of 10/13/25.
 import pdb as pb
 # import numpy as np
 # from tensorflow.keras.models import Sequential
@@ -14,8 +14,8 @@ import pdb as pb
 import tensorflow.keras
 
 # NOTE: May or may not need all these imports, BUT they are here just in case!
-
 # End of Body of imports required for loading and using model
+
 # dashboard tab
 from reactpy import component, html
 from constants import (
@@ -55,16 +55,23 @@ from constants import (
     picksTitleText,
     dashboardStack,
 )
-# placeholder picks (ML model will replace)
-# Body of function that automatically fills in contents of placeHolderPicks using contents derived from model's output: 
 
+# path to Jay's model prediction file (written by baseline_model.py)
+# projectCode/MLLifecycle/ModelDevelopment/ModelPredictions.csv
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PRED_PATH = os.path.normpath(
+    os.path.join(
+        BASE_DIR,
+        "..",  # State2
+        "..",  # components
+        "..",  # projectCode
+        "MLLifecycle",
+        "ModelDevelopment",
+        "ModelPredictions.csv",
+    )
+)
 
-
-
-
-
-
-# End of Body of function that automatically fills in contents of placeHolderPicks using contents derived from model's output: 
+# placeholder picks (ML model will replace if CSV is available)
 placeholderPicks = [
     {
         "company": "Stock 1",
@@ -88,65 +95,89 @@ placeholderPicks = [
         "risk": "High",
     },
 ]
-def fillPicks(modelPrediction = None):
-    # Goal: a) Obtain companies chosen by user, [NOTE: Within these steps, will need to figure out how to initiate data engineering pipeline process to create said model to obtain prediction ]b) Call model to make prediction, c) Obtain model's prediction, d) Process model's prediction for user consumption.  
-    # Using if-else below to constrain amt of admissible predictions for demo purposes.
-    # if(modelPrediction == None and len(modelPrediction) > 4):
-    if(modelPrediction != None):
-        """
-        new_model = tf.keras.models.load_model('my_model.keras')
-        predictions = new_model.predict()
-        
-        NOTE: Below will be used to do conversion, ensuring that palceHolder Picks is populated [PN: May also require presence of test_stocks and ]
-            test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users. 
-        np.argsort(predictions[0]) #<-- NOTE: argsort sorts argument indices in ascending order! [UPDATE: There is also an edge case, if preds coincidentally are the same, then the next maximum should be pulled instead]
-        np.argsort(predictions[1])
-        np.argsort(predictions[2])
-        np.argsort(predictions[3])
-
-        test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"]
-        test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]]["Company"]
-        test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]]["Company"]
-        test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]][0] ]["Company"]
 
 
-        
-        np.argmax(predictions[0])
-        [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
-        [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]
-        [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]]
+def load_model_picks(max_picks=3):
+    """
+    Goal:
+      - read Jay's ModelPredictions.csv
+      - turn the rows into the same dict format the UI already expects
+      - if anything goes wrong, just use placeholderPicks
 
-        UPDATE: Decided to have model's predictions as a dataframe referencing the test_stock data AND the model's predictions as columns. Thus, above will only occur within backend of model. 
-        
-        """
-    else:
-        # """
-        tickerRealNameTable = {
+    This keeps things beginner-friendly and avoids breaking the dashboard
+    if the model hasn't been run yet.
+    """
+    # simple mapping from ticker -> human-friendly company name
+    tickerRealNameTable = {
         "AAPL": "Apple",
         "GOOG": "Google",
+        "GOOGL": "Google",
         "AMZN": "Amazon",
-        "MSFT": "Microsoft"
-        }
-        # ^^ Add more above later on!
-        local = True
-        writePathForModelPreds = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/ModelPredictions.csv" if local == True else "./ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
-        filePathToModelPredFile = writePathForModelPreds #<-- updating soon
-        dataFrameReffingModelPred = pd.read_csv(f"{filePathToModelPredFile}") #<-- will change soon to dataframe refrencing a dataframe referencing the test_stock data AND the model's predictions as columns!
-        # for i in range(len(modelPrediction)):
-        # NOTE: Below, instead of doing for, we will do three for demo purposes, hence why
-        # offset '-1' is present. 
-        for i in range(dataFrameReffingModelPred.shape[0] - 1):
-            # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
-            placeholderPicks[i]["company"] = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
-            placeholderPicks[i]["ticker"] = dataFrameReffingModelPred.loc[i, "Company"]
-            placeholderPicks[i]["score"] = dataFrameReffingModelPred.loc[i, "Optimality"]
-        
-        return
-        # NOTE: May add something that grabs top 3 companies for any set of companies given.
-        # NOTE: Nevertheles,s I believe this is all the code that is NEEDED. Currently
-        # working towards writing file that will be read in by pd.read_csv call above. 
-        # """
-fillPicks()
+        "MSFT": "Microsoft",
+        # add more later if we expand the universe
+    }
+
+    # if the CSV doesn't exist yet, just use the hard-coded picks
+    if not os.path.exists(MODEL_PRED_PATH):
+        print(f"[Dashboard] ModelPredictions.csv not found at {MODEL_PRED_PATH}, using placeholder picks.")
+        return placeholderPicks
+
+    try:
+        df = pd.read_csv(MODEL_PRED_PATH)
+    except Exception as ex:
+        print(f"[Dashboard] Error reading {MODEL_PRED_PATH}: {ex}")
+        return placeholderPicks
+
+    # we at least expect a 'Company' column from Jay's code
+    if "Company" not in df.columns:
+        print("[Dashboard] 'Company' column missing in ModelPredictions.csv, using placeholder picks.")
+        return placeholderPicks
+
+    # if there's an Optimality column, use that as our score;
+    # otherwise, try Model Predictions; if not, fall back to 0.
+    if "Optimality" in df.columns:
+        score_col = "Optimality"
+    elif "Model Predictions" in df.columns:
+        score_col = "Model Predictions"
+    else:
+        score_col = None
+
+    picks = []
+
+    # just grab the top N rows for the demo
+    for _, row in df.head(max_picks).iterrows():
+        ticker = str(row["Company"])
+        company_name = tickerRealNameTable.get(ticker, ticker)
+
+        if score_col is not None:
+            try:
+                raw_score = float(row[score_col])
+            except Exception:
+                raw_score = 0.0
+        else:
+            raw_score = 0.0
+
+        # clamp/scale score to something that looks like 0–100
+        score = int(max(0, min(raw_score, 100)))
+
+        picks.append(
+            {
+                "company": company_name,
+                "ticker": ticker,
+                "score": score,
+                "tags": ["Value", "Model Pick"],
+                "risk": "Medium",
+            }
+        )
+
+    # if CSV was empty or weird, fall back
+    if not picks:
+        return placeholderPicks
+
+    print(f"[Dashboard] Loaded {len(picks)} picks from model.")
+    return picks
+
+
 # score bar for the Smart Score column
 def scoreBar(score):
     percent = max(0, min(score, 100))
@@ -166,9 +197,13 @@ def scoreBar(score):
         ),
         html.span({"style": scoreBarText}, str(score)),
     )
+
+
 # tag pill under value metrics
 def tagPill(text):
     return html.span({"style": tagChip}, text)
+
+
 # risk badge
 def riskBadge(level):
     colors = {"low": "#22c55e", "medium": "#3b82f6", "high": "#ef4444"}
@@ -178,19 +213,24 @@ def riskBadge(level):
         html.span({"style": {**riskBadgeDot, "background": color}}),
         html.span(level),
     )
+
+
 @component
 def DashboardTab(data=None):
     base = data or {}
+
     # left sidebar slider data
     budget = base.get("budget", 10000)
     years = base.get("years", 5)
     risk = str(base.get("risk", "Medium"))
+
     # inputs from pref
     inputs = base.get("inputs") or {}
     startAmt = inputs.get("startAmt")
     targetAmt = inputs.get("targetAmt")
     timeFrame = inputs.get("timeFrame")
     timeFrameDisplay = inputs.get("timeFrameDisplay")
+
     # also look at top level in case backend sends saved prefs directly
     if startAmt is None and "startAmt" in base:
         startAmt = base.get("startAmt")
@@ -200,8 +240,17 @@ def DashboardTab(data=None):
         timeFrameDisplay = base.get("timeFrameDisplay")
     if timeFrame is None and "timeFrame" in base:
         timeFrame = base.get("timeFrame")
+
     growthRate = base.get("growthRate")
-    picks = base.get("picks", placeholderPicks)
+
+    # picks:
+    # 1) if backend passes picks in data, use those
+    # 2) otherwise, load from Jay's ModelPredictions.csv
+    # 3) if that fails, use placeholderPicks
+    picks = base.get("picks")
+    if not picks:
+        picks = load_model_picks()
+
     # summary text
     summaryBullets = base.get("summaryBullets")
     if not summaryBullets:
@@ -212,16 +261,19 @@ def DashboardTab(data=None):
             displayTime = f"{timeFrame:.2f} years"
         else:
             displayTime = f"{years} years"
+
         # pick which dollar amount to show
         if startAmt is not None:
             budgetNumber = startAmt
         else:
             budgetNumber = budget
+
         summaryBullets = [
             f"We found {len(picks)} strong value stocks matching your {risk.lower()} risk profile.",
             f"These reccomendations are tailored for a ${budgetNumber:,.0f} investment over {displayTime}.",
             "The suggested mix balances profits, growth, and reasonable debt.",
         ]
+
     # header
     header = html.div(
         {"style": dashboardHeaderBox},
@@ -231,6 +283,7 @@ def DashboardTab(data=None):
             "Here are the top stock ideas based on your goals.",
         ),
     )
+
     # summary card
     summaryCard = html.div(
         dashboardCard,
@@ -240,6 +293,7 @@ def DashboardTab(data=None):
             *[html.li(line) for line in summaryBullets],
         ),
     )
+
     # table header
     tableHeader = html.tr(
         {},
@@ -249,6 +303,7 @@ def DashboardTab(data=None):
         html.th({"style": stockTableHeaderCell}, "Risk Level"),
         html.th({"style": stockTableHeaderCellRight}, ""),
     )
+
     # table rows
     rows = []
     for index, stock in enumerate(picks):
@@ -278,6 +333,7 @@ def DashboardTab(data=None):
                 ),
             )
         )
+
     # picks card
     picksCard = html.div(
         dashboardCard,
@@ -291,6 +347,7 @@ def DashboardTab(data=None):
             html.tbody({}, *rows),
         ),
     )
+
     # chart placeholder
     chartsCard = html.div(
         dashboardCard,
@@ -304,5 +361,6 @@ def DashboardTab(data=None):
         ),
         html.div({"style": chartsPlaceholderBox}, "Graph area placeholder"),
     )
+
     # stack everything
     return html.div({"style": dashboardStack}, header, summaryCard, picksCard, chartsCard)
