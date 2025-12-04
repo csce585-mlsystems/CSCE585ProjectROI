@@ -1,11 +1,4 @@
 # SimpleModel.py
-"""
-Goal:
-- take the engineered value-investing dataset that my partner built
-- pick a few simple features (P/B, P/E, NCAV)
-- train a basic logistic regression model to predict "Optimality"
-- save the trained model + scaler for later use in the app
-"""
 
 import os
 
@@ -20,7 +13,7 @@ import joblib
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# go up one level from ModelTraining → MLLifecycle → then into ModelDevelopment
+# go into ModelDevelopment
 DATA_PATH = os.path.join(
     BASE_DIR, "..", "ModelDevelopment", "preparedDataset.csv"
 )
@@ -35,7 +28,7 @@ SCALER_PATH = os.path.join(MODEL_DIR, "simple_scaler.joblib")
 
 def load_data():
     """
-    load the engineered dataset from CSV and do some basic sanity checks
+    load the engineered dataset from CSV
     """
     print(f"Loading data from: {DATA_PATH}")
     df = pd.read_csv(DATA_PATH)
@@ -43,8 +36,6 @@ def load_data():
     print("Columns in dataset:")
     print(df.columns)
 
-    # I’m assuming these columns exist based on partner’s pipeline.
-    # If the names are slightly different, I’ll just tweak them.
     needed_cols = ["P/B", "P/E", "NCAV", "Optimality"]
 
     for col in needed_cols:
@@ -58,7 +49,6 @@ def load_data():
     print(df[needed_cols].head())
 
     return df
-
 
 def build_features_and_labels(df: pd.DataFrame):
     """
@@ -120,19 +110,12 @@ def split_and_scale(X, y):
     return X_train_scaled, X_test_scaled, y_train, y_test, scaler
 
 def train_model(X_train, y_train):
-    """
-    train a basic logistic regression model as a simple baseline
-
-    this is intentionally simple and beginner-friendly:
-    - no neural nets here
-    - just a straightforward classifier on top of partner’s features
-    """
     model = LogisticRegression(
         max_iter=1000,
         multi_class="auto",
     )
 
-    print("Training Logistic Regression model...")
+    print("Training model...")
     model.fit(X_train, y_train)
     print("Done training.")
 
@@ -153,7 +136,6 @@ def evaluate_model(model, X_test, y_test):
 def save_artifacts(model, scaler):
     """
     save the trained model + scaler so they can be loaded later
-    by the web app or another script
     """
     joblib.dump(model, MODEL_PATH)
     joblib.dump(scaler, SCALER_PATH)
@@ -179,8 +161,6 @@ def main():
 
     print("\n=== STEP 6: Save model + scaler ===")
     save_artifacts(model, scaler)
-
-    print("\nAll done. This is my simple baseline training pipeline built on top of the engineered dataset.")
 
 if __name__ == "__main__":
     main()
