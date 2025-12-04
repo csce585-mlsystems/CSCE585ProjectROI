@@ -1,1 +1,14 @@
-//eventually replace with the p1 document
+For the P1 experimentation, the team developed two subsystems of the machine learning model for the purpose of retrieving real time stock data from Yahoo Finance and rating its ROI based on predefined financial metrics. Yahoo Finance is a library of interest because the team could easily import the financial data and easily transfer real time financial data in the model development, training and user interface of the web app. Tensor flow is the optimal framework for financial predictions because it performs the complex mathematical operations necessary to form connections between nodes of timeseries data.  TensorFlow is where the prediction logic arises because it draws relationships and patterns from the data which will help our user know which stocks to select. 
+	The machine learning model is a tensorflow sequential operation where it has a direct input and output stream of data. Sequential operations are essential for time series data; it takes advantage of the temporal order of data points to reveal trends, patterns and predict future values which align with the team's overall objective to curate ML supported stock predictions for our users. 
+	
+
+In the P1 experimentation, the team created a baseline benchmark for model prediction accuracy to ensure that the model is complied, trained and produces expected outputs. 
+of tuples which consists of P/B (Price to booking ratio), P/E (Price to earning ratio) and NCAV (Net Current Asset Value) compared to non-tuple parameters.  
+The team loads the preparedDataset.csv into the dense network which is trained and writes predictions into a CSV. For the training pipeline the X value is defined as a feature and y is the label. The dataset features and labels are split into training and test data. The trained data is converted into a binary vector representation of categorical data which is referred to as one hot label which is then fed into a keras object of neural network. The team sets up the hyperparameters which are the configurations of the model as batch size (training example) of 128, hidden units (number of neurons) of 256 and drop out rate (portion of neurons that are randomly deactivated) of 45%.              
+The experiment follows a model architecture of data input into a dense network transferred into a rectified linear unit which will experience a 45% dropout neuron rate then feed back into the dense layer and the  rectified linear unit. 
+The graphical results are listed below  
+
+
+
+
+The figures above show that there is numerical instability during the training process signifying that our loss function is not suited for scale of inputs and lack of feature normalization. This could also signal that our prediction accuracy is not precise and cannot extract any meaningful relationships. For future experimentation we will lower the dropout rate and increase the training size of data to get greater precision. 
