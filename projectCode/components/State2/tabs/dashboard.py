@@ -88,10 +88,11 @@ placeholderPicks = [
         "risk": "High",
     },
 ]
-def fillPicks(modelPrediction):
+def fillPicks(modelPrediction = None):
     # Goal: a) Obtain companies chosen by user, [NOTE: Within these steps, will need to figure out how to initiate data engineering pipeline process to create said model to obtain prediction ]b) Call model to make prediction, c) Obtain model's prediction, d) Process model's prediction for user consumption.  
     # Using if-else below to constrain amt of admissible predictions for demo purposes.
-    if(len(modelPrediction) > 4):
+    # if(modelPrediction == None and len(modelPrediction) > 4):
+    if(modelPrediction != None):
         """
         new_model = tf.keras.models.load_model('my_model.keras')
         predictions = new_model.predict()
@@ -123,22 +124,29 @@ def fillPicks(modelPrediction):
         tickerRealNameTable = {
         "AAPL": "Apple",
         "GOOG": "Google",
-        "AMZN": "Amazon"
+        "AMZN": "Amazon",
+        "MSFT": "Microsoft"
         }
         # ^^ Add more above later on!
-        filePathToModelPredFile = "" #<-- updating soon
-        dataFrameReffingModelPred = pd.DataFrame() or pd.read_csv(f"{filePathToModelPredFile}") #<-- will change soon to dataframe refrencing a dataframe referencing the test_stock data AND the model's predictions as columns!
-        for i in range(len(modelPrediction)):
+        local = True
+        writePathForModelPreds = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/ModelPredictions.csv" if local == True else "./ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
+        filePathToModelPredFile = writePathForModelPreds #<-- updating soon
+        dataFrameReffingModelPred = pd.read_csv(f"{filePathToModelPredFile}") #<-- will change soon to dataframe refrencing a dataframe referencing the test_stock data AND the model's predictions as columns!
+        # for i in range(len(modelPrediction)):
+        # NOTE: Below, instead of doing for, we will do three for demo purposes, hence why
+        # offset '-1' is present. 
+        for i in range(dataFrameReffingModelPred.shape[0] - 1):
             # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
-            placeholderPicks[i].company = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
-            placeholderPicks[i].ticker = dataFrameReffingModelPred.loc[i, "Company"]
-            placeholderPicks[i].score = dataFrameReffingModelPred.loc[i, "Optimality"]
+            placeholderPicks[i]["company"] = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
+            placeholderPicks[i]["ticker"] = dataFrameReffingModelPred.loc[i, "Company"]
+            placeholderPicks[i]["score"] = dataFrameReffingModelPred.loc[i, "Optimality"]
+        
         return
         # NOTE: May add something that grabs top 3 companies for any set of companies given.
         # NOTE: Nevertheles,s I believe this is all the code that is NEEDED. Currently
         # working towards writing file that will be read in by pd.read_csv call above. 
         # """
-
+fillPicks()
 # score bar for the Smart Score column
 def scoreBar(score):
     percent = max(0, min(score, 100))

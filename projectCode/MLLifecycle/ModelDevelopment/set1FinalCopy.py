@@ -11,7 +11,7 @@ from tensorflow.keras.layers import Dense, Activation, Dropout, Input
 from tensorflow.keras.utils import to_categorical, plot_model
 from tensorflow.keras.datasets import mnist
 # end of body of neccessary imports
-# Important Steps in Model Development: 1) Obtaining the training data, 2) Create the model containing initialized weights and a bais[which would be very involved with using numbers from certain columns], 3) Observe model's performance before training, 4) Defining a loss function for model, 5) Write a basic Training Loop
+# Important Steps in Model Development: 1) Obtaining the training data, 2) Create the model containing initialized weights and a bias[which would be very involved with using numbers from certain columns], 3) Observe model's performance before training, 4) Defining a loss function for model, 5) Write a basic Training Loop
 def attempt3():
     inNoteBook = False
     # Body of Neccessary Imports for Model Development.
@@ -103,7 +103,7 @@ def attempt3():
         return
     experimentSetup0()
     # experimentSetup1()
-    experimentSetup2()
+    # experimentSetup2()
     # This is the output for one-hot vector, being sent into the softmax activation function.
     model.add(Activation('softmax'))
     model.summary()
@@ -124,25 +124,42 @@ def attempt3():
     # 6) Evaluating Model
     acc = model.evaluate(x_test, y_test, batch_size=batch_size,verbose=0)
     print("\nTest accuracy: %.1f%%" % (100.0 * acc[1]))
+    
+    # Body of making copy of test_stocks to be used later
+    test_stocksCopy = test_stocks
+
+    # End of Body of making copy of test_stocks to be used later
+
     test_stocks["Company"] = test_stocks.index; test_stocks.loc[:,"Company"] = test_stocks.loc[:,"Company"].astype("int32")
     # 6) Verifying and Visualzing the Predictions
     # a) Obtaining accuarrcy of the predictions:
     WriteModelToAFile = True
     predictions = model.predict(x_test) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
     # Write code for writing model to a file here
+    local = True #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
     if(WriteModelToAFile):
+        # Goal: Make copy of test stocks, add predictions column referencing model's 
         print("---Writing Model to a file for future use---")
         print("---DEBUGGING CHECKPOINT: Writing Model to a file for future use---")
         pb.set_trace()
         
         copyTwoSendOff = test_stocks
-        copyTwoSendOff["Model Predictions"] = predictions
-        # Goal: Make copy of test stocks, add predictions column referencing model's 
+        # copyTwoSendOff["Model Predictions"] = predictions
+        # copyTwoSendOff.loc[:,"Model Predictions"] = predictions
+        # copyTwoSendOff.loc[:,"Model Predictions"] = pd.Series([np.argmax(x) for x in predictions])
+        copyTwoSendOff["Model Predictions"] = pd.Series([np.argmax(x) for x in predictions])
         # thoughts. 
+        copyTwoSendOff.loc[:, "Company"] = test_labels
+        # Body of modifying predictions to ensure that each prediction results in only ONE thing being chosen
+
+        
+        # End of Body of modifying predictions to ensure that each prediction results in only ONE thing being chosen
+        writePathForModelPreds = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/ModelPredictions.csv" if local == True else "" #<-- '""' Needs to refer to virtual environment. 
 
         
         
         
+        copyTwoSendOff.to_csv(f"{writePathForModelPreds}")
         print("---End of Writing Model to a file for future use---")
 
         
