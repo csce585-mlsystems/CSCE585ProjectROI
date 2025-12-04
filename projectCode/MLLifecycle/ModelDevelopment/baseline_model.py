@@ -65,7 +65,7 @@ def attempt3():
 
     model = Sequential()
 
-    # ---------------- experiment setup helpers ---------------- #
+    # experiment setup helpers
 
     def experimentSetup0():
         """
