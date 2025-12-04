@@ -324,6 +324,7 @@ def DashboardTab(data=None):
         ),
     )
     # chart placeholder
+    replacingPlaceholder = False
     chartsCard = html.div(
         dashboardCard,
         html.div(
@@ -334,8 +335,7 @@ def DashboardTab(data=None):
                 "Charts & ML explanations eventually",
             ),
         ),
-        # html.div({"style": chartsPlaceholderBox}, "Graph area placeholder"),
-        html.div({"style": chartsPlaceholderBox}, 
+        html.div({"style": chartsPlaceholderBox}, "Graph area placeholder") if replacingPlaceholder == False else  html.div({"style": chartsPlaceholderBox}, 
                  html.img({"src": "C:/users/adoct/downloads/picture.jpg" })),
     )
     # stack everything
