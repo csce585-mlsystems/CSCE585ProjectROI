@@ -59,7 +59,6 @@ Note: This has no impact on your grade as long as you properly follow the proced
 For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package manager instead of `pip`. Your repo must include both the `uv.lock` and `pyproject.toml` files.  
 
 ## Directory Structure  
-Example:  
 ```
 .
 ├── README.md
