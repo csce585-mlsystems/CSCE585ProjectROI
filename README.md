@@ -126,7 +126,8 @@ For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package ma
 
 ## How to Run  
 - Include all instructions (`commands`, `scripts`, etc.) needed to run your code.  
-- Provide all other details a computer science student would need to reproduce your results.  
+- Provide all other details a computer science student would need to reproduce your results.
+- Some exploratory plots in the notebooks use matplotlib, which may require additional system level setup on macOS with Python 3.13. The core application and ML pipeline run without it.
 
 Example:  
 - Install uv & activate environment (MAC)
@@ -146,6 +147,11 @@ Example:
 - To run the app:  
   ```bash
   python run.py
+  ```
+
+- The results:  
+  ```bash
+  python results.py
   ```
   
 - To reproduce ML experiment notebooks:  
