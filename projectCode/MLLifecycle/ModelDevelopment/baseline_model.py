@@ -19,7 +19,7 @@ def attempt3():
     - build a dense network
     - train it and write predictions to a CSV
     """
-    inNoteBook = False
+    inNoteBook = True  # <- run in local repo folder so we use preparedDataset.csv
 
     # path to the CSV that has the engineered stock features
     filePathToModelDir = (
@@ -224,8 +224,7 @@ def attempt3():
         copyTwoSendOff.loc[:, "Company"] = test_labels
 
         writePathForModelPreds = (
-            "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/"
-            "ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/ModelPredictions.csv"
+            "ModelPredictions.csv"  # write next to this script instead of Windows path
             if local
             else ""
         )
