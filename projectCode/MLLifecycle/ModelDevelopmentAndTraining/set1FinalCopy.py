@@ -1,5 +1,6 @@
 # Purpose: This file will contain code that helps with Model Development.
 # Body of neccessary imports
+import os
 import tensorflow as tf
 import matplotlib
 from matplotlib import pyplot as plt
@@ -23,9 +24,9 @@ def attempt3():
     # End of Body of Neccessary Imports for Model Development.
     # NOTE: Below is used to modify network parameters using experiment setup func(s).
     global x_train; global x_test
-    demo = False
-    parentDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585" if demo == False else "."
-    filePathToModelDir = f"{parentDir}/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    demo = True
+    parentDir = "C:/Users/adoct/Notes for CSCE Classes\\[Fall 2025\\]/Notes for CSCE 585/projectCode" if demo == False else os.getcwd().replace("\\","/")
+    filePathToModelDir = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
     train_stocks = pd.read_csv(f"{filePathToModelDir}"); train_labels = test_labels = train_stocks.loc[:,"Company"] #<-- References labels which are derived from custom engineered dataset.
     del train_stocks["Unnamed: 0"]
     test_stocks = pd.read_csv(f"{filePathToModelDir}"); test_labels = train_stocks.loc[:,"Company"] #<-- References labels which are derived from custom engineered dataset.
@@ -163,9 +164,9 @@ def attempt3():
         copyTwoSendOff.loc[:, "Company"] = test_labels
 
         
-        demo = False
-        parentDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585" if demo == False else "."
-        writePathForModelPreds = f"{parentDir}/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "" #<-- '""' Needs to refer to virtual environment. 
+        demo = True
+        parentDir = "C:/Users/adoct/Notes for CSCE Classes\\[Fall 2025\\]/Notes for CSCE 585/projectCode" if demo == False else os.getcwd().replace("\\","/")
+        writePathForModelPreds = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "" #<-- '""' Needs to refer to virtual environment. 
 
         
         
@@ -286,9 +287,9 @@ def ModelTrainingAndDevelopment():
     # End of Body of Neccessary Imports for Model Development.
     # NOTE: Below is used to modify network parameters using experiment setup func(s).
     global x_train; global x_test
-    demo = False
-    parentDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585" if demo == False else "."
-    filePathToModelDir = f"{parentDir}/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    demo = True
+    parentDir = "C:/Users/adoct/Notes for CSCE Classes\\[Fall 2025\\]/Notes for CSCE 585/projectCode" if demo == False else os.getcwd().replace("\\","/")
+    filePathToModelDir = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
     train_stocks = pd.read_csv(f"{filePathToModelDir}"); train_labels = test_labels = train_stocks.loc[:,"Company"] #<-- References labels which are derived from custom engineered dataset.
     del train_stocks["Unnamed: 0"]
     test_stocks = pd.read_csv(f"{filePathToModelDir}"); test_labels = train_stocks.loc[:,"Company"] #<-- References labels which are derived from custom engineered dataset.
