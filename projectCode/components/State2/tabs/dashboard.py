@@ -65,6 +65,8 @@ from constants import (
 
 
 # End of Body of function that automatically fills in contents of placeHolderPicks using contents derived from model's output: 
+# placeholderPicks[i]["company"] = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
+
 placeholderPicks = [
     {
         "company": "Stock 1",
@@ -88,6 +90,37 @@ placeholderPicks = [
         "risk": "High",
     },
 ]
+placeholderPicks = [{"tags": ["Tag A", "Tag B"],
+        "risk": "High",}
+                    ,{"tags": ["Tag A", "Tag B"],
+        "risk": "Medium",},
+                    {"tags": ["Tag A", "Tag B"],
+        "risk": "Low",}]
+tickerRealNameTable = {
+        "AAPL": "Apple",
+        "GOOG": "Google",
+        "AMZN": "Amazon",
+        "MSFT": "Microsoft",
+        "META": "Meta Platforms",
+        "NVDA": "Nvidia Corporation",
+        "TSLA": "Tesla, Inc",
+        "BRK-B": "Berkshire Hathway Inc",
+        "JPM": "JPMorgan Chase & Co",
+        "V": "Visa Inc",
+        "MA": "Mastercard Incorporated",
+        "HD": "The Home Depot",
+        "NFLX": "Netflix, Inc",
+        "DIS": "The Walt Disney Company",
+        "PEP": "PepsiCo, Inc",
+        "KO": "The Coca-Cola Company",
+        "XOM": "Exxon Mobil Corporation",
+        "CVX": "Chevron Corporation",
+        "ADBE": "Adobe Inc",
+        "CSCO": "Cisco Systems, Inc"
+        }
+addingExtraTickers = False
+if (addingExtraTickers == True):
+    placeholderPicks.append([(dict() for i in range(len(tickerRealNameTable)))]) #<-- Used to allocate space for all picks
 def fillPicks(modelPrediction = None):
     # Goal: a) Obtain companies chosen by user, [NOTE: Within these steps, will need to figure out how to initiate data engineering pipeline process to create said model to obtain prediction ]b) Call model to make prediction, c) Obtain model's prediction, d) Process model's prediction for user consumption.  
     # Using if-else below to constrain amt of admissible predictions for demo purposes.
@@ -121,26 +154,24 @@ def fillPicks(modelPrediction = None):
         """
     else:
         # """
-        tickerRealNameTable = {
-        "AAPL": "Apple",
-        "GOOG": "Google",
-        "AMZN": "Amazon",
-        "MSFT": "Microsoft"
-        }
-        # ^^ Add more above later on!
+        global tickerRealNameTable
+                # ^^ Add more above later on!
         local = True
-        writePathForModelPreds = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/ModelPredictions.csv" if local == True else "./ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
+        writePathForModelPreds = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "./ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
         filePathToModelPredFile = writePathForModelPreds #<-- updating soon
         dataFrameReffingModelPred = pd.read_csv(f"{filePathToModelPredFile}") #<-- will change soon to dataframe refrencing a dataframe referencing the test_stock data AND the model's predictions as columns!
-        # for i in range(len(modelPrediction)):
-        # NOTE: Below, instead of doing for, we will do three for demo purposes, hence why
+        # NOTE: Be\, instead of doing for, we will do three for demo purposes, hence why
         # offset '-1' is present. 
         isOrderOfTickerTablePrecedence = False
-        for i in range((dataFrameReffingModelPred.shape[0] - 1) if isOrderOfTickerTablePrecedence else len(tickerRealNameTable)):
+        # print("---DEBUGGING CHECKPOINT: VALIDATING PROCESSES--")
+        # pb.set_trace()
+        for i in range((dataFrameReffingModelPred.shape[0] - 1) if not isOrderOfTickerTablePrecedence else len(tickerRealNameTable)):
             # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
             placeholderPicks[i]["company"] = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
             placeholderPicks[i]["ticker"] = dataFrameReffingModelPred.loc[i, "Company"]
             placeholderPicks[i]["score"] = dataFrameReffingModelPred.loc[i, "Optimality"]
+            placeholderPicks[i]["tags"][0] = f"Price to Earnings Ratio: {dataFrameReffingModelPred.loc[i, "P/E"]}"
+            placeholderPicks[i]["tags"][1] = f"Share Price: {dataFrameReffingModelPred.loc[i, "Share Price"]}"
         
         return
         # NOTE: May add something that grabs top 3 companies for any set of companies given.
@@ -303,7 +334,9 @@ def DashboardTab(data=None):
                 "Charts & ML explanations eventually",
             ),
         ),
-        html.div({"style": chartsPlaceholderBox}, "Graph area placeholder"),
+        # html.div({"style": chartsPlaceholderBox}, "Graph area placeholder"),
+        html.div({"style": chartsPlaceholderBox}, 
+                 html.img({"src": "C:/users/adoct/downloads/picture.jpg" })),
     )
     # stack everything
     return html.div({"style": dashboardStack}, header, summaryCard, picksCard, chartsCard)
