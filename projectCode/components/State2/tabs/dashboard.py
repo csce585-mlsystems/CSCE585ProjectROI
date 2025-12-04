@@ -135,7 +135,8 @@ def fillPicks(modelPrediction = None):
         # for i in range(len(modelPrediction)):
         # NOTE: Below, instead of doing for, we will do three for demo purposes, hence why
         # offset '-1' is present. 
-        for i in range(dataFrameReffingModelPred.shape[0] - 1):
+        isOrderOfTickerTablePrecedence = False
+        for i in range((dataFrameReffingModelPred.shape[0] - 1) if isOrderOfTickerTablePrecedence else len(tickerRealNameTable)):
             # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
             placeholderPicks[i]["company"] = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
             placeholderPicks[i]["ticker"] = dataFrameReffingModelPred.loc[i, "Company"]
