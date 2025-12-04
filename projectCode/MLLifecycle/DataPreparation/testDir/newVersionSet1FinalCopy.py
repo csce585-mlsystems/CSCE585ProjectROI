@@ -239,8 +239,12 @@ def main(companies: list[str] = []):
     # print("---DEBUGGING CHECKPOINT #1: Investigating companySeries value---")
     # pb.set_trace()
     if len(companies) == 0:
-        companies: list[str] = ["GOOG","AAPL", "AMZN", "MSFT"] 
-    
+        companies: list[str] = [
+            "GOOG","AAPL","AMZN","MSFT",
+            "META","NVDA","TSLA","BRK-B","JPM",
+            "V","MA","HD","NFLX","DIS",
+            "PEP","KO","XOM","CVX","ADBE","CSCO"
+        ]
     listOfSeriesToCreateDataFrame = []
     for i in range(len(companies)):
         print(f"----Adding company {companies[i]} to engineered dataset----")
@@ -267,8 +271,8 @@ def main(companies: list[str] = []):
     del resultantDataFrame['index']
     print(resultantDataFrame) #<-- THis dataframe will reference the dataframe that adheres to the follwowing object:
     # company(CompanyName, "P/B", "P/E", "NCAV", "Date For Eval", "Optimality", (cont here if applicable))[NOTE: Will be wise to make a Entity via ERDs for documentation when writing paper at end]
-    inNoteBook = False
-    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    inNoteBook = True
+    filePathToModelDir = "preparedDataset.csv"
     # Body of handling edge case where all of them are same optimality
     resultantDataFrame.to_csv(f"{filePathToModelDir}")
     if((resultantDataFrame["Optimality"] == 0).all() == True):
@@ -285,8 +289,13 @@ def dataPrepDeriv(companies: list[str] = []):
     # print("---DEBUGGING CHECKPOINT #1: Investigating companySeries value---")
     # pb.set_trace()
     if len(companies) == 0:
-        companies: list[str] = ["GOOG","AAPL", "AMZN", "MSFT"] 
-    
+        companies: list[str] = [
+            "GOOG","AAPL","AMZN","MSFT",
+            "META","NVDA","TSLA","BRK-B","JPM",
+            "V","MA","HD","NFLX","DIS",
+            "PEP","KO","XOM","CVX","ADBE","CSCO"
+        ]
+
     listOfSeriesToCreateDataFrame = []
     for i in range(len(companies)):
         print(f"----Adding company {companies[i]} to engineered dataset----")
@@ -313,8 +322,8 @@ def dataPrepDeriv(companies: list[str] = []):
     del resultantDataFrame['index']
     print(resultantDataFrame) #<-- THis dataframe will reference the dataframe that adheres to the follwowing object:
     # company(CompanyName, "P/B", "P/E", "NCAV", "Date For Eval", "Optimality", (cont here if applicable))[NOTE: Will be wise to make a Entity via ERDs for documentation when writing paper at end]
-    inNoteBook = False
-    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    inNoteBook = True
+    filePathToModelDir = "preparedDataset.csv"
     # Body of handling edge case where all of them are same optimality
     resultantDataFrame.to_csv(f"{filePathToModelDir}")
     if((resultantDataFrame["Optimality"] == 0).all() == True):
