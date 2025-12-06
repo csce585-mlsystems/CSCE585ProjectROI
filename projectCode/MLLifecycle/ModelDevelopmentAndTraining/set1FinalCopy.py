@@ -257,7 +257,9 @@ def attempt3():
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    integrationMode = True
+    if(not integrationMode):
+        plt.show()
 
     plt.savefig("ModelAccuracyPlot#1.png")
     ## summarize history for loss
@@ -266,7 +268,9 @@ def attempt3():
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    integrationMode = True
+    if(not integrationMode):
+        plt.show()
 
     plt.savefig("ModelLossPlot#1.jpg")
     # End of Body of plotting model
@@ -406,7 +410,9 @@ def ModelTrainingAndDevelopment():
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    integrationMode = True
+    if(not integrationMode):
+        plt.show()
 
     # plt.savefig("ModelAccuracy#1.png") <-- commented this out until embedded pipeline is established
     ## summarize history for loss
@@ -415,7 +421,9 @@ def ModelTrainingAndDevelopment():
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    integrationMode = True
+    if(not integrationMode):
+        plt.show()
 
     # plt.savefig("ModelAccuracy#1.png") <-- commented this out until embedded pipeline is established
     # End of Body of plotting model

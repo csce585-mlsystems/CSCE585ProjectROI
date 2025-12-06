@@ -175,13 +175,16 @@ def fillPicks(modelPrediction = None):
         # NOTE: Be\, instead of doing for, we will do three for demo purposes, hence why
         # offset '-1' is present. 
         isOrderOfTickerTablePrecedence = True
-        print("---DEBUGGING CHECKPOINT: Checking if tickerRealName table value---")
-        pb.set_trace()
         # tickerRealNameTable = [x for x in tickerRealNameTable if list(x.keys()) in tickerRealNameTable.keys() and list(x.keys()) in dataFrameReffingModelPred["Company"] ]
         # tickerRealNameTable = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"] ]
         currentTickers = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"].values.tolist() ]
         
-        placeholderPicks = [{"tags": []} for i in range(len(currentTickers))]
+        placeholderPicks = [{"tags": ["Tag A", "Tag B"], "risk": ""} for i in range(len(currentTickers))]
+        placeholderPicks[0]["risk"] = "high"
+        placeholderPicks[1]["risk"] = "medium"
+        placeholderPicks[2]["risk"] = "low"
+        print("---DEBUGGING CHECKPOINT: Checking if tickerRealName table value---")
+        pb.set_trace()
         for i in range((dataFrameReffingModelPred.shape[0] - 1) if not isOrderOfTickerTablePrecedence else len(currentTickers)):
             # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
             placeholderPicks[i]["company"] = currentTickers[i]
