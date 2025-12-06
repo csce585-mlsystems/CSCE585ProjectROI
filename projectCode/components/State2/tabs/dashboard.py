@@ -1,6 +1,6 @@
 
 # Body of imports required for loading and using model
-import tensorflow as tf
+# import tensorflow as tf
 import matplotlib
 from matplotlib import pyplot as plt
 import pandas as pd
@@ -11,7 +11,10 @@ import pdb as pb
 # from tensorflow.keras.layers import Dense, Activation, Dropout, Input
 # from tensorflow.keras.utils import to_categorical, plot_model
 # from tensorflow.keras.datasets import mnist
-import tensorflow.keras
+# import tensorflow.keras
+from ....MLLifecycle import script as SCR
+# C:\Users\adoct\Notes for CSCE Classes[Fall 2025]\Notes for CSCE 585\ProjectRepo\projectCode\components\State2\tabs\dashboard.py
+# C:\Users\adoct\Notes for CSCE Classes[Fall 2025]\Notes for CSCE 585\ProjectRepo\projectCode\MLLifecycle\script.py
 
 # NOTE: May or may not need all these imports, BUT they are here just in case!
 
@@ -154,6 +157,13 @@ def fillPicks(modelPrediction = None):
         """
     else:
         # """
+        testingScript = False
+        if testingScript == True:
+            # Body of script.py
+            companies: list[str] = ["GOOG","AAPL", "AMZN", "MSFT"] #<-- will need to reference stocks desired by users. Can populate here though. 
+            
+            # End of script.py which is responsible for running model in background
+        # At this point, model's results are pulled from the dataframe mentioned below. 
         global tickerRealNameTable
                 # ^^ Add more above later on!
         local = True
@@ -164,12 +174,17 @@ def fillPicks(modelPrediction = None):
         dataFrameReffingModelPred = pd.read_csv(f"{filePathToModelPredFile}") #<-- will change soon to dataframe refrencing a dataframe referencing the test_stock data AND the model's predictions as columns!
         # NOTE: Be\, instead of doing for, we will do three for demo purposes, hence why
         # offset '-1' is present. 
-        isOrderOfTickerTablePrecedence = False
-        # print("---DEBUGGING CHECKPOINT: VALIDATING PROCESSES--")
-        # pb.set_trace()
-        for i in range((dataFrameReffingModelPred.shape[0] - 1) if not isOrderOfTickerTablePrecedence else len(tickerRealNameTable)):
+        isOrderOfTickerTablePrecedence = True
+        print("---DEBUGGING CHECKPOINT: Checking if tickerRealName table value---")
+        pb.set_trace()
+        # tickerRealNameTable = [x for x in tickerRealNameTable if list(x.keys()) in tickerRealNameTable.keys() and list(x.keys()) in dataFrameReffingModelPred["Company"] ]
+        # tickerRealNameTable = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"] ]
+        currentTickers = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"].values.tolist() ]
+        
+        placeholderPicks = [{"tags": []} for i in range(len(currentTickers))]
+        for i in range((dataFrameReffingModelPred.shape[0] - 1) if not isOrderOfTickerTablePrecedence else len(currentTickers)):
             # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
-            placeholderPicks[i]["company"] = tickerRealNameTable[dataFrameReffingModelPred.loc[i,"Company"]]
+            placeholderPicks[i]["company"] = currentTickers[i]
             placeholderPicks[i]["ticker"] = dataFrameReffingModelPred.loc[i, "Company"]
             placeholderPicks[i]["score"] = dataFrameReffingModelPred.loc[i, "Optimality"]
             placeholderPicks[i]["tags"][0] = f"Price to Earnings Ratio: {dataFrameReffingModelPred.loc[i, "P/E"]}"

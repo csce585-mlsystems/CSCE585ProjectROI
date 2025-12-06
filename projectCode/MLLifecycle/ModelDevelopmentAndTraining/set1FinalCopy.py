@@ -275,7 +275,7 @@ def attempt3():
     # Body of saving model to a file to be used later
     # End of Body of saving model to a file to be used later
     # end of 6)
-attempt3()
+# attempt3()
 def ModelTrainingAndDevelopment():
     inNoteBook = False
     # Body of Neccessary Imports for Model Development.
@@ -408,7 +408,7 @@ def ModelTrainingAndDevelopment():
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
 
-    plt.savefig()
+    # plt.savefig("ModelAccuracy#1.png") <-- commented this out until embedded pipeline is established
     ## summarize history for loss
     plt.plot(train_history.history['loss'])
     plt.title('model loss')
@@ -417,7 +417,7 @@ def ModelTrainingAndDevelopment():
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
 
-    plt.savefig()
+    # plt.savefig("ModelAccuracy#1.png") <-- commented this out until embedded pipeline is established
     # End of Body of plotting model
     # b) Printing Model Summary, which can be good to go into detail about:
     model.summary()

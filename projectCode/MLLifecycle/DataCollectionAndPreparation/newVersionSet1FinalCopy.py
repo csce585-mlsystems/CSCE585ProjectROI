@@ -18,7 +18,7 @@ class subsys1:
     def __init__(self,param1 = """Insert any params that may be sufficient here!"""):
         print("---Subsystem 1 in Progress---")
     # component a) [mapping formulas using dep vars and indep vars]
-    def compA(self,company):
+    def compA(self,company, customDateDelta = None):
         PRatioBug = True
         print("--Component a[Subsystem 1] in progress--")
         global arrOfDataFramesNeeded
@@ -34,7 +34,12 @@ class subsys1:
         companyAlias = company
         ticker = yf.Ticker(f"{companyAlias}")
         global end_date #<-- Setting global so end_date can be accessed.
-        start_date: datetime = datetime.today() - timedelta(days=10) ; end_date = datetime.today()
+        customPull = True if customDateDelta != None else False 
+        # NOTE: Make sure, customDateDelta is measured in DAYS not YEARS!
+        if(customPull == False):
+            start_date: datetime = datetime.today() - timedelta(days=10) ; end_date = datetime.today()
+        else:
+            start_date: datetime = datetime.today() - timedelta(days=customDateDelta) ; end_date = datetime.today()
         #^^ Setting start_date and end_date as arbitrary value relative to current day and current day respectively.
         yearsRelToDateInQ: datetime =  start_date - timedelta(days=5*365)
         start_date = start_date.date().isoformat()
@@ -220,8 +225,8 @@ class subsys2:
         global retreivedDataFrames
         retreivedDataFrames = [dataFrameReffingCompanyData,dataFrameReffingCompanyData] or pd.DataFrame()
         # Body of writing resp dataframes to files[need to use to_csv I believe]
-        filePathToTrainingSetDir: str = "MLLifecycle/ModelDevelopment/TrainingSets"
-        filePathToTestSetDir: str = "MLLifecycle/ModelDevelopment/TestingSets"
+        filePathToTrainingSetDir: str = "MLLifecycle/ModelDevelopmentAndTraining/TrainingSets"
+        filePathToTestSetDir: str = "MLLifecycle/ModelDevelopmentAndTraining/TestingSets"
         print("--End of Component b[Subsystem 2]--")
         print("Entering Debuging Mode for Checkpoint #3")
         # CHECKPOINT #3: At this point, dataframes will be written to the neccessary files to be ingested by the Model.
@@ -234,7 +239,7 @@ class subsys2:
         return #<-- Testing version of return statement[anything above this return statement is sucessful and everything below hasn't been tested yet. THis is relative to each function]
     # end of component b)
 
-def main(companies: list[str] = []):
+def main(companies: list[str] = [], desiredDateToPullInvestment = None):
     print("---Starting Data Prep Process---")
     # print("---DEBUGGING CHECKPOINT #1: Investigating companySeries value---")
     # pb.set_trace()
@@ -249,8 +254,12 @@ def main(companies: list[str] = []):
         print("---Starting Subsystem 1---")
         # Call function referencing topmost subsystem #1 here:
         a: str = ""; b: str = ""
-        subsys1().compA(company=companies[i])
-        subsys2().compA(param1=companies[i])
+        if desiredDateToPullInvestment == None:
+            subsys1().compA(company=companies[i])
+            subsys2().compA(param1=companies[i])
+        else:
+            subsys1().compA(company=companies[i],customDateDelta=desiredDateToPullInvestment)
+            subsys2().compA(param1=companies[i])
         retSeries = True
         if retSeries:
             # ^^ NOTE: Above is returning a series each time[at least this is the assumption]
@@ -268,7 +277,7 @@ def main(companies: list[str] = []):
     print(resultantDataFrame) #<-- THis dataframe will reference the dataframe that adheres to the follwowing object:
     # company(CompanyName, "P/B", "P/E", "NCAV", "Date For Eval", "Optimality", (cont here if applicable))[NOTE: Will be wise to make a Entity via ERDs for documentation when writing paper at end]
     inNoteBook = False
-    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
     # Body of handling edge case where all of them are same optimality
     resultantDataFrame.to_csv(f"{filePathToModelDir}")
     if((resultantDataFrame["Optimality"] == 0).all() == True):
@@ -279,8 +288,7 @@ def main(companies: list[str] = []):
         # End of Setting optimality column to be based on alphabetical ordering
         resultantDataFrame.to_csv(f"{filePathToModelDir}")
     # End of Body of handling edge case where all of them are same optimality
-main()
-def dataPrepDeriv(companies: list[str] = []):
+def dataPrepDeriv(companies: list[str] = [], desiredDateToPullInvestment = None):
     print("---Starting Data Prep Process---")
     # print("---DEBUGGING CHECKPOINT #1: Investigating companySeries value---")
     # pb.set_trace()
@@ -295,8 +303,12 @@ def dataPrepDeriv(companies: list[str] = []):
         print("---Starting Subsystem 1---")
         # Call function referencing topmost subsystem #1 here:
         a: str = ""; b: str = ""
-        subsys1().compA(company=companies[i])
-        subsys2().compA(param1=companies[i])
+        if desiredDateToPullInvestment == None:
+            subsys1().compA(company=companies[i])
+            subsys2().compA(param1=companies[i])
+        else:
+            subsys1().compA(company=companies[i],customDateDelta=desiredDateToPullInvestment)
+            subsys2().compA(param1=companies[i])
         retSeries = True
         if retSeries:
             # ^^ NOTE: Above is returning a series each time[at least this is the assumption]
@@ -314,7 +326,7 @@ def dataPrepDeriv(companies: list[str] = []):
     print(resultantDataFrame) #<-- THis dataframe will reference the dataframe that adheres to the follwowing object:
     # company(CompanyName, "P/B", "P/E", "NCAV", "Date For Eval", "Optimality", (cont here if applicable))[NOTE: Will be wise to make a Entity via ERDs for documentation when writing paper at end]
     inNoteBook = False
-    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopment/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
     # Body of handling edge case where all of them are same optimality
     resultantDataFrame.to_csv(f"{filePathToModelDir}")
     if((resultantDataFrame["Optimality"] == 0).all() == True):
