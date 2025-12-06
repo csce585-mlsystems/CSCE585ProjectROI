@@ -192,8 +192,8 @@ def fillPicks(modelPrediction = None):
             placeholderPicks[i]["tags"][0] = f"Price to Earnings Ratio: {dataFrameReffingModelPred.loc[i, "P/E"]}"
             placeholderPicks[i]["tags"][1] = f"Share Price: {dataFrameReffingModelPred.loc[i, "Share Price"]}"
         
-        print("---DEBUGGING CHECKPOINT: Checking value of placeholderPicks---")
-        pb.set_trace() #<-- NOTE: Works as intended
+        # print("---DEBUGGING CHECKPOINT: Checking value of placeholderPicks---")
+        # pb.set_trace() #<-- NOTE: Works as intended
         return
         # NOTE: May add something that grabs top 3 companies for any set of companies given.
         # NOTE: Nevertheles,s I believe this is all the code that is NEEDED. Currently
@@ -308,8 +308,8 @@ def DashboardTab(data=None):
     Version1 = False
     if Version1 == True:
         for index, stock in enumerate(picks):
-            print("---DEBUGGING CHECKPOINT: Checking if display works properly with result---")
-            pb.set_trace() #<-- NOTE: Works as intended
+            # print("---DEBUGGING CHECKPOINT: Checking if display works properly with result---")
+            # pb.set_trace() #<-- NOTE: Works as intended
             rows.append(
                 html.tr(
                     {"key": f"stock{index}", "style": stockTableRow},
@@ -338,8 +338,8 @@ def DashboardTab(data=None):
             )
     else:
         for index, stock in enumerate(picks):
-            print("---DEBUGGING CHECKPOINT: Checking if display works properly with result---")
-            pb.set_trace() #<-- NOTE: Works as intended
+            # print("---DEBUGGING CHECKPOINT: Checking if display works properly with result---")
+            # pb.set_trace() #<-- NOTE: Works as intended
             rows.append(
                 html.tr(
                     {"key": f"stock{index}", "style": stockTableRow},

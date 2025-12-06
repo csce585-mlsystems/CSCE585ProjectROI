@@ -12,6 +12,11 @@ from tensorflow.keras.layers import Dense, Activation, Dropout, Input
 from tensorflow.keras.utils import to_categorical, plot_model
 from tensorflow.keras.datasets import mnist
 # end of body of neccessary imports
+# Body of setting up paths for saving models"
+current_dir = os.path.dirname(__file__)
+
+# End of Body of setting up paths for saving models
+# NOTE: For function, will need to have an array of bools that reference the modes that dictate which plot number to assign to prints.
 # Important Steps in Model Development: 1) Obtaining the training data, 2) Create the model containing initialized weights and a bias[which would be very involved with using numbers from certain columns], 3) Observe model's performance before training, 4) Defining a loss function for model, 5) Write a basic Training Loop
 def attempt3():
     inNoteBook = False
@@ -261,7 +266,23 @@ def attempt3():
     if(not integrationMode):
         plt.show()
 
-    plt.savefig("ModelAccuracyPlot#1.png")
+    # plt.savefig("./ModelAccuracyPlot#1.png")
+    # plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1.png")
+    # print("--DEBUGGING CHECKPOINT: Investigating why plot doesn't save")
+    # pb.set_trace() <-- Works as intended.
+    # plt.savefig("../../../plots/ModelAccuracyPlot#1.png")
+    plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1.png")
+    # NOTE: Will replace True with booleans that will live at top of file
+    taskDesc = ["Baseline Performance","Experiment #1 Pictures","Experiment #2 Pictures","Experiment #3 Pictures"]
+    if(True):
+        print("---PRINTING THINGS FOR TASK {taskDesc[0]}")
+    elif(True):
+        print("---PRINTING THINGS FOR TASK {taskDesc[1]}")
+    elif(True):
+        print("---PRINTING THINGS FOR TASK {taskDesc[2]}")
+    else:
+        print("---PRINTING THINGS FOR TASK {taskDesc[3]}")
+    # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
     ## summarize history for loss
     plt.plot(train_history.history['loss'])
     plt.title('model loss')
@@ -272,14 +293,17 @@ def attempt3():
     if(not integrationMode):
         plt.show()
 
-    plt.savefig("ModelLossPlot#1.jpg")
+    # plt.savefig("./ModelLossPlot#1.jpg")
+    # plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    # plt.savefig("../../plots/ModelLossPlot#1.jpg")
+    plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
     # End of Body of plotting model
     # b) Printing Model Summary, which can be good to go into detail about:
     model.summary()
     # Body of saving model to a file to be used later
     # End of Body of saving model to a file to be used later
     # end of 6)
-# attempt3()
 def ModelTrainingAndDevelopment():
     inNoteBook = False
     # Body of Neccessary Imports for Model Development.
@@ -394,14 +418,128 @@ def ModelTrainingAndDevelopment():
     # 6) Evaluating Model
     acc = model.evaluate(x_test, y_test, batch_size=batch_size,verbose=0)
     print("\nTest accuracy: %.1f%%" % (100.0 * acc[1]))
+    
+    # Body of making copy of test_stocks to be used later
+    test_stocksCopy = test_stocks
+
+    # End of Body of making copy of test_stocks to be used later
+
     test_stocks["Company"] = test_stocks.index; test_stocks.loc[:,"Company"] = test_stocks.loc[:,"Company"].astype("int32")
     # 6) Verifying and Visualzing the Predictions
     # a) Obtaining accuarrcy of the predictions:
+    WriteModelToAFile = True
     predictions = model.predict(x_test) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
-    predictions[0]
-    # print("---DEBUGGING CHECKPOINT: Improving Predictions Algorithm---")
-    # pb.set_trace()    
+    # Write code for writing model to a file here
+    local = True #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
+    ImprovedAlgo = True
+    if(WriteModelToAFile):
+        # Goal: Make copy of test stocks, add predictions column referencing model's 
+        print("---Writing Model to a file for future use---")
+        # print("---DEBUGGING CHECKPOINT: Writing Model to a file for future use---")
+        # pb.set_trace() #<-- Works as intended
+        
+        copyTwoSendOff = test_stocks
+        # copyTwoSendOff["Model Predictions"] = predictions
+        # copyTwoSendOff.loc[:,"Model Predictions"] = predictions
+        # copyTwoSendOff.loc[:,"Model Predictions"] = pd.Series([np.argmax(x) for x in predictions])
+        # Body of modifying predictions to ensure that each prediction results in only ONE thing being chosen
+        # Attempt #1[closest I've gotten]
+        list_a = test_stocks["Optimality"].tolist()
+        list_b = [np.argsort(predictions[i])[-1] for i in range(len(predictions)) if i < len(predictions) - 1 and np.argsort(predictions[i][-1]) in np.argsort(predictions[i+1][-1])]
+        list_b = [x.item() for x in list_b]
+        missing_element = set(list_a).difference(set(list_b)) #<-- equal to list_a \cap (list_b)^c . 
+        copyTwoSendOff["Model Predictions"] = pd.Series([np.argmax(x) for x in predictions]) if ImprovedAlgo == False else pd.Series([*list_b,missing_element.pop()]) 
+        # thoughts. 
+        # End of Attempt #1
+        # End of Body of modifying predictions to ensure that each prediction results in only ONE thing being chosen
+        copyTwoSendOff.loc[:, "Company"] = test_labels
 
+        
+        demo = True
+        parentDir = "C:/Users/adoct/Notes for CSCE Classes\\[Fall 2025\\]/Notes for CSCE 585/projectCode" if demo == False else os.getcwd().replace("\\","/")
+        writePathForModelPreds = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "" #<-- '""' Needs to refer to virtual environment. 
+
+        
+        
+        
+        copyTwoSendOff.to_csv(f"{writePathForModelPreds}")
+        print("---End of Writing Model to a file for future use---")
+
+        
+        
+        
+        # End of writing code for writing model to a file here
+    predictions[0]
+
+    # print("---DEBUGGING CHECKPOINT: Improving Predictions Algorithm---") #<-- works as intended
+    # pb.set_trace()
+    """
+    # NOTE: Below will reference ways to transform predictions into string format to be able to utilzied for user consumption[DISREGARD #1: Only applicable to model integration into app]
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([predictions[0]])]["Company"].values[0])
+    print("----")
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[1] if predictions[1].tolist().index(x) != np.argmax([predictions[0]])])]["Company"].values[0])
+    print("----")
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[2] if predictions[2].tolist().index(x) != np.argmax([predictions[0]]) and predictions[2].tolist().index(x) != np.argmax([predictions[1]])])]["Company"].values[0])
+    print("----")
+    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[3] if predictions[3].tolist().index(x) != np.argmax([predictions[0]]) and predictions[3].tolist().index(x) != np.argmax([predictions[1]]) and predictions[3].tolist().index(x) != np.argmax([predictions[2]])])]["Company"].values[0])
+    print("----")
+    # UPDATE: Above works, BUT the problem is that each prediction MUST be unique, and the predictions should be limited based on the value(s) of the previous prediction.
+    # Attempt #1 At solution:
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"].values[0])
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[1])]["Company"].values[0])
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[2])]["Company"].values[0])
+    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[3])]["Company"].values[0])
+    # End of Attempt #1 At solution:
+    # Attempt #2 At solution:
+    np.argsort(predictions[0])
+    np.argmax(predictions[0])
+    [x for x in np.argsort(predictions[1]) if x != np.argmax(predictions[0])]
+    np.argsort(predictions[1][np.argsort(predictions[0])[0]])
+    [x for x in np.argsort(predictions[1]) if x != np.argmax(predictions[0])]
+    np.argsort(predictions[2])
+    [x for x in np.argsort(predictions[2]) if x != np.argmax(predictions[0]) and x!= np.argmax(predictions[1])]
+    np.argsort(predictions[3])
+    [x for x in np.argsort(predictions[3]) if x != np.argmax(predictions[0]) and x != np.argmax(predictions[1]) and x != np.argmax(predictions[2])]
+    np.argmax(predictions[0])
+    np.argmax([x for x in predictions[1] if predictions[1].tolist().index(x) not in [np.argmax(predictions[0])]])
+    np.argmax([x for x in predictions[2] if predictions[2].tolist().index(x) not in [np.argmax(predictions[0]), np.argmax(predictions[1])]])
+    np.argmax([x for x in predictions[3] if predictions[3].tolist().index(x) not in [np.argmax(predictions[0]), np.argmax(predictions[1]), np.argmax(predictions[2])]])
+    # (cont here!)[UPDATE: Need to use np.argsort to ensure none of the labels chosen result in one label being chosen more than once! Refer to this link for assistance: https://www.geeksforgeeks.org/python/how-to-get-the-n-largest-values-of-an-array-using-numpy/][Attempt to acheive solution is below] [NOTE: Basic idea is this: np.argmax(predictions[2][:np.argmax(predictions[1])])]
+    # End of Attempt #2 At solution:
+    test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users.
+    # Attempt #3 At solution:
+    np.argsort(predictions[0]) #<-- NOTE: argsort sorts argument indices in ascending order! [UPDATE: There is also an edge case, if preds coincidentally are the same, then the next maximum should be pulled instead]
+    np.argsort(predictions[1])
+    np.argsort(predictions[2])
+    np.argsort(predictions[3])
+    test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]]["Company"]
+    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]][0] ]["Company"]
+    np.argmax(predictions[0])
+    [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
+    [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]
+    [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]]
+    # UPDATE: Above works greatly when 4 companies are utilized. Now, focus shifts to programmatically adhering to situation for any finite amount of companies.
+    conditions = []
+    i = 1
+    test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users.
+    print("--DEBUGGING CHECKPOINT: CHecking if algo works for any finite num of predictions---") # UPDATE: This process will be done after finishing up everything else.
+    pb.set_trace()
+    while i < (len(predictions)):
+        # GOAL: a) Ensure that each prediction is unique, so a desired order can be implemented.
+        lambda x: x != np.argsort(predictions[i - 1])[-1]
+        conditions.append(lambda x: x != np.argsort(predictions[i - 1])[-1]) #<-- NOTE: Leaving x und   ef on purpose since it'll be defined in list comprehension below.
+        # conditions.append(x != np.argsort(predictions[i - 1])[-1]) #<-- NOTE: Leaving x undef on purpose since it'll be defined in list comprehension below.
+        # [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
+        print([x for x in np.argsort(predictions[i]) if conditions][-1])
+        print("----")
+        print(test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if conditions][-1]]["Company"])
+        print("----")
+        i += 1
+    # End of Attempt #3 At solution:
+    """
+    # NOTE: Above will reference ways to transform predictions into string format to be able to utilzied for user consumption
     ## Listing all data in history:
     print(train_history.history.keys())
     ## summarize train_history for accuracy
@@ -414,7 +552,24 @@ def ModelTrainingAndDevelopment():
     if(not integrationMode):
         plt.show()
 
-    # plt.savefig("ModelAccuracy#1.png") <-- commented this out until embedded pipeline is established
+    # plt.savefig("./ModelAccuracyPlot#1.png")
+    # plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1.png")
+    print("--DEBUGGING CHECKPOINT: Investigating why plot doesn't save")
+    pb.set_trace()
+    # plt.savefig("../../../plots/ModelAccuracyPlot#1.png")
+    plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1.png")
+    # NOTE: Will replace True with booleans that will live at top of file
+    taskDesc = ["Baseline Performance","Experiment #1 Pictures","Experiment #2 Pictures","Experiment #3 Pictures"]
+    if(True):
+        print("---PRINTING THINGS FOR TASK {taskDesc[0]}")
+    elif(True):
+        print("---PRINTING THINGS FOR TASK {taskDesc[1]}")
+    elif(True):
+        print("---PRINTING THINGS FOR TASK {taskDesc[2]}")
+    else:
+        print("---PRINTING THINGS FOR TASK {taskDesc[3]}")
+    # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
+    plt.close() #<-- used to ensure that EACH plot is separate!
     ## summarize history for loss
     plt.plot(train_history.history['loss'])
     plt.title('model loss')
@@ -425,10 +580,16 @@ def ModelTrainingAndDevelopment():
     if(not integrationMode):
         plt.show()
 
-    # plt.savefig("ModelAccuracy#1.png") <-- commented this out until embedded pipeline is established
+    # plt.savefig("./ModelLossPlot#1.jpg")
+    # plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    # plt.savefig("../../plots/ModelLossPlot#1.jpg")
+    plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
     # End of Body of plotting model
     # b) Printing Model Summary, which can be good to go into detail about:
     model.summary()
     # Body of saving model to a file to be used later
     # End of Body of saving model to a file to be used later
     # end of 6)
+    
+# attempt3()
