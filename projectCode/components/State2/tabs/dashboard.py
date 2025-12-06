@@ -175,16 +175,15 @@ def fillPicks(modelPrediction = None):
         # NOTE: Be\, instead of doing for, we will do three for demo purposes, hence why
         # offset '-1' is present. 
         isOrderOfTickerTablePrecedence = True
-        # tickerRealNameTable = [x for x in tickerRealNameTable if list(x.keys()) in tickerRealNameTable.keys() and list(x.keys()) in dataFrameReffingModelPred["Company"] ]
-        # tickerRealNameTable = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"] ]
+        global currentTickers, placeholderPicks #<-- Added these to ensure that modifications are applied outside of this function to be used in functions below.
         currentTickers = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"].values.tolist() ]
         
+        # Body of determining risks of stocks chosen and ensuring that top stocks are pulled
         placeholderPicks = [{"tags": ["Tag A", "Tag B"], "risk": ""} for i in range(len(currentTickers))]
         placeholderPicks[0]["risk"] = "high"
         placeholderPicks[1]["risk"] = "medium"
         placeholderPicks[2]["risk"] = "low"
-        print("---DEBUGGING CHECKPOINT: Checking if tickerRealName table value---")
-        pb.set_trace()
+        # End of body of determining risks of stocks chosen and ensuring that top stocks are pulled
         for i in range((dataFrameReffingModelPred.shape[0] - 1) if not isOrderOfTickerTablePrecedence else len(currentTickers)):
             # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
             placeholderPicks[i]["company"] = currentTickers[i]
@@ -193,6 +192,8 @@ def fillPicks(modelPrediction = None):
             placeholderPicks[i]["tags"][0] = f"Price to Earnings Ratio: {dataFrameReffingModelPred.loc[i, "P/E"]}"
             placeholderPicks[i]["tags"][1] = f"Share Price: {dataFrameReffingModelPred.loc[i, "Share Price"]}"
         
+        print("---DEBUGGING CHECKPOINT: Checking value of placeholderPicks---")
+        pb.set_trace() #<-- NOTE: Works as intended
         return
         # NOTE: May add something that grabs top 3 companies for any set of companies given.
         # NOTE: Nevertheles,s I believe this is all the code that is NEEDED. Currently
@@ -254,6 +255,7 @@ def DashboardTab(data=None):
         timeFrame = base.get("timeFrame")
     growthRate = base.get("growthRate")
     picks = base.get("picks", placeholderPicks)
+    # picks = base.get("picks", currentTickers) <-- not solution to problem!
     # summary text
     summaryBullets = base.get("summaryBullets")
     if not summaryBullets:
@@ -303,33 +305,67 @@ def DashboardTab(data=None):
     )
     # table rows
     rows = []
-    for index, stock in enumerate(picks):
-        rows.append(
-            html.tr(
-                {"key": f"stock{index}", "style": stockTableRow},
-                html.td(
-                    {"style": stockCompanyCell},
-                    html.div(
-                        {"style": stockCompanyBox},
-                        html.span({"style": stockCompanyNameText}, stock["company"]),
-                        html.span({"style": stockTickerText}, stock["ticker"]),
+    Version1 = False
+    if Version1 == True:
+        for index, stock in enumerate(picks):
+            print("---DEBUGGING CHECKPOINT: Checking if display works properly with result---")
+            pb.set_trace() #<-- NOTE: Works as intended
+            rows.append(
+                html.tr(
+                    {"key": f"stock{index}", "style": stockTableRow},
+                    html.td(
+                        {"style": stockCompanyCell},
+                        html.div(
+                            {"style": stockCompanyBox},
+                            html.span({"style": stockCompanyNameText}, stock["company"]),
+                            html.span({"style": stockTickerText}, stock["ticker"]),
+                        ),
                     ),
-                ),
-                html.td({"style": stockScoreCell}, scoreBar(stock["score"])),
-                html.td(
-                    {"style": stockTagsCell},
-                    html.div(
-                        {"style": stockTagsRow},
-                        *[tagPill(tag) for tag in stock["tags"]],
+                    html.td({"style": stockScoreCell}, scoreBar(stock["score"])),
+                    html.td(
+                        {"style": stockTagsCell},
+                        html.div(
+                            {"style": stockTagsRow},
+                            *[tagPill(tag) for tag in stock["tags"]],
+                        ),
                     ),
-                ),
-                html.td({"style": stockRiskCell}, riskBadge(stock["risk"])),
-                html.td(
-                    {"style": stockDetailsCell},
-                    html.button({"style": stockDetailsButton}, "Details"),
-                ),
+                    html.td({"style": stockRiskCell}, riskBadge(stock["risk"])),
+                    html.td(
+                        {"style": stockDetailsCell},
+                        html.button({"style": stockDetailsButton}, "Details"),
+                    ),
+                )
             )
-        )
+    else:
+        for index, stock in enumerate(picks):
+            print("---DEBUGGING CHECKPOINT: Checking if display works properly with result---")
+            pb.set_trace() #<-- NOTE: Works as intended
+            rows.append(
+                html.tr(
+                    {"key": f"stock{index}", "style": stockTableRow},
+                    html.td(
+                        {"style": stockCompanyCell},
+                        html.div(
+                            {"style": stockCompanyBox},
+                            html.span({"style": stockCompanyNameText}, stock["company"]),
+                            html.span({"style": stockTickerText}, stock["ticker"]),
+                        ),
+                    ),
+                    html.td({"style": stockScoreCell}, scoreBar(stock["score"])),
+                    html.td(
+                        {"style": stockTagsCell},
+                        html.div(
+                            {"style": stockTagsRow},
+                            *[tagPill(tag) for tag in stock["tags"]],
+                        ),
+                    ),
+                    html.td({"style": stockRiskCell}, riskBadge(stock["risk"])),
+                    html.td(
+                        {"style": stockDetailsCell},
+                        html.button({"style": stockDetailsButton}, "Details"),
+                    ),
+                )
+            )
     # picks card
     picksCard = html.div(
         dashboardCard,
