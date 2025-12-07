@@ -3,23 +3,34 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import sys
+import os
+import pdb as pb
+
 # Body of sequentially outputing the plots in question
-module_dir3 = os.path.join('C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/plots')
+module_dir3 = os.path.join('C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo')
 sys.path.insert(0,module_dir3)
 
-module_dir4 = os.path.join('/c/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/plots')
+module_dir4 = os.path.join('C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining')
 sys.path.insert(1,module_dir4)
-numOfExperiments = 3 #<-- update this if neccessary
+sys.path = [x.replace("\\","/") for x in sys.path]
+numOfExperiments = 4 #<-- update this if neccessary
 numOfImages = 2*numOfExperiments #<-- update this later on
-listOfFilePathsReffingPlots = [{"filePath": f"./plots/Model{'Accuracy' if x % 2 == 0 else 'Loss'}#{1 if x % 2 == 0 else 2}"} for x in range(numOfImages)]
+listOfFilePathsReffingPlots = [{"filePath": f"{sys.path[1]}/plots/Model{'Accuracy' if x % 2 == 0 else 'Loss'}Plot#1"} for x in range(numOfImages)]
 
 # NOTE: For this to work, will have to add code in model file responsible for writing plot
 # to a file!
+print("---NOTE: Files referenced here, can be found in plots in ProjectRepo Directory folder")
+print("---PRINTING....---")
 for i in range(len(listOfFilePathsReffingPlots)):
-    # img = mpimg.imread(image_path)
-    img = mpimg.imread(listOfFilePathsReffingPlots[i]["filePath"])
-    plt.imshow(img)
-    # Line of code that writes image to a file in directory to be seen by viewers
+    for j in ["Baseline", "Experiment#1", "Experiment#2", "Experiment#3"]:
+        # print("---DEBUGGING CHECKPOINT: TESTING OUT RESULTS.py to ensure it works correctly---")
+        # pb.set_trace()
+        # img = mpimg.imread(image_path)
+        img = mpimg.imread(f"{listOfFilePathsReffingPlots[i]["filePath"]}_{j}.png")
+        plt.imshow(img)
+        # Line of code that writes image to a file in directory to be seen by viewers
+        #plt.close()
 
+print("---PRINTING COMPLETE!---")
 
 # End of Body of sequentially outputing the plots in question

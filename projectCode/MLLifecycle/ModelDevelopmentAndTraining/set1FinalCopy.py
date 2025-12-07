@@ -1,6 +1,7 @@
 # Purpose: This file will contain code that helps with Model Development.
 # Body of neccessary imports
 import os
+import sys
 import tensorflow as tf
 import matplotlib
 from matplotlib import pyplot as plt
@@ -11,7 +12,14 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout, Input
 from tensorflow.keras.utils import to_categorical, plot_model
 from tensorflow.keras.datasets import mnist
+sys.path.insert(3,"C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo")
 # end of body of neccessary imports
+# Body of modes of plots
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,True,False,False
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,True,False
+baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,False,True
+# End of Body of modes of plots
 # Body of setting up paths for saving models"
 current_dir = os.path.dirname(__file__)
 
@@ -149,8 +157,6 @@ def attempt3():
     if(WriteModelToAFile):
         # Goal: Make copy of test stocks, add predictions column referencing model's 
         print("---Writing Model to a file for future use---")
-        print("---DEBUGGING CHECKPOINT: Writing Model to a file for future use---")
-        pb.set_trace()
         
         copyTwoSendOff = test_stocks
         # copyTwoSendOff["Model Predictions"] = predictions
@@ -185,8 +191,6 @@ def attempt3():
         # End of writing code for writing model to a file here
     predictions[0]
 
-    print("---DEBUGGING CHECKPOINT: Improving Predictions Algorithm---")
-    pb.set_trace()
     """
     # NOTE: Below will reference ways to transform predictions into string format to be able to utilzied for user consumption[DISREGARD #1: Only applicable to model integration into app]
     print(test_stocks[test_stocks["Optimality"] == np.argmax([predictions[0]])]["Company"].values[0])
@@ -273,15 +277,26 @@ def attempt3():
     # plt.savefig("../../../plots/ModelAccuracyPlot#1.png")
     plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1.png")
     # NOTE: Will replace True with booleans that will live at top of file
+    # baseLinePerform, Experiment1, Experiment2, Experiment3 = True,True,True,True
     taskDesc = ["Baseline Performance","Experiment #1 Pictures","Experiment #2 Pictures","Experiment #3 Pictures"]
-    if(True):
-        print("---PRINTING THINGS FOR TASK {taskDesc[0]}")
-    elif(True):
-        print("---PRINTING THINGS FOR TASK {taskDesc[1]}")
-    elif(True):
-        print("---PRINTING THINGS FOR TASK {taskDesc[2]}")
-    else:
-        print("---PRINTING THINGS FOR TASK {taskDesc[3]}")
+    # print("--DEBUGGING CHCECKECHPOINT:---")
+    # pb.set_trace()
+    if(baseLinePerform):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[0]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Baseline.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Baseline.png")
+    elif(Experiment1):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[1]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Experiment#1.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Experiment#1.png")
+    elif(Experiment2):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[2]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Experiment#2.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Experiment#2.png")
+    elif(Experiment3):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[3]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Experiment#3.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Experiment#3.png")
     # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
     ## summarize history for loss
     plt.plot(train_history.history['loss'])
@@ -296,7 +311,23 @@ def attempt3():
     # plt.savefig("./ModelLossPlot#1.jpg")
     # plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
     # plt.savefig("../../plots/ModelLossPlot#1.jpg")
-    plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    # plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    if(baseLinePerform):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[0]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Baseline.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Baseline.png")
+    elif(Experiment1):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[1]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Experiment#1.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Experiment#1.png")
+    elif(Experiment2):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[2]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Experiment#2.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Experiment#2.png")
+    elif(Experiment3):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[3]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Experiment#3.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Experiment#3.png")
     # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
     # End of Body of plotting model
     # b) Printing Model Summary, which can be good to go into detail about:
@@ -436,7 +467,8 @@ def ModelTrainingAndDevelopment():
         # Goal: Make copy of test stocks, add predictions column referencing model's 
         print("---Writing Model to a file for future use---")
         # print("---DEBUGGING CHECKPOINT: Writing Model to a file for future use---")
-        # pb.set_trace() #<-- Works as intended
+        # pb.set_trace()
+        # ^^ ABOVE NOT NEEDED!
         
         copyTwoSendOff = test_stocks
         # copyTwoSendOff["Model Predictions"] = predictions
@@ -471,7 +503,7 @@ def ModelTrainingAndDevelopment():
         # End of writing code for writing model to a file here
     predictions[0]
 
-    # print("---DEBUGGING CHECKPOINT: Improving Predictions Algorithm---") #<-- works as intended
+    # print("---DEBUGGING CHECKPOINT: Improving Predictions Algorithm---")
     # pb.set_trace()
     """
     # NOTE: Below will reference ways to transform predictions into string format to be able to utilzied for user consumption[DISREGARD #1: Only applicable to model integration into app]
@@ -554,22 +586,32 @@ def ModelTrainingAndDevelopment():
 
     # plt.savefig("./ModelAccuracyPlot#1.png")
     # plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1.png")
-    print("--DEBUGGING CHECKPOINT: Investigating why plot doesn't save")
-    pb.set_trace()
+    # print("--DEBUGGING CHECKPOINT: Investigating why plot doesn't save")
+    # pb.set_trace() <-- Works as intended.
     # plt.savefig("../../../plots/ModelAccuracyPlot#1.png")
     plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1.png")
     # NOTE: Will replace True with booleans that will live at top of file
+    # baseLinePerform, Experiment1, Experiment2, Experiment3 = True,True,True,True
     taskDesc = ["Baseline Performance","Experiment #1 Pictures","Experiment #2 Pictures","Experiment #3 Pictures"]
-    if(True):
-        print("---PRINTING THINGS FOR TASK {taskDesc[0]}")
-    elif(True):
-        print("---PRINTING THINGS FOR TASK {taskDesc[1]}")
-    elif(True):
-        print("---PRINTING THINGS FOR TASK {taskDesc[2]}")
-    else:
-        print("---PRINTING THINGS FOR TASK {taskDesc[3]}")
+    # print("--DEBUGGING CHCECKECHPOINT:---")
+    # pb.set_trace()
+    if(baseLinePerform):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[0]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Baseline.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Baseline.png")
+    elif(Experiment1):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[1]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Experiment#1.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Experiment#1.png")
+    elif(Experiment2):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[2]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Experiment#2.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Experiment#2.png")
+    elif(Experiment3):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[3]}---")
+        plt.savefig(f"{current_dir}/plots/ModelAccuracyPlot#1_Experiment#3.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelAccuracyPlot#1_Experiment#3.png")
     # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
-    plt.close() #<-- used to ensure that EACH plot is separate!
     ## summarize history for loss
     plt.plot(train_history.history['loss'])
     plt.title('model loss')
@@ -583,7 +625,23 @@ def ModelTrainingAndDevelopment():
     # plt.savefig("./ModelLossPlot#1.jpg")
     # plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
     # plt.savefig("../../plots/ModelLossPlot#1.jpg")
-    plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    # plt.savefig(f"{current_dir}/plots/ModelLossPlot#1.png")
+    if(baseLinePerform):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[0]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Baseline.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Baseline.png")
+    elif(Experiment1):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[1]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Experiment#1.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Experiment#1.png")
+    elif(Experiment2):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[2]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Experiment#2.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Experiment#2.png")
+    elif(Experiment3):
+        print("---PRINTING THINGS FOR TASK: {taskDesc[3]}---")
+        plt.savefig(f"{current_dir}/plots/ModelLossPlot#1_Experiment#3.png")
+        plt.savefig(f"{sys.path[3]}/plots/ModelLossPlot#1_Experiment#3.png")
     # PN: Will need to change number to prevent overriding. Will need some sort of boolean.
     # End of Body of plotting model
     # b) Printing Model Summary, which can be good to go into detail about:
