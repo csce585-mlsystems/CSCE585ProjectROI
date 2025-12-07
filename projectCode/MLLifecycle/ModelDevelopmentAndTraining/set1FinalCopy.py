@@ -12,13 +12,15 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout, Input
 from tensorflow.keras.utils import to_categorical, plot_model
 from tensorflow.keras.datasets import mnist
-sys.path.insert(3,"C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo")
+
+DemoMode = True
+sys.path.insert(3,"C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo" if DemoMode == False else "ProjectRepo")
 # end of body of neccessary imports
 # Body of modes of plots
-# baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False
-# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,True,False,False
-# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,True,False
-baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,False,True
+baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False #<-- Mode #1
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,True,False,False #<-- Mode #2
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,True,False #<-- Mode #3
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,False,True #<-- Mode #4
 # End of Body of modes of plots
 # Body of setting up paths for saving models"
 current_dir = os.path.dirname(__file__)
@@ -152,7 +154,7 @@ def attempt3():
     WriteModelToAFile = True
     predictions = model.predict(x_test) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
     # Write code for writing model to a file here
-    local = True #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
+    local = False #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
     ImprovedAlgo = True
     if(WriteModelToAFile):
         # Goal: Make copy of test stocks, add predictions column referencing model's 
@@ -177,7 +179,7 @@ def attempt3():
         
         demo = True
         parentDir = "C:/Users/adoct/Notes for CSCE Classes\\[Fall 2025\\]/Notes for CSCE 585/projectCode" if demo == False else os.getcwd().replace("\\","/")
-        writePathForModelPreds = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "" #<-- '""' Needs to refer to virtual environment. 
+        writePathForModelPreds = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. 
 
         
         
@@ -461,7 +463,7 @@ def ModelTrainingAndDevelopment():
     WriteModelToAFile = True
     predictions = model.predict(x_test) #<-- NOTE: This retunrns an array of probabilities for each class. Thus, for future consumption by person, could assign these predictions to a column added to test_stocks?
     # Write code for writing model to a file here
-    local = True #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
+    local = False #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
     ImprovedAlgo = True
     if(WriteModelToAFile):
         # Goal: Make copy of test stocks, add predictions column referencing model's 
@@ -489,7 +491,7 @@ def ModelTrainingAndDevelopment():
         
         demo = True
         parentDir = "C:/Users/adoct/Notes for CSCE Classes\\[Fall 2025\\]/Notes for CSCE 585/projectCode" if demo == False else os.getcwd().replace("\\","/")
-        writePathForModelPreds = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "" #<-- '""' Needs to refer to virtual environment. 
+        writePathForModelPreds = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. 
 
         
         

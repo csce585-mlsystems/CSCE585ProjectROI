@@ -277,7 +277,8 @@ def main(companies: list[str] = [], desiredDateToPullInvestment = None):
     print(resultantDataFrame) #<-- THis dataframe will reference the dataframe that adheres to the follwowing object:
     # company(CompanyName, "P/B", "P/E", "NCAV", "Date For Eval", "Optimality", (cont here if applicable))[NOTE: Will be wise to make a Entity via ERDs for documentation when writing paper at end]
     inNoteBook = False
-    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    DemoMode = True
+    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False or DemoMode == True else "preparedDataset.csv"
     # Body of handling edge case where all of them are same optimality
     resultantDataFrame.to_csv(f"{filePathToModelDir}")
     if((resultantDataFrame["Optimality"] == 0).all() == True):
@@ -326,7 +327,8 @@ def dataPrepDeriv(companies: list[str] = [], desiredDateToPullInvestment = None)
     print(resultantDataFrame) #<-- THis dataframe will reference the dataframe that adheres to the follwowing object:
     # company(CompanyName, "P/B", "P/E", "NCAV", "Date For Eval", "Optimality", (cont here if applicable))[NOTE: Will be wise to make a Entity via ERDs for documentation when writing paper at end]
     inNoteBook = False
-    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
+    DemoMode = True
+    filePathToModelDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False or DemoMode == True else "preparedDataset.csv"
     # Body of handling edge case where all of them are same optimality
     resultantDataFrame.to_csv(f"{filePathToModelDir}")
     if((resultantDataFrame["Optimality"] == 0).all() == True):

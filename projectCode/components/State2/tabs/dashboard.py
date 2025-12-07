@@ -166,10 +166,10 @@ def fillPicks(modelPrediction = None):
         # At this point, model's results are pulled from the dataframe mentioned below. 
         global tickerRealNameTable
                 # ^^ Add more above later on!
-        local = True
-        demo = False
-        parentDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585" if demo == False else "." 
-        writePathForModelPreds = f"{parentDir}/ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "./ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
+        local = False
+        demo = True
+        parentDir = "C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585" if demo == False else "" 
+        writePathForModelPreds = f"{parentDir+("/" if demo == False else "")}ProjectRepo/projectCode/MLLifecycle/ModelDevelopmentAndTraining/ModelPredictions.csv" if local == True else "ModelPredictions.csv" #<-- '""' Needs to refer to virtual environment. [VIRTUAL ENVIRONMENT ADDRESS THING[NOTE]: Will need to change this file path to adhere to virtual environment!] 
         filePathToModelPredFile = writePathForModelPreds #<-- updating soon
         dataFrameReffingModelPred = pd.read_csv(f"{filePathToModelPredFile}") #<-- will change soon to dataframe refrencing a dataframe referencing the test_stock data AND the model's predictions as columns!
         # NOTE: Be\, instead of doing for, we will do three for demo purposes, hence why
