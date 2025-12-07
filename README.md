@@ -60,13 +60,16 @@ For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package ma
 
 ## Directory Structure  
 ```
+├── ModelLossPlot#1.jpg
+├── ModelPredictions.csv
 ├── README.md
 ├── UIDesignDescs
-│   └── set1.md
+│   ├── set1.md
+│   └── stateDiagramReferencingUserInteraction.md
 ├── UXResearch
 │   └── purpose.md
 ├── __pycache__
-│   └── constants.cpython-311.pyc
+│   └── constants.cpython-312.pyc
 ├── app.py
 ├── constants.py
 ├── docs
@@ -75,6 +78,10 @@ For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package ma
 │   │   └── SlidesP0.pdf
 │   ├── p1
 │   │   ├── SlidesP1.pdf
+│   │   ├── milestone1
+│   │   │   ├── Experiments
+│   │   │   │   └── initialExperiments.ipynb
+│   │   │   └── powerpointTemplate.tex
 │   │   └── p1.txt
 │   ├── p2
 │   │   └── p2.txt
@@ -82,29 +89,162 @@ For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package ma
 ├── milestones
 │   ├── milestone1
 │   │   ├── Experiments
+│   │   │   ├── experiment1MockJuptyerFile.md
+│   │   │   ├── initialExperiments.ipynb
+│   │   │   └── initialExperimentsFinalCopy.ipynb
 │   │   ├── p1Document.md
+│   │   └── requirements.txt
+│   ├── milestone1WVirtualEnv
+│   │   ├── CACHEDIR.TAG
+│   │   ├── Experiments
+│   │   │   ├── experiment1MockJuptyerFile.md
+│   │   │   ├── initialExperiments.ipynb
+│   │   │   ├── initialExperimentsFinalCopy.ipynb
+│   │   │   └── tempLogPips1.txt
+│   │   ├── Lib
+│   │   │   └── site-packages
+│   │   │       ├── _virtualenv.pth
+│   │   │       └── _virtualenv.py
+│   │   ├── Scripts
+│   │   │   ├── activate
+│   │   │   ├── activate.bat
+│   │   │   ├── activate.csh
+│   │   │   ├── activate.fish
+│   │   │   ├── activate.nu
+│   │   │   ├── activate.ps1
+│   │   │   ├── activate_this.py
+│   │   │   ├── deactivate.bat
+│   │   │   ├── pydoc.bat
+│   │   │   ├── python.exe
+│   │   │   └── pythonw.exe
+│   │   ├── VirtualEnvSetup1.sh
+│   │   ├── p1Document.md
+│   │   ├── powerpointTemplate.tex
+│   │   ├── pyproject.toml
+│   │   ├── pyvenv.cfg
+│   │   └── requirements.txt
+│   ├── milestone2
+│   │   ├── draftPaper.tex
+│   │   ├── draftPaperMarkdownVersion.md
+│   │   ├── guide.md
+│   │   ├── initialExperiments.ipynb
+│   │   ├── initialExperimentsFinalCopyP2Version.ipynb
 │   │   └── powerpointTemplate.tex
-│   └── milestone2
-│       ├── guide.md
-│       ├── initialExperiments.ipynb
-│       └── initialExperimentsFinalCopyP2Version.ipynb
+│   ├── milestone2WVirtualEnv
+│   │   ├── CACHEDIR.TAG
+│   │   ├── Lib
+│   │   │   └── site-packages
+│   │   │       ├── _virtualenv.pth
+│   │   │       └── _virtualenv.py
+│   │   ├── Scripts
+│   │   │   ├── activate
+│   │   │   ├── activate.bat
+│   │   │   ├── activate.csh
+│   │   │   ├── activate.fish
+│   │   │   ├── activate.nu
+│   │   │   ├── activate.ps1
+│   │   │   ├── activate_this.py
+│   │   │   ├── deactivate.bat
+│   │   │   ├── pydoc.bat
+│   │   │   ├── python.exe
+│   │   │   └── pythonw.exe
+│   │   ├── VirtualEnvSetup2.sh
+│   │   ├── draftPaper.tex
+│   │   ├── guide.md
+│   │   ├── initialExperiments.ipynb
+│   │   ├── initialExperimentsFinalCopyP2Version.ipynb
+│   │   ├── powerpointTemplate.tex
+│   │   └── pyvenv.cfg
+│   ├── notebookReferencingCleanBaselineVersionOfModel.ipynb
+│   └── powerpointTemplate.tex
+├── noteRegardingP1_READREAD_ME.md
+├── originalCopyOfProjectProposal.md
 ├── preferences.json
 ├── projectCode
 │   ├── MLLifecycle
-│   │   ├── DataCollection
-│   │   ├── DataPreparation
-│   │   ├── ModelDevelopment
-│   │   ├── ModelTraining
+│   │   ├── DataCollectionAndPreparation
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-312.pyc
+│   │   │   │   └── newVersionSet1FinalCopy.cpython-312.pyc
+│   │   │   ├── cleanedDataUnmodified
+│   │   │   │   ├── amazon_Metrics.csv
+│   │   │   │   ├── apple_Metrics.csv
+│   │   │   │   └── google_Metrics.csv
+│   │   │   ├── firstVersionTrainingSet.csv
+│   │   │   ├── newVersionSet1FinalCopy.py
+│   │   │   ├── outputFromAttrs.txt
+│   │   │   ├── set1.py
+│   │   │   └── testDir
+│   │   │       ├── generalCodept1.py
+│   │   │       ├── newVersionSet1.py
+│   │   │       ├── newVersionSet1FinalCopy.py
+│   │   │       └── purpose.md
+│   │   ├── ModelAccuracyPlot#1.png
+│   │   ├── ModelDevelopmentAndTraining
+│   │   │   ├── CleanData
+│   │   │   │   └── guide.md
+│   │   │   ├── ModelPredictions.csv
+│   │   │   ├── TestSets
+│   │   │   ├── TrainingSets
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-312.pyc
+│   │   │   │   └── set1FinalCopy.cpython-312.pyc
+│   │   │   ├── plots
+│   │   │   │   ├── ModelAccuracyPlot#1.png
+│   │   │   │   ├── ModelAccuracyPlot#1_Baseline.png
+│   │   │   │   ├── ModelAccuracyPlot#1_Experiment#1.png
+│   │   │   │   ├── ModelAccuracyPlot#1_Experiment#2.png
+│   │   │   │   ├── ModelAccuracyPlot#1_Experiment#3.png
+│   │   │   │   ├── ModelLossPlot#1_Baseline.png
+│   │   │   │   ├── ModelLossPlot#1_Experiment#1.png
+│   │   │   │   ├── ModelLossPlot#1_Experiment#2.png
+│   │   │   │   └── ModelLossPlot#1_Experiment#3.png
+│   │   │   ├── preparedDataset.csv
+│   │   │   └── set1FinalCopy.py
+│   │   ├── ModelLossPlot#1.jpg
+│   │   ├── __pycache__
+│   │   │   └── script.cpython-312.pyc
+│   │   ├── script.py
 │   │   └── summaryOfFiles.md
 │   ├── __init__.py
 │   ├── __pycache__
-│   │   └── __init__.cpython-311.pyc
+│   │   └── __init__.cpython-312.pyc
 │   ├── components
 │   │   ├── State0
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-312.pyc
+│   │   │   │   └── componentSet0.cpython-312.pyc
+│   │   │   └── componentSet0.py
 │   │   ├── State1
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-312.pyc
+│   │   │   │   └── componentSet1.cpython-312.pyc
+│   │   │   └── componentSet1.py
 │   │   ├── State2
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-312.pyc
+│   │   │   │   └── componentSet2.cpython-312.pyc
+│   │   │   ├── componentSet2.py
+│   │   │   └── tabs
+│   │   │       ├── __init__.py
+│   │   │       ├── __pycache__
+│   │   │       │   ├── __init__.cpython-312.pyc
+│   │   │       │   ├── dashboard.cpython-312.pyc
+│   │   │       │   ├── discover.cpython-312.pyc
+│   │   │       │   ├── portfolio.cpython-312.pyc
+│   │   │       │   └── settings.cpython-312.pyc
+│   │   │       ├── dashboard.py
+│   │   │       ├── discover.py
+│   │   │       ├── portfolio.py
+│   │   │       └── settings.py
 │   │   ├── __init__.py
 │   │   └── __pycache__
+│   │       └── __init__.cpython-312.pyc
 │   ├── requirements.md
 │   └── routes
 │       ├── State0Routes.py
@@ -112,11 +252,19 @@ For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package ma
 │       ├── State2Routes.py
 │       ├── __init__.py
 │       └── __pycache__
-├── pyproject.toml
+│           ├── State0Routes.cpython-312.pyc
+│           ├── State1Routes.cpython-312.pyc
+│           ├── State1Routes.cpython-312.pyc.2008644087856
+│           ├── State2Routes.cpython-312.pyc
+│           └── __init__.cpython-312.pyc
+├── projectProposalInfo
+│   └── templateProvidedByTA.md
+├── requirements.txt
 ├── results.py
 ├── run.py
-├── users.json
-└── uv.lock
+└── users.json
+
+
 ```
 
 ⚠️ Notes:  
