@@ -49,25 +49,74 @@ Note: This has no impact on your grade as long as you properly follow the proced
 
 [3] Cao, K., & You, H. (2022, September 28). Fundamental Analysis Via Machine Learning: Financial Analysts Journal: Vol 80, no 2. Taylor & Francis Online. https://www.tandfonline.com/doi/abs/10.1080/0015198X.2024.2313692
 
-# < The following is only applicable for the final project submission >  
-
 ## Dependencies  
-### Include all dependencies required to run the project. Example:  
-- Python 3.11  
-- Ubuntu 22.04  
-
+### Include all dependencies required to run the project.  
+- Python 3.11+
+- macOS 13+ or Windows 10+
+- uv
+- uv.lock and pyproject.toml are included in this repository
+  
 For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package manager instead of `pip`. Your repo must include both the `uv.lock` and `pyproject.toml` files.  
 
 ## Directory Structure  
-Example:  
 ```
-|- data (mandatory)
-|- src (mandatory)
-|   |- model.py
-|   |- example.py
-|- train.py
-|- run.py (mandatory)
-|- result.py (mandatory)
+├── README.md
+├── UIDesignDescs
+│   └── set1.md
+├── UXResearch
+│   └── purpose.md
+├── __pycache__
+│   └── constants.cpython-311.pyc
+├── app.py
+├── constants.py
+├── docs
+│   ├── p0
+│   │   ├── P0.pdf
+│   │   └── SlidesP0.pdf
+│   ├── p1
+│   │   ├── SlidesP1.pdf
+│   │   └── p1.txt
+│   ├── p2
+│   │   └── p2.txt
+│   └── references.bib
+├── milestones
+│   ├── milestone1
+│   │   ├── Experiments
+│   │   ├── p1Document.md
+│   │   └── powerpointTemplate.tex
+│   └── milestone2
+│       ├── guide.md
+│       ├── initialExperiments.ipynb
+│       └── initialExperimentsFinalCopyP2Version.ipynb
+├── preferences.json
+├── projectCode
+│   ├── MLLifecycle
+│   │   ├── DataCollection
+│   │   ├── DataPreparation
+│   │   ├── ModelDevelopment
+│   │   ├── ModelTraining
+│   │   └── summaryOfFiles.md
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   └── __init__.cpython-311.pyc
+│   ├── components
+│   │   ├── State0
+│   │   ├── State1
+│   │   ├── State2
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   ├── requirements.md
+│   └── routes
+│       ├── State0Routes.py
+│       ├── State1Routes.py
+│       ├── State2Routes.py
+│       ├── __init__.py
+│       └── __pycache__
+├── pyproject.toml
+├── results.py
+├── run.py
+├── users.json
+└── uv.lock
 ```
 
 ⚠️ Notes:  
@@ -77,22 +126,45 @@ Example:
 
 ## How to Run  
 - Include all instructions (`commands`, `scripts`, etc.) needed to run your code.  
-- Provide all other details a computer science student would need to reproduce your results.  
+- Provide all other details a computer science student would need to reproduce your results.
+- Some exploratory plots in the notebooks use matplotlib, which may require additional system level setup on macOS with Python 3.13. The core application and ML pipeline run without it.
 
 Example:  
-- Download the [DATASET](dataset_link)
+- Install uv & activate environment (MAC)
   ```bash
-  wget <URL_of_file>
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  uv sync
+  source .venv/bin/activate
   ```
 
-- To train the model, run:  
+- Install uv & activate environment (WIndows)
   ```bash
-  python train.py
-  ```  
-- To plot the results, run:  
+  iwr https://astral.sh/uv/install.ps1 -useb | iex
+  uv sync
+  .\.venv\Scripts\activate
+  ```
+
+- To run the app:  
   ```bash
-  python result.py
-  ```  
+  python run.py
+  ```
+
+- The results:  
+  ```bash
+  python results.py
+  ```
+  
+- To reproduce ML experiment notebooks:  
+  ```bash
+  cd milestones/milestone2
+  jupyter notebook
+  ```
+  
+- To run the files directly:  
+  ```bash
+  python projectCode/MLLifecycle/ModelDevelopment/baseline_model.py
+  python projectCode/MLLifecycle/ModelDevelopment/experiment1_model.py
+  ```
 
 ## Demo  
 - All projects must include video(s) demonstrating your project.  
