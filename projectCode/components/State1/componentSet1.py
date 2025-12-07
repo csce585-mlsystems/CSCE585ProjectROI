@@ -1,6 +1,8 @@
 # componentSet1.py
 from reactpy import component, html, hooks
-import asyncio, httpx
+import asyncio, httpx, pdb as pb
+# C:\Users\adoct\Notes for CSCE Classes[Fall 2025]\Notes for CSCE 585\ProjectRepo\projectCode\components\State1\componentSet1.py
+from ...MLLifecycle import script as SCR
 from constants import (
     URL,
     UI,
@@ -107,7 +109,7 @@ def timeFrameField(timeFrame, setTimeFrame, timeFrameUnit, setTimeFrameUnit):
             ),
         ],
     )
-# convert months/days to years for annual comp. math
+# convert  from  years/months to days for annual comp. math
 def convertToYears(value, unit):
     try:
         number = float(value)
@@ -118,6 +120,17 @@ def convertToYears(value, unit):
         return number / 12
     if unit == "Days":
         return number / 365
+    return number
+def convertToDays(value, unit):
+    try:
+        number = float(value)
+    except Exception:
+        return 0
+
+    if unit == "Months":
+        return 28*number
+    if unit == "Years":
+        return number*365
     return number
 # format
 def buildTimeFrameDisplay(value, unit):
@@ -131,6 +144,17 @@ def buildTimeFrameDisplay(value, unit):
         labelUnit = unit
     # :g keeps it from showing .0 unless needed
     return f"{number:g} {labelUnit}"
+
+# Body of allowing choice of tickers
+def choosingTickers(noTable = True):
+    if noTable == True:
+        companies: list[str] = ["GOOG","AAPL", "AMZN", "MSFT"] #<-- will need to reference stocks desired by users. Can populate here though. 
+        return companies
+
+
+# End of Body of allowing choice of tickers
+global timeFrameDays
+timeFrameDays = 0;
 @component
 def State1View(onSuccess=None, username=None):
     startAmount, setStartAmount = hooks.use_state("")
@@ -144,13 +168,16 @@ def State1View(onSuccess=None, username=None):
         setLoading(True)
         setError(None)
         try:
+            global timeFrameDays
             timeFrameYears = convertToYears(timeFrame, timeFrameUnit)
+            timeFrameDays = convertToDays(timeFrame, timeFrameUnit)
             timeFrameLabel = buildTimeFrameDisplay(timeFrame, timeFrameUnit)
             payload = {
                 "username": username,
                 "startAmt": startAmount,
                 "targetAmt": targetAmount,
                 "timeFrame": timeFrameYears,
+                "timeFrameTester": timeFrameDays,
                 "timeFrameDisplay": timeFrameLabel,
             }
             status, data = await postToBackend(recommendRoute, payload)
@@ -166,6 +193,11 @@ def State1View(onSuccess=None, username=None):
             setLoading(False)
     # generate button
     def handleGenerateClick(_event):
+        # NOTE: Embedding data pipeline here!
+        # print("--DEBUGGING CHECKPOINT: Testing case where script is embedded here instead---")
+        # pb.set_trace() #<-- NOTE: Works as intended
+        SCR.main(listOfCompanies=choosingTickers(True), dateToPullFrmStock=timeFrameDays)
+
         asyncio.create_task(submit())
     # handler for generate button
     def handleGenerateKeyDown(event):
