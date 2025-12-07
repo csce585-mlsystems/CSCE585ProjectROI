@@ -156,7 +156,9 @@ Example:
   
 - To reproduce ML experiment notebooks:  
   ```bash
+  cd milestones/milestone1 
   cd milestones/milestone2
+
   jupyter notebook
   ```
   
@@ -167,6 +169,6 @@ Example:
   ```
 
 ## Demo  
-- All projects must include video(s) demonstrating your project.  
-- Please use annotations/explanations to clarify what is happening in the demo.  
+- [Link to Video](https://youtu.be/9m3HA3epPpU)
+- In the video, we are doing the following steps: 1) Logging into the application with credentials, 2) Setting desired amount to invest and setting the optimal amount of money to result from said investment, 3) We press 'Generate Recommendations', which accesses a repository of stocks and ranks these stocks based on the value investing strategy, and 4) A screen appears referencing the results of the ML Model's predictions. 
 ---
