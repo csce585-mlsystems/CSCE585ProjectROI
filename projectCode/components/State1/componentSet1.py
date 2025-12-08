@@ -148,7 +148,7 @@ def buildTimeFrameDisplay(value, unit):
 # Body of allowing choice of tickers
 def choosingTickers(noTable = True):
     if noTable == True:
-        companies: list[str] = ["GOOG","AAPL", "AMZN", "MSFT"] #<-- will need to reference stocks desired by users. Can populate here though. 
+        companies: list[str] = ["GOOG","AAPL", "AMZN", "MSFT", "META"] #<-- will need to reference stocks desired by users. Can populate here though. 
         return companies
 
 

@@ -482,6 +482,8 @@ def ModelTrainingAndDevelopment():
         list_b = [np.argsort(predictions[i])[-1] for i in range(len(predictions)) if i < len(predictions) - 1 and np.argsort(predictions[i][-1]) in np.argsort(predictions[i+1][-1])]
         list_b = [x.item() for x in list_b]
         missing_element = set(list_a).difference(set(list_b)) #<-- equal to list_a \cap (list_b)^c . 
+        print("--DEBUGGING CHECKPOINT: Retrying to make algorithm for unique label selection--- ")
+        pb.set_trace()
         copyTwoSendOff["Model Predictions"] = pd.Series([np.argmax(x) for x in predictions]) if ImprovedAlgo == False else pd.Series([*list_b,missing_element.pop()]) 
         # thoughts. 
         # End of Attempt #1
