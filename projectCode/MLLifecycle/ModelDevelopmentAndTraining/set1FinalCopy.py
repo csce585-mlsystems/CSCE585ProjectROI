@@ -604,8 +604,8 @@ def ModelTrainingAndDevelopment():
     # b) Printing Model Summary, which can be good to go into detail about:
     model.summary()
     # Body of creating transition matrices and saving them to file(s) for future use
-    print("---DEBUGGING CHECKPOINT: Figuring out how to print out confusion matrix---")
-    pb.set_trace()
+    # print("---DEBUGGING CHECKPOINT: Figuring out how to print out confusion matrix---")
+    # pb.set_trace()
     """    
       cf = tf.math.confusion_matrix(
         labels=[max(2^i) for i in y_test],
