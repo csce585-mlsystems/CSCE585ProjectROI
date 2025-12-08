@@ -18,8 +18,8 @@ sys.path.insert(3,"C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CS
 # end of body of neccessary imports
 # Body of modes of plots
 # baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False #<-- Mode #1
-# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,True,False,False #<-- Mode #2
-baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,True,False #<-- Mode #3
+baseLinePerform, Experiment1, Experiment2, Experiment3 = False,True,False,False #<-- Mode #2
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,True,False #<-- Mode #3
 # baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,False,True #<-- Mode #4
 # End of Body of modes of plots
 # Body of setting up paths for saving models"
