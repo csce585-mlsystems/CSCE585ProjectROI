@@ -17,9 +17,9 @@ DemoMode = True
 sys.path.insert(3,"C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo" if DemoMode == False else "ProjectRepo")
 # end of body of neccessary imports
 # Body of modes of plots
-baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False #<-- Mode #1
+# baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False #<-- Mode #1
 # baseLinePerform, Experiment1, Experiment2, Experiment3 = False,True,False,False #<-- Mode #2
-# baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,True,False #<-- Mode #3
+baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,True,False #<-- Mode #3
 # baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,False,True #<-- Mode #4
 # End of Body of modes of plots
 # Body of setting up paths for saving models"
@@ -572,7 +572,7 @@ def ModelTrainingAndDevelopment():
     ## summarize history for loss
     plt.plot(train_history.history['loss'])
     plt.title('model loss')
-    plt.ylabel('accuracy')
+    plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     integrationMode = True
@@ -603,8 +603,18 @@ def ModelTrainingAndDevelopment():
     # End of Body of plotting model
     # b) Printing Model Summary, which can be good to go into detail about:
     model.summary()
-    # Body of saving model to a file to be used later
-    # End of Body of saving model to a file to be used later
+    # Body of creating transition matrices and saving them to file(s) for future use
+    print("---DEBUGGING CHECKPOINT: Figuring out how to print out confusion matrix---")
+    pb.set_trace()
+    """    
+      cf = tf.math.confusion_matrix(
+        labels=[max(2^i) for i in y_test],
+        predictions=predictions,
+        num_classes=num_labels,
+    )
+    # print(cf)
+    """    
+    # End of creating transition matrices and saving them to file(s) for future use
     # end of 6)
     
 # attempt3()
