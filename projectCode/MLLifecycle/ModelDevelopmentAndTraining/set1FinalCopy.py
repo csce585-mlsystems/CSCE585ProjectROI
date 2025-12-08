@@ -23,8 +23,8 @@ baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False 
 # baseLinePerform, Experiment1, Experiment2, Experiment3 = False,False,False,True #<-- Mode #4
 # End of Body of modes of plots
 # Body of setting up paths for saving models"
-current_dir = os.path.dirname(__file__)
-
+current_dir = os.path.dirname(__file__).replace("\\","/")
+sys.path = [sys.path[i].replace("\\","/") for i in range(len(sys.path))]
 # End of Body of setting up paths for saving models
 # NOTE: For function, will need to have an array of bools that reference the modes that dictate which plot number to assign to prints.
 # Important Steps in Model Development: 1) Obtaining the training data, 2) Create the model containing initialized weights and a bias[which would be very involved with using numbers from certain columns], 3) Observe model's performance before training, 4) Defining a loss function for model, 5) Write a basic Training Loop
