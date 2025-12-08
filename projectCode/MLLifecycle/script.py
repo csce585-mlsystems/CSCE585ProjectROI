@@ -15,6 +15,7 @@ sys.path.insert(1,module_dir2)
 DemoMode = True
 module_dir3 = os.path.join('C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo/plots' if DemoMode == False else "ProjectRepo/plots")
 sys.path.insert(2,module_dir3)
+sys.path = [sys.path[i].replace("\\","/") for i in range(len(sys.path))]
 # print("--DEBUGGING CHECKPOINT: Ensuring that imports work--")
 # pb.set_trace()
 

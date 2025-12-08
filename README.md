@@ -49,222 +49,25 @@ Note: This has no impact on your grade as long as you properly follow the proced
 
 [3] Cao, K., & You, H. (2022, September 28). Fundamental Analysis Via Machine Learning: Financial Analysts Journal: Vol 80, no 2. Taylor & Francis Online. https://www.tandfonline.com/doi/abs/10.1080/0015198X.2024.2313692
 
+# < The following is only applicable for the final project submission >  
+
 ## Dependencies  
-### Include all dependencies required to run the project.  
-- Python 3.11+
-- macOS 13+ or Windows 10+
-- uv
-- uv.lock and pyproject.toml are included in this repository
-  
+### Include all dependencies required to run the project. Example:  
+- Python 3.11  
+- Ubuntu 22.04  
+
 For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package manager instead of `pip`. Your repo must include both the `uv.lock` and `pyproject.toml` files.  
 
 ## Directory Structure  
+Example:  
 ```
-├── ModelLossPlot#1.jpg
-├── ModelPredictions.csv
-├── README.md
-├── UIDesignDescs
-│   ├── set1.md
-│   └── stateDiagramReferencingUserInteraction.md
-├── UXResearch
-│   └── purpose.md
-├── __pycache__
-│   └── constants.cpython-312.pyc
-├── app.py
-├── constants.py
-├── docs
-│   ├── p0
-│   │   ├── P0.pdf
-│   │   └── SlidesP0.pdf
-│   ├── p1
-│   │   ├── SlidesP1.pdf
-│   │   ├── milestone1
-│   │   │   ├── Experiments
-│   │   │   │   └── initialExperiments.ipynb
-│   │   │   └── powerpointTemplate.tex
-│   │   └── p1.txt
-│   ├── p2
-│   │   └── p2.txt
-│   └── references.bib
-├── milestones
-│   ├── milestone1
-│   │   ├── Experiments
-│   │   │   ├── experiment1MockJuptyerFile.md
-│   │   │   ├── initialExperiments.ipynb
-│   │   │   └── initialExperimentsFinalCopy.ipynb
-│   │   ├── p1Document.md
-│   │   └── requirements.txt
-│   ├── milestone1WVirtualEnv
-│   │   ├── CACHEDIR.TAG
-│   │   ├── Experiments
-│   │   │   ├── experiment1MockJuptyerFile.md
-│   │   │   ├── initialExperiments.ipynb
-│   │   │   ├── initialExperimentsFinalCopy.ipynb
-│   │   │   └── tempLogPips1.txt
-│   │   ├── Lib
-│   │   │   └── site-packages
-│   │   │       ├── _virtualenv.pth
-│   │   │       └── _virtualenv.py
-│   │   ├── Scripts
-│   │   │   ├── activate
-│   │   │   ├── activate.bat
-│   │   │   ├── activate.csh
-│   │   │   ├── activate.fish
-│   │   │   ├── activate.nu
-│   │   │   ├── activate.ps1
-│   │   │   ├── activate_this.py
-│   │   │   ├── deactivate.bat
-│   │   │   ├── pydoc.bat
-│   │   │   ├── python.exe
-│   │   │   └── pythonw.exe
-│   │   ├── VirtualEnvSetup1.sh
-│   │   ├── p1Document.md
-│   │   ├── powerpointTemplate.tex
-│   │   ├── pyproject.toml
-│   │   ├── pyvenv.cfg
-│   │   └── requirements.txt
-│   ├── milestone2
-│   │   ├── draftPaper.tex
-│   │   ├── draftPaperMarkdownVersion.md
-│   │   ├── guide.md
-│   │   ├── initialExperiments.ipynb
-│   │   ├── initialExperimentsFinalCopyP2Version.ipynb
-│   │   └── powerpointTemplate.tex
-│   ├── milestone2WVirtualEnv
-│   │   ├── CACHEDIR.TAG
-│   │   ├── Lib
-│   │   │   └── site-packages
-│   │   │       ├── _virtualenv.pth
-│   │   │       └── _virtualenv.py
-│   │   ├── Scripts
-│   │   │   ├── activate
-│   │   │   ├── activate.bat
-│   │   │   ├── activate.csh
-│   │   │   ├── activate.fish
-│   │   │   ├── activate.nu
-│   │   │   ├── activate.ps1
-│   │   │   ├── activate_this.py
-│   │   │   ├── deactivate.bat
-│   │   │   ├── pydoc.bat
-│   │   │   ├── python.exe
-│   │   │   └── pythonw.exe
-│   │   ├── VirtualEnvSetup2.sh
-│   │   ├── draftPaper.tex
-│   │   ├── guide.md
-│   │   ├── initialExperiments.ipynb
-│   │   ├── initialExperimentsFinalCopyP2Version.ipynb
-│   │   ├── powerpointTemplate.tex
-│   │   └── pyvenv.cfg
-│   ├── notebookReferencingCleanBaselineVersionOfModel.ipynb
-│   └── powerpointTemplate.tex
-├── noteRegardingP1_READREAD_ME.md
-├── originalCopyOfProjectProposal.md
-├── preferences.json
-├── projectCode
-│   ├── MLLifecycle
-│   │   ├── DataCollectionAndPreparation
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-312.pyc
-│   │   │   │   └── newVersionSet1FinalCopy.cpython-312.pyc
-│   │   │   ├── cleanedDataUnmodified
-│   │   │   │   ├── amazon_Metrics.csv
-│   │   │   │   ├── apple_Metrics.csv
-│   │   │   │   └── google_Metrics.csv
-│   │   │   ├── firstVersionTrainingSet.csv
-│   │   │   ├── newVersionSet1FinalCopy.py
-│   │   │   ├── outputFromAttrs.txt
-│   │   │   ├── set1.py
-│   │   │   └── testDir
-│   │   │       ├── generalCodept1.py
-│   │   │       ├── newVersionSet1.py
-│   │   │       ├── newVersionSet1FinalCopy.py
-│   │   │       └── purpose.md
-│   │   ├── ModelAccuracyPlot#1.png
-│   │   ├── ModelDevelopmentAndTraining
-│   │   │   ├── CleanData
-│   │   │   │   └── guide.md
-│   │   │   ├── ModelPredictions.csv
-│   │   │   ├── TestSets
-│   │   │   ├── TrainingSets
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-312.pyc
-│   │   │   │   └── set1FinalCopy.cpython-312.pyc
-│   │   │   ├── plots
-│   │   │   │   ├── ModelAccuracyPlot#1.png
-│   │   │   │   ├── ModelAccuracyPlot#1_Baseline.png
-│   │   │   │   ├── ModelAccuracyPlot#1_Experiment#1.png
-│   │   │   │   ├── ModelAccuracyPlot#1_Experiment#2.png
-│   │   │   │   ├── ModelAccuracyPlot#1_Experiment#3.png
-│   │   │   │   ├── ModelLossPlot#1_Baseline.png
-│   │   │   │   ├── ModelLossPlot#1_Experiment#1.png
-│   │   │   │   ├── ModelLossPlot#1_Experiment#2.png
-│   │   │   │   └── ModelLossPlot#1_Experiment#3.png
-│   │   │   ├── preparedDataset.csv
-│   │   │   └── set1FinalCopy.py
-│   │   ├── ModelLossPlot#1.jpg
-│   │   ├── __pycache__
-│   │   │   └── script.cpython-312.pyc
-│   │   ├── script.py
-│   │   └── summaryOfFiles.md
-│   ├── __init__.py
-│   ├── __pycache__
-│   │   └── __init__.cpython-312.pyc
-│   ├── components
-│   │   ├── State0
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-312.pyc
-│   │   │   │   └── componentSet0.cpython-312.pyc
-│   │   │   └── componentSet0.py
-│   │   ├── State1
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-312.pyc
-│   │   │   │   └── componentSet1.cpython-312.pyc
-│   │   │   └── componentSet1.py
-│   │   ├── State2
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-312.pyc
-│   │   │   │   └── componentSet2.cpython-312.pyc
-│   │   │   ├── componentSet2.py
-│   │   │   └── tabs
-│   │   │       ├── __init__.py
-│   │   │       ├── __pycache__
-│   │   │       │   ├── __init__.cpython-312.pyc
-│   │   │       │   ├── dashboard.cpython-312.pyc
-│   │   │       │   ├── discover.cpython-312.pyc
-│   │   │       │   ├── portfolio.cpython-312.pyc
-│   │   │       │   └── settings.cpython-312.pyc
-│   │   │       ├── dashboard.py
-│   │   │       ├── discover.py
-│   │   │       ├── portfolio.py
-│   │   │       └── settings.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       └── __init__.cpython-312.pyc
-│   ├── requirements.md
-│   └── routes
-│       ├── State0Routes.py
-│       ├── State1Routes.py
-│       ├── State2Routes.py
-│       ├── __init__.py
-│       └── __pycache__
-│           ├── State0Routes.cpython-312.pyc
-│           ├── State1Routes.cpython-312.pyc
-│           ├── State1Routes.cpython-312.pyc.2008644087856
-│           ├── State2Routes.cpython-312.pyc
-│           └── __init__.cpython-312.pyc
-├── projectProposalInfo
-│   └── templateProvidedByTA.md
-├── requirements.txt
-├── results.py
-├── run.py
-└── users.json
-
-
+|- data (mandatory)
+|- src (mandatory)
+|   |- model.py
+|   |- example.py
+|- train.py
+|- run.py (mandatory)
+|- result.py (mandatory)
 ```
 
 ⚠️ Notes:  
@@ -274,49 +77,24 @@ For Python users: Please use [uv](https://docs.astral.sh/uv/) as your package ma
 
 ## How to Run  
 - Include all instructions (`commands`, `scripts`, etc.) needed to run your code.  
-- Provide all other details a computer science student would need to reproduce your results.
-- Some exploratory plots in the notebooks use matplotlib, which may require additional system level setup on macOS with Python 3.13. The core application and ML pipeline run without it.
+- Provide all other details a computer science student would need to reproduce your results.  
 
 Example:  
-- Install uv & activate environment (MAC)
+- Download the [DATASET](dataset_link)
   ```bash
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  uv sync
-  source .venv/bin/activate
+  wget <URL_of_file>
   ```
 
-- Install uv & activate environment (WIndows)
+- To train the model, run:  
   ```bash
-  iwr https://astral.sh/uv/install.ps1 -useb | iex
-  uv sync
-  .\.venv\Scripts\activate
-  ```
-
-- To run the app:  
+  python train.py
+  ```  
+- To plot the results, run:  
   ```bash
-  python run.py
-  ```
-
-- The results:  
-  ```bash
-  python results.py
-  ```
-  
-- To reproduce ML experiment notebooks:  
-  ```bash
-  cd milestones/milestone1 
-  cd milestones/milestone2
-
-  jupyter notebook
-  ```
-  
-- To run the files directly:  
-  ```bash
-  python projectCode/MLLifecycle/ModelDevelopment/baseline_model.py
-  python projectCode/MLLifecycle/ModelDevelopment/experiment1_model.py
-  ```
+  python result.py
+  ```  
 
 ## Demo  
-- [Link to Video](https://youtu.be/9m3HA3epPpU)
-- In the video, we are doing the following steps: 1) Logging into the application with credentials, 2) Setting desired amount to invest and setting the optimal amount of money to result from said investment, 3) We press 'Generate Recommendations', which accesses a repository of stocks and ranks these stocks based on the value investing strategy, and 4) A screen appears referencing the results of the ML Model's predictions. 
+- All projects must include video(s) demonstrating your project.  
+- Please use annotations/explanations to clarify what is happening in the demo.  
 ---
