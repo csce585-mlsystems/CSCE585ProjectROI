@@ -64,9 +64,9 @@ class subsys1:
         alreadyExists = False if boolExpMain == True else True
         print("-Beginning of assigning formulas-")
         global independentVars
-        independentVars = ["Close" if PRatioBug == False else "Open","Tangible Book Value","High","Retained Earnings","Net Tangible Assets"]
+        independentVars = ["Close" if PRatioBug == False else "Open","Tangible Book Value","High","Retained Earnings","Net Tangible Assets", ]
         global DependentVars
-        DependentVars = ["P/B", "P/E", "NCAV", "Date For Eval"] #<-- PN: Date for Eval was created to reference the date to use to make relevant decisions.
+        DependentVars = ["P/B", "P/E", "NCAV", "Total Debt", "Tangible Book Value", "Net Debt", "Stockholder's Equity", "Current Liabilities", "Stockholders Equity", "Date For Eval"] #<-- PN: Date for Eval was created to reference the date to use to make relevant decisions.
         DependentVars.append("Share Price")
         global dataFramesToBeShipped
         dataFramesToBeShipped = [pd.DataFrame(), pd.DataFrame()]
@@ -87,6 +87,8 @@ class subsys1:
             print(dataFramesToBeShipped[0])
             # end of Assigning the formulas
         elif PRatioBug and pullingFromTickerInfo == True:
+            # print("---DEBUGGING CHECKPOINT: Seeing what arrOfDataFramesNeeded References---")
+            # pb.set_trace()
             dataFramesToBeShipped[0].loc[0,DependentVars[0]] = ticker.info["priceToBook"]
             print("---")
             print(arrOfDataFramesNeeded[0].columns)
@@ -95,6 +97,20 @@ class subsys1:
             print(arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[1]])
             dataFramesToBeShipped[0].loc[0,DependentVars[1]] = ticker.info["regularMarketPrice"]/ticker.info["earningsQuarterlyGrowth"]
             dataFramesToBeShipped[0].loc[0,DependentVars[2]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[3]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[3]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[4]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[4]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[5]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[2]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[6]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[12]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[7]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[29]] #<-- Here, NCAV comes from balance sheet.
+
+
+
+            dataFramesToBeShipped[0].loc[0,DependentVars[3]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
+            dataFramesToBeShipped[0].loc[0,DependentVars[4]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
+
+
+            dataFramesToBeShipped[0].loc[0,DependentVars[4]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
+            dataFramesToBeShipped[0].loc[0,DependentVars[5]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
             print(dataFramesToBeShipped[0])
             dataFramesToBeShipped[0].loc[0,"Share Price"] = ticker.info["regularMarketPrice"]
             # end of Assigning the formulas
@@ -159,18 +175,30 @@ class subsys2:
                 arrForCondTwo: pd.DataFrame = arrOfDataFramesNeeded[len(arrOfDataFramesNeeded) - 1] #<-- Did this since I added the dataframe specifically for cond 2 at the END of arrOfDataFramesNeeded. [UPDATE: Need to replace this]
                 highestP_EOvrFiveYrs: float = arrForCondTwo["P/E"].max() #<-- REPLACEMENT PENDING: will be replaced when above is filled in. [UPDATE: Using default operator logic to set val to trusy val if ither operand is undef. Will involve querying dataframe for maximum val in column]
                     # Body of creating boolExp Array for respective conditions
+                # debtToThingComparison = 
+                averageP_EForIndustry = 40.35 #<-- average P/E ratio for tech comps.
                 boolExps: list[bool] = [
-                        dataFrameReffingCompanyData["P/B" if currCompany == None else ("P/B",currCompany)] <= 1.0,
+                        dataFrameReffingCompanyData["P/B" if currCompany == None else ("P/B",currCompany)] <= averageP_EForIndustry,
                     dataFrameReffingCompanyData["P/E" if currCompany == None else ("P/E",currCompany)] <= 0.4*highestP_EOvrFiveYrs,
-                    dataFrameReffingCompanyData["Share Price" if currCompany == None else ("Share Price",currCompany)] < 0.67*dataFrameReffingCompanyData["Tangible Book Value" if currCompany == None else ("Tangible Book Value",currCompany)]
+                    dataFrameReffingCompanyData["Total Debt"] > dataFrameReffingCompanyData["Tangible Book Value"],  
+                    dataFrameReffingCompanyData["Total Debt"] > 2*dataFrameReffingCompanyData["NCAV"],  
+                    dataFrameReffingCompanyData["Total Debt"] > 2*dataFrameReffingCompanyData["Current Liabilities"] and dataFrameReffingCompanyData["Total Debt"] > 2*dataFrameReffingCompanyData["Stockholders Equity"],  
+                    
                 ]
                     # End of Body of creating boolExp Array for respective conditions
+                 
+                # debtToThingComparison = 
+                # debtToThingComparison =
                 score = 0
                 if boolExps[0]:
                     score += 1
                 if boolExps[1]:
                     score += 1
                 if boolExps[2]:
+                    score += 1
+                if boolExps[3]:
+                    score += 1
+                if boolExps[4]:
                     score += 1
                 dataFrameReffingCompanyData["Optimality"] = score;
                 # End of Body of executing algorithm for strategy responsible for assigning optimality
