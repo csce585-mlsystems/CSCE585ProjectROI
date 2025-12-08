@@ -176,24 +176,24 @@ def fillPicks(modelPrediction = None):
         # offset '-1' is present. 
         isOrderOfTickerTablePrecedence = True
         global currentTickers, placeholderPicks #<-- Added these to ensure that modifications are applied outside of this function to be used in functions below.
-        currentTickers = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"].values.tolist() ]
+        dataFrameReffingModelPred = dataFrameReffingModelPred.sort_values(by="Model Predictions", ascending=False)
+        # currentTickers = [x for x in tickerRealNameTable.keys() if x in dataFrameReffingModelPred["Company"].values.tolist() ]
+        currentTickers = dataFrameReffingModelPred["Company"].tolist()
         
         # Body of determining risks of stocks chosen and ensuring that top stocks are pulled
         placeholderPicks = [{"tags": ["Tag A", "Tag B"], "risk": ""} for i in range(len(currentTickers))]
-        placeholderPicks[0]["risk"] = "high"
+        placeholderPicks[0]["risk"] = "low"
         placeholderPicks[1]["risk"] = "medium"
-        placeholderPicks[2]["risk"] = "low"
+        placeholderPicks[2]["risk"] = "high"
         # End of body of determining risks of stocks chosen and ensuring that top stocks are pulled
         for i in range((dataFrameReffingModelPred.shape[0] - 1) if not isOrderOfTickerTablePrecedence else len(currentTickers)):
             # NOTE: May need a table that refs the ticker-Actual name pairs to be used below!
             placeholderPicks[i]["company"] = currentTickers[i]
-            placeholderPicks[i]["ticker"] = dataFrameReffingModelPred.loc[i, "Company"]
-            placeholderPicks[i]["score"] = dataFrameReffingModelPred.loc[i, "Optimality"]
+            placeholderPicks[i]["ticker"] = dataFrameReffingModelPred.loc[dataFrameReffingModelPred.index[i], "Company"]
+            placeholderPicks[i]["score"] = dataFrameReffingModelPred.loc[dataFrameReffingModelPred.index[i], "Model Predictions"]
             placeholderPicks[i]["tags"][0] = f"Price to Earnings Ratio: {dataFrameReffingModelPred.loc[i, "P/E"]}"
             placeholderPicks[i]["tags"][1] = f"Share Price: {dataFrameReffingModelPred.loc[i, "Share Price"]}"
         
-        # print("---DEBUGGING CHECKPOINT: Checking value of placeholderPicks---")
-        # pb.set_trace() #<-- NOTE: Works as intended
         return
         # NOTE: May add something that grabs top 3 companies for any set of companies given.
         # NOTE: Nevertheles,s I believe this is all the code that is NEEDED. Currently

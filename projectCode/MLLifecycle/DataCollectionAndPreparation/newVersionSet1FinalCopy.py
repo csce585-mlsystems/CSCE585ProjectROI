@@ -66,7 +66,7 @@ class subsys1:
         global independentVars
         independentVars = ["Close" if PRatioBug == False else "Open","Tangible Book Value","High","Retained Earnings","Net Tangible Assets", ]
         global DependentVars
-        DependentVars = ["P/B", "P/E", "NCAV", "Total Debt", "Tangible Book Value", "Net Debt", "Date For Eval"] #<-- PN: Date for Eval was created to reference the date to use to make relevant decisions.
+        DependentVars = ["P/B", "P/E", "NCAV", "Total Debt", "Tangible Book Value", "Net Debt", "Stockholder's Equity", "Current Liabilities", "Stockholders Equity", "Date For Eval"] #<-- PN: Date for Eval was created to reference the date to use to make relevant decisions.
         DependentVars.append("Share Price")
         global dataFramesToBeShipped
         dataFramesToBeShipped = [pd.DataFrame(), pd.DataFrame()]
@@ -87,8 +87,8 @@ class subsys1:
             print(dataFramesToBeShipped[0])
             # end of Assigning the formulas
         elif PRatioBug and pullingFromTickerInfo == True:
-            print("---DEBUGGING CHECKPOINT: Seeing what arrOfDataFramesNeeded References---")
-            pb.set_trace()
+            # print("---DEBUGGING CHECKPOINT: Seeing what arrOfDataFramesNeeded References---")
+            # pb.set_trace()
             dataFramesToBeShipped[0].loc[0,DependentVars[0]] = ticker.info["priceToBook"]
             print("---")
             print(arrOfDataFramesNeeded[0].columns)
@@ -97,7 +97,18 @@ class subsys1:
             print(arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[1]])
             dataFramesToBeShipped[0].loc[0,DependentVars[1]] = ticker.info["regularMarketPrice"]/ticker.info["earningsQuarterlyGrowth"]
             dataFramesToBeShipped[0].loc[0,DependentVars[2]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[3]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[3]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[4]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[4]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[5]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[2]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[6]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[12]] #<-- Here, NCAV comes from balance sheet.
+            dataFramesToBeShipped[0].loc[0,DependentVars[7]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[29]] #<-- Here, NCAV comes from balance sheet.
+
+
+
             dataFramesToBeShipped[0].loc[0,DependentVars[3]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
+            dataFramesToBeShipped[0].loc[0,DependentVars[4]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
+
+
             dataFramesToBeShipped[0].loc[0,DependentVars[4]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
             dataFramesToBeShipped[0].loc[0,DependentVars[5]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] 
             print(dataFramesToBeShipped[0])
@@ -171,7 +182,7 @@ class subsys2:
                     dataFrameReffingCompanyData["P/E" if currCompany == None else ("P/E",currCompany)] <= 0.4*highestP_EOvrFiveYrs,
                     dataFrameReffingCompanyData["Total Debt"] > dataFrameReffingCompanyData["Tangible Book Value"],  
                     dataFrameReffingCompanyData["Total Debt"] > 2*dataFrameReffingCompanyData["NCAV"],  
-                    dataFrameReffingCompanyData["Net Debt"] > 2*dataFrameReffingCompanyData["NCAV"],  
+                    dataFrameReffingCompanyData["Total Debt"] > 2*dataFrameReffingCompanyData["Current Liabilities"] and dataFrameReffingCompanyData["Total Debt"] > 2*dataFrameReffingCompanyData["Stockholders Equity"],  
                     
                 ]
                     # End of Body of creating boolExp Array for respective conditions

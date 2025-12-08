@@ -482,10 +482,29 @@ def ModelTrainingAndDevelopment():
         list_b = [np.argsort(predictions[i])[-1] for i in range(len(predictions)) if i < len(predictions) - 1 and np.argsort(predictions[i][-1]) in np.argsort(predictions[i+1][-1])]
         list_b = [x.item() for x in list_b]
         missing_element = set(list_a).difference(set(list_b)) #<-- equal to list_a \cap (list_b)^c . 
-        print("--DEBUGGING CHECKPOINT: Retrying to make algorithm for unique label selection--- ")
-        pb.set_trace()
-        copyTwoSendOff["Model Predictions"] = pd.Series([np.argmax(x) for x in predictions]) if ImprovedAlgo == False else pd.Series([*list_b,missing_element.pop()]) 
+        # End of Attempt #1
+
+        # Attempt #2
+        testerU = [np.argsort(x) for x in predictions]
+        # Algorithm for ensuring unique signings for labels:
+        labelResults = ["" for i in range(len(predictions))]
+
+        # boolValues = list(map(lambda x,i: x != labelResults[i], ))
+        # Body of creating array that'll be dynamically added to for all i (x != labelResults[i]) .
+        def boolPP(a,b):
+            return a != b
+        booVals = [lambda x,y: x != y]
+        labelResults[0] = testerU[0][0]
+        for i in range(len(labelResults) - 1):
+            labelResults[i+1] = [x for x in testerU[i] if x not in labelResults[:i+1]][0]
+
+        # End of algorithm[ALGORITHM WORKS!!]
+        
+        # End of Attempt #2
+        copyTwoSendOff["Model Predictions"] = pd.Series([np.argmax(x) for x in predictions]) if ImprovedAlgo == False else pd.Series(labelResults) 
         # thoughts. 
+        # print("--DEBUGGING CHECKPOINT: Sorting predictions in order so they reflect--- ")
+        # pb.set_trace()
         # End of Attempt #1
         # End of Body of modifying predictions to ensure that each prediction results in only ONE thing being chosen
         copyTwoSendOff.loc[:, "Company"] = test_labels
@@ -509,72 +528,6 @@ def ModelTrainingAndDevelopment():
 
     # print("---DEBUGGING CHECKPOINT: Improving Predictions Algorithm---")
     # pb.set_trace()
-    """
-    # NOTE: Below will reference ways to transform predictions into string format to be able to utilzied for user consumption[DISREGARD #1: Only applicable to model integration into app]
-    print(test_stocks[test_stocks["Optimality"] == np.argmax([predictions[0]])]["Company"].values[0])
-    print("----")
-    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[1] if predictions[1].tolist().index(x) != np.argmax([predictions[0]])])]["Company"].values[0])
-    print("----")
-    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[2] if predictions[2].tolist().index(x) != np.argmax([predictions[0]]) and predictions[2].tolist().index(x) != np.argmax([predictions[1]])])]["Company"].values[0])
-    print("----")
-    print(test_stocks[test_stocks["Optimality"] == np.argmax([x for x in predictions[3] if predictions[3].tolist().index(x) != np.argmax([predictions[0]]) and predictions[3].tolist().index(x) != np.argmax([predictions[1]]) and predictions[3].tolist().index(x) != np.argmax([predictions[2]])])]["Company"].values[0])
-    print("----")
-    # UPDATE: Above works, BUT the problem is that each prediction MUST be unique, and the predictions should be limited based on the value(s) of the previous prediction.
-    # Attempt #1 At solution:
-    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"].values[0])
-    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[1])]["Company"].values[0])
-    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[2])]["Company"].values[0])
-    print(test_stocks[test_stocks["Optimality"] == np.argmax(predictions[3])]["Company"].values[0])
-    # End of Attempt #1 At solution:
-    # Attempt #2 At solution:
-    np.argsort(predictions[0])
-    np.argmax(predictions[0])
-    [x for x in np.argsort(predictions[1]) if x != np.argmax(predictions[0])]
-    np.argsort(predictions[1][np.argsort(predictions[0])[0]])
-    [x for x in np.argsort(predictions[1]) if x != np.argmax(predictions[0])]
-    np.argsort(predictions[2])
-    [x for x in np.argsort(predictions[2]) if x != np.argmax(predictions[0]) and x!= np.argmax(predictions[1])]
-    np.argsort(predictions[3])
-    [x for x in np.argsort(predictions[3]) if x != np.argmax(predictions[0]) and x != np.argmax(predictions[1]) and x != np.argmax(predictions[2])]
-    np.argmax(predictions[0])
-    np.argmax([x for x in predictions[1] if predictions[1].tolist().index(x) not in [np.argmax(predictions[0])]])
-    np.argmax([x for x in predictions[2] if predictions[2].tolist().index(x) not in [np.argmax(predictions[0]), np.argmax(predictions[1])]])
-    np.argmax([x for x in predictions[3] if predictions[3].tolist().index(x) not in [np.argmax(predictions[0]), np.argmax(predictions[1]), np.argmax(predictions[2])]])
-    # (cont here!)[UPDATE: Need to use np.argsort to ensure none of the labels chosen result in one label being chosen more than once! Refer to this link for assistance: https://www.geeksforgeeks.org/python/how-to-get-the-n-largest-values-of-an-array-using-numpy/][Attempt to acheive solution is below] [NOTE: Basic idea is this: np.argmax(predictions[2][:np.argmax(predictions[1])])]
-    # End of Attempt #2 At solution:
-    test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users.
-    # Attempt #3 At solution:
-    np.argsort(predictions[0]) #<-- NOTE: argsort sorts argument indices in ascending order! [UPDATE: There is also an edge case, if preds coincidentally are the same, then the next maximum should be pulled instead]
-    np.argsort(predictions[1])
-    np.argsort(predictions[2])
-    np.argsort(predictions[3])
-    test_stocks[test_stocks["Optimality"] == np.argmax(predictions[0])]["Company"]
-    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]]["Company"]
-    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]]["Company"]
-    test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]][0] ]["Company"]
-    np.argmax(predictions[0])
-    [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
-    [x for x in np.argsort(predictions[2]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] ][-1]
-    [x for x in np.argsort(predictions[3]) if x != np.argsort(predictions[0])[-1] and x != np.argsort(predictions[1])[-1] and x != np.argsort(predictions[2])[-2]]
-    # UPDATE: Above works greatly when 4 companies are utilized. Now, focus shifts to programmatically adhering to situation for any finite amount of companies.
-    conditions = []
-    i = 1
-    test_stocks.loc[:,"Company"] = train_stocks.loc[:,"Company"].astype("str") #<-- Used to convert one-hot encoding back into strings interpretable by users.
-    print("--DEBUGGING CHECKPOINT: CHecking if algo works for any finite num of predictions---") # UPDATE: This process will be done after finishing up everything else.
-    pb.set_trace()
-    while i < (len(predictions)):
-        # GOAL: a) Ensure that each prediction is unique, so a desired order can be implemented.
-        lambda x: x != np.argsort(predictions[i - 1])[-1]
-        conditions.append(lambda x: x != np.argsort(predictions[i - 1])[-1]) #<-- NOTE: Leaving x und   ef on purpose since it'll be defined in list comprehension below.
-        # conditions.append(x != np.argsort(predictions[i - 1])[-1]) #<-- NOTE: Leaving x undef on purpose since it'll be defined in list comprehension below.
-        # [x for x in np.argsort(predictions[1]) if x != np.argsort(predictions[0])[-1]][-1]
-        print([x for x in np.argsort(predictions[i]) if conditions][-1])
-        print("----")
-        print(test_stocks[test_stocks["Optimality"] == [x for x in np.argsort(predictions[1]) if conditions][-1]]["Company"])
-        print("----")
-        i += 1
-    # End of Attempt #3 At solution:
-    """
     # NOTE: Above will reference ways to transform predictions into string format to be able to utilzied for user consumption
     ## Listing all data in history:
     print(train_history.history.keys())
