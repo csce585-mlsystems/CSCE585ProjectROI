@@ -177,6 +177,7 @@ class subsys2:
                     # Body of creating boolExp Array for respective conditions
                 # debtToThingComparison = 
                 averageP_EForIndustry = 40.35 #<-- average P/E ratio for tech comps.
+                print("--DEBUGGING CHECKPOINT #1: Evaluating Bool expressions ensuring the classifications are doing what they are supposed to---")
                 boolExps: list[bool] = [
                         dataFrameReffingCompanyData["P/B" if currCompany == None else ("P/B",currCompany)] <= averageP_EForIndustry,
                     dataFrameReffingCompanyData["P/E" if currCompany == None else ("P/E",currCompany)] <= 0.4*highestP_EOvrFiveYrs,

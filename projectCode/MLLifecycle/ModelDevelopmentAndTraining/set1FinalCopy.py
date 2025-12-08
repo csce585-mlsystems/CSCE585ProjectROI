@@ -64,7 +64,67 @@ def attempt3():
     hidden_units = 256
     dropout = 0.45
     isExperimentSetup3Active = False
-    model = Sequential()
+    def newModelIntegration(modelNew = False):
+        if(not modelNew):
+            model = Sequential()
+        else:
+            # NOTE: Insert body of newModel here!
+             def experimentSetup0_newModel():
+                # This will reference the default settings irrespective to experiments.
+                # 1) Creating the Model.
+                print("---Undergoing Experiment Setup #0_newModel---")
+                model.add(Input((x_train.shape[1],)))
+                model.add(Dense(hidden_units))
+                model.add(Activation('relu'))
+                model.add(Dropout(dropout))
+                model.add(Dense(hidden_units))
+                model.add(Activation('relu')) if experimentSetup3_newModel() == None else experimentSetup3_newModel() #<-- This changes the Activation function, adhering to experimentSetup3_newModel!
+                model.add(Dropout(dropout))
+                model.add(Dense(num_labels))
+                print("---End of Experiment Setup #0_newModel---")
+                return
+             def experimentSetup1_newModel():
+                # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout
+                print("---Undergoing Experiment Setup #1_newModel---")
+                setN = 1 #<-- Change number for this to get values from resp sets.
+                experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), (128,256,0.3), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
+                batch_size = experiment1Tuples[setN][0]
+                hidden_units = experiment1Tuples[setN][1]
+                dropout = experiment1Tuples[setN][2]
+                print("---End of Experiment Setup #1_newModel---")
+                return
+             global listVerOfX_train
+             listVerOfX_train = x_train.columns[:len(x_train.columns)-1].to_list()
+             # ^^ Utilized to setup experiment #2 whose desc is below.
+             def experimentSetup2_newModel(numQuantLvls = 2):
+                # Goal of exp: Want to see model performance based on degree of quantanization of data
+                print("---Undergoing Experiment Setup #2_newModel---")
+                # NOTE: Below will involve replacing 255 with a different number based on degree of quantanization of data.
+                # Using for loop to iterate through each column to apply this quantinization to each column.
+                global x_train, x_test
+                for i in listVerOfX_train:
+                    x_trainMax = x_train[i].max()
+                    x_trainMin = x_train[i].min()
+                    x_testMax = x_test[i].max()
+                    x_testMin = x_test[i].min()
+                    widthsOfQuant = [(x_trainMax - x_trainMin)/(numQuantLvls - 1),(x_testMax - x_testMin)/(numQuantLvls - 1)]
+                    x_train.loc[:,i] = x_train.loc[:,i]/widthsOfQuant[0]
+                    x_test.loc[:,i] = x_test.loc[:,i]/widthsOfQuant[0]
+                print("---End of Experiment Setup #2_newModel---")
+                return
+             def experimentSetup3_newModel():
+                # Goal of exp: Want to see model performance based on type of activation function from a subset of all possible activation functions.
+                print("---Undergoing Experiment Setup #3_newModel---" if isExperimentSetup3_newModelActive else "---Experiment Setup #3_newModel was skipped---")
+                activationFuncs = ['elu', 'sigmoid', 'tanh' ]
+                print("---End of Experiment Setup #3_newModel---" if isExperimentSetup3_newModelActive else "---End of Experiment Setup #3_newModel was skipped---")
+                return model.add(Activation(activationFuncs[0])) if isExperimentSetup3_newModelActive == True else None
+             def experimentSetup4_newModel():
+                print("---Undergoing Experiment Setup #4_newModel---")
+                # Need to have an experiment that utilizes scaling analysis[in progress]
+                print("---End of Experiment Setup #4_newModel---")
+                return
+             
+    newModelIntegration(False)
     def experimentSetup0():
        # This will reference the default settings irrespective to experiments.
        # 1) Creating the Model.
