@@ -16,6 +16,19 @@ from tensorflow.keras.datasets import mnist
 DemoMode = True
 sys.path.insert(3,"C:/Users/adoct/Notes for CSCE Classes[Fall 2025]/Notes for CSCE 585/ProjectRepo" if DemoMode == False else "ProjectRepo")
 # end of body of neccessary imports
+# Body of neccessray imports for new verison of model
+
+from sklearn.datasets import fetch_openml #<-- USed to fetch MNIST Dataset
+from sklearn.model_selection import StratifiedKFold
+from sklearn.base import clone
+from sklearn.linear_model import SGDClassifier #<-- NOTE: Can use this in place of model??
+from sklearn.model_selection import cross_val_score
+from sklearn.base import BaseEstimator
+from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import confusion_matrix
+
+
+# End of Body of neccessray imports for new verison of model
 # Body of modes of plots
 # baseLinePerform, Experiment1, Experiment2, Experiment3 = True,False,False,False #<-- Mode #1
 baseLinePerform, Experiment1, Experiment2, Experiment3 = False,True,False,False #<-- Mode #2
