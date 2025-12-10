@@ -64,23 +64,63 @@ def getMetrics(tickers):
     for i, ticker in enumerate(tickers):
         try:
             stock = yf.Ticker(ticker)
-            info = stock.info
-            sector = info.get("sector")
+            b = stock.balance_sheet
+            # sector
+            sector = stock.info.get("sector")
             # making sure we always have a pe
-            pe = info.get("trailingPE")
-            if pe is None:
-                pe = info.get("forwardPE")
-            pb = info.get("priceToBook")
-            de = info.get("debtToEquity")
-            fcf = info.get("freeCashflow")
+            # metric pe
+            pe = stock.info.get("trailingPE")
+            if pe is None: pe = stock.info.get("forwardPE")
+            # metric: pb
+            pb = stock.info.get("priceToBook")
+            # metric: share price
+            sharePrice = stock.info.get("regularMarketPrice")
+            # metric:  debt
+            debt = None
+            if "Total Debt" in b.index: debt = b.loc["Total Debt"].iloc[0]
+            # metric: total liability
+            totalLiability = None
+            if "Total Liab" in b.index: totalLiability = b.loc["Total Liab"].iloc[0]
+            # metric: current liability
+            currentLiability = None
+            if "Total Current Liabilities" in b.index: currentLiability = b.loc["Total Current Liabilities"].iloc[0]
+            # metric: intangible assets
+            intangibleAssets = None
+            if "Intangible Assets" in b.index: intangibleAssets = b.loc["Intangible Assets"].iloc[0]
+            # metric: total assets
+            totalAssets = None
+            if "Total Assets" in b.index: totalAssets = b.loc["Total Assets"].iloc[0]
+            # metric: current assets
+            currentAssets = None
+            if "Total Current Assets" in b.index: currentAssets = b.loc["Total Current Assets"].iloc[0]
+            # making sure we always have a bval for equity
+            # metric: equity
+            equity = None
+            if "Common Stock Equity" in b.index: equity = b.loc["Common Stock Equity"].iloc[0]
+            elif "Stockholders Equity" in b.index: equity = b.loc["Stockholders Equity"].iloc[0]
+            # metric: cash
+            cash = None
+            if "Cash And Cash Equivalents" in b.index: cash = b.loc["Cash And Cash Equivalents"].iloc[0]
+            # making sure we always have a company name
+            # metric: company name
+            company = stock.info.get("shortName")
+            if company is None: company = stock.info.get("longName") 
             rows.append(
                 {
                     "ticker": ticker,
+                    "company": company,
                     "sector": sector,
                     "pe": pe,
                     "pb": pb,
-                    "de": de,
-                    "fcf": fcf,
+                    "sharePrice": sharePrice,
+                    "debt": debt,
+                    "totalLiability": totalLiability,
+                    "currentLiability": currentLiability,
+                    "intangibleAssets": intangibleAssets,
+                    "totalAssets": totalAssets,
+                    "currentAssets": currentAssets,
+                    "equity": equity,
+                    "cash": cash,
                 }
             )
         except Exception as e:
