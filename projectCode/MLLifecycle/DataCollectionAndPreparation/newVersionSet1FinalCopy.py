@@ -368,4 +368,4 @@ def dataPrepDeriv(companies: list[str] = [], desiredDateToPullInvestment = None)
         # End of Setting optimality column to be based on alphabetical ordering
         resultantDataFrame.to_csv(f"{filePathToModelDir}")
     # End of Body of handling edge case where all of them are same optimality
-dataPrepDeriv(['GOOG', 'AAPL', 'AMZN', 'MSFT', 'META'])
+dataPrepDeriv(['GOOG', 'AAPL', 'AMZN', 'MSFT', 'META', 'OTIS', 'HOLX', 'CHRW', 'FITB', 'PANW'])

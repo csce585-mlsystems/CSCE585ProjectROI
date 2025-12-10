@@ -61,16 +61,18 @@ def attempt3():
     del train_stocks["Unnamed: 0"]
     test_stocks = pd.read_csv(f"{filePathToModelDir}"); test_labels = train_stocks.loc[:,"Company"] #<-- References labels which are derived from custom engineered dataset.
     del test_stocks["Unnamed: 0"]
-    x_train = train_stocks.loc[:,train_stocks.columns != "Optimality"]
+    # x_train = train_stocks.loc[:,train_stocks.columns != "Optimality"]
+    x_train = train_stocks.loc[:,:]
     y_train = train_labels
-    x_test = test_stocks.loc[:,train_stocks.columns != "Optimality"]
+    # x_test = test_stocks.loc[:,test_stocks.columns != "Optimality"]
+    x_test = test_stocks.loc[:,:]
     y_test = test_labels
     # ^^ Above ensures that prediction labels are y and x references the data used to make said decision.
     # "Compute the number of labels"
     num_labels = len(np.unique(y_train))
     # "Convert to one-hot vector"[we converted the labels to one-hot vectors using to_categorical]
-    y_train = to_categorical(y_train.index)
-    y_test = to_categorical(y_test.index)
+    # y_train = to_categorical(y_train.index)
+    # y_test = to_categorical(y_test.index)
     input_size = len(train_stocks.columns)  #<-- input_size refers to number of attributes for each row tuple of data.
     # Establishing Network Parameters
     global batch_size, hidden_units, dropout
@@ -84,6 +86,8 @@ def attempt3():
             model = Sequential()
         else:
             isExperimentSetup3_newModelActive = False
+            global x_train, x_test
+            global y_train, y_test
             # NOTE: Insert body of newModel here!
             def experimentSetup0_newModel():
                 Tutorial = False
@@ -225,7 +229,6 @@ def attempt3():
                     plt.show()
 
                     roc_auc_score(y_train_5, y_scores_forest)
-                    p
 
                     sgd_clf.fit(X_train,y_train) # "y_train, not y_train_5"
                     sgd_clf.predict([some_digit]) # "y_train, not y_train_5"
@@ -303,10 +306,28 @@ def attempt3():
                     from sklearn.linear_model import SGDClassifier #<-- NOTE: Can use this in place of model??
                     
                     sgd_clf = SGDClassifier(random_state=42)
-                    sgd_clf.fit(X_train, y_train) #<-- This command is used to train the model
-                    
+                    # NOTE: Between this, need to have: i) Model needs to be trained on optimality, ii) Model needs to be in able to apply optimality number to each company given, iii) company labels need to be one-hot encoded or transformed into integers for model intepretation. 
+
                     pb.set_trace()
-                    sgd_clf.predict(y_test); #<-- This command is used to TEST/evalutate the model. 
+                    x_train["Company"] = pd.Series(x_train["Company"].index.tolist())                    
+                    """
+                    NOTE: Below isn't needed, remove in final version.
+                    # y_train = pd.Categorical(y_train.index.tolist())
+                    # y_test = pd.Categorical(y_test.index.tolist())
+                    # sgd_clf.fit(X_train, y_train) #<-- This command is used to train the model
+                    # sgd_clf.fit(x_train, y_train) #<-- This command is used to train the model
+                    """
+                    if(x_train.isna().any(axis = 1).sum()):
+                        for i in x_train.columns:
+                            x_train[i].fillna(x_train[i].mean())
+                    
+                    x_test["Company"] = pd.Series([i for i in range(len(x_test["Company"]))])
+                    sgd_clf.fit(x_train, x_train["Company"]) #<-- This command is used to train the model
+                    
+                    
+                    # sgd_clf.predict(y_test); #<-- This command is used to TEST/evalutate the model. 
+                    sgd_clf.predict(x_test); #<-- NOTE: x_test is used here b/c scikit-learn automatically omitts the label column.
+                    pb.set_trace() 
                     
                     
                     
@@ -319,12 +340,25 @@ def attempt3():
 
 
                     # Body of evaluating classifier's results via plotting etc
-                    print("---Creating Classifiers to for model choices---")
+                    print("---Evaluating Classifier's Results---")
                     
                     from sklearn.model_selection import cross_val_score
-                    cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy") #<-- this returns the classifer model's accuracy in percentage form
-                    
-                    print("---End of Creating Classifiers to for model choices---")
+                    # cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy") #<-- this returns the classifer model's accuracy in percentage form
+                    y_train = x_train["Company"]
+                    cross_val_score(sgd_clf, x_train, y_train, cv=3, scoring="accuracy") #<-- this returns the classifer model's accuracy in percentage form
+                    from sklearn.model_selection import cross_val_score
+                    cross_val_score(sgd_clf, x_train, y_train, cv=3, scoring="accuracy") #<-- this returns the classifer model's accuracy in percentage form
+                    cross_val_score(never_5_clf, x_train, y_train, cv=3, scoring="accuracy")
+                    from sklearn.model_selection import cross_val_predict
+                    y_train_pred = cross_val_predict(sgd_clf, x_train, y_train, cv=3)
+                    from sklearn.metrics import confusion_matrix
+                    confusion_matrix(y_train, y_train_pred)
+                    y_scores = cross_val_predict(sgd_clf, x_train, y_train, cv=3, method="decision_function")
+                    from sklearn.metrics import precision_recall_curve
+
+                    precisions, recalls, thresholds = precision_recall_curve(y_train, y_scores);
+
+                    print("---End of Evaluating Classifier's Results---")
 
                     
                     
@@ -342,20 +376,22 @@ def attempt3():
                 print("---End of Experiment Setup #0_newModel---")
                 return
             def experimentSetup1_newModel():
-                    # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout
+                    # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout[UPDATE: Instead of these three params, will use threshold, precision, and recall instead!]
                     print("---Undergoing Experiment Setup #1_newModel---")
                     pb.set_trace()
                     setN = 1 #<-- Change number for this to get values from resp sets.
-                    experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), (128,256,0.3), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
-                    batch_size = experiment1Tuples[setN][0]
-                    hidden_units = experiment1Tuples[setN][1]
-                    dropout = experiment1Tuples[setN][2]
+                    experiment1Tuples: list[tuple] = [(5,45), (5,30), (5,3), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
+                    #batch_size = experiment1Tuples[setN][0]
+                    #hidden_units = experiment1Tuples[setN][1]
+                    #dropout = experiment1Tuples[setN][2]
+                    
+                    # NOTE: Need to replace metrics above with classifier parameters. Need to do more invesigating. 
                     print("---End of Experiment Setup #1_newModel---")
                     return
             global listVerOfX_train
             listVerOfX_train = x_train.columns[:len(x_train.columns)-1].to_list()
                         # ^^ Utilized to setup experiment #2 whose desc is below.
-            def experimentSetup2_newModel(numQuantLvls = 2):
+            def experimentSetup2_newModel(numQuantLvls = 2): # NOTE: experimentSetup2_newModel can stay the same. 
                 # Goal of exp: Want to see model performance based on degree of quantanization of data
                 print("---Undergoing Experiment Setup #2_newModel---")
                 pb.set_trace()
@@ -372,10 +408,16 @@ def attempt3():
                     x_test.loc[:,i] = x_test.loc[:,i]/widthsOfQuant[0]
                 print("---End of Experiment Setup #2_newModel---")
                 return
-            def experimentSetup3_newModel():
-                # Goal of exp: Want to see model performance based on type of activation function from a subset of all possible activation functions.
+            def experimentSetup3_newModel(pair1 = True):
+                # Goal of exp: Will be responsible for removing feature-pairs[complete]
                 print("---Undergoing Experiment Setup #3_newModel---" if isExperimentSetup3_newModelActive else "---Experiment Setup #3_newModel was skipped---")
-                activationFuncs = ['elu', 'sigmoid', 'tanh' ]
+                p
+                if(pair1):
+                    del x_test[['P/E', 'P/B']]
+                    del x_train[['P/E', 'P/B']]
+                else:
+                    del x_test[['NCAV', 'Share Price']]
+                    del x_train[['NCAV', 'Share Price']]
                 print("---End of Experiment Setup #3_newModel---" if isExperimentSetup3_newModelActive else "---End of Experiment Setup #3_newModel was skipped---")
                 return model.add(Activation(activationFuncs[0])) if isExperimentSetup3_newModelActive == True else None
             def experimentSetup4_newModel():
@@ -690,8 +732,8 @@ def ModelTrainingAndDevelopment():
     # "Compute the number of labels"
     num_labels = len(np.unique(y_train))
     # "Convert to one-hot vector"[we converted the labels to one-hot vectors using to_categorical]
-    y_train = to_categorical(y_train.index)
-    y_test = to_categorical(y_test.index)
+    # y_train = to_categorical(y_train.index)
+    # y_test = to_categorical(y_test.index)
     input_size = len(train_stocks.columns)  #<-- input_size refers to number of attributes for each row tuple of data.
     # Establishing Network Parameters
     global batch_size, hidden_units, dropout
@@ -944,5 +986,5 @@ def ModelTrainingAndDevelopment():
     # End of creating transition matrices and saving them to file(s) for future use
     # end of 6)
     
-# attempt3()
 attempt3()
+# ModelTrainingAndDevelopment()
