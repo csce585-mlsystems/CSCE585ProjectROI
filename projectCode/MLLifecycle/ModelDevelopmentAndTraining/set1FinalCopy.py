@@ -41,6 +41,7 @@ sys.path = [sys.path[i].replace("\\","/") for i in range(len(sys.path))]
 # End of Body of setting up paths for saving models
 # NOTE: For function, will need to have an array of bools that reference the modes that dictate which plot number to assign to prints.
 # Important Steps in Model Development: 1) Obtaining the training data, 2) Create the model containing initialized weights and a bias[which would be very involved with using numbers from certain columns], 3) Observe model's performance before training, 4) Defining a loss function for model, 5) Write a basic Training Loop
+
 def attempt3():
     inNoteBook = False
     # Body of Neccessary Imports for Model Development.
@@ -51,7 +52,8 @@ def attempt3():
     from tensorflow.keras.datasets import mnist
     # End of Body of Neccessary Imports for Model Development.
     # NOTE: Below is used to modify network parameters using experiment setup func(s).
-    global x_train; global x_test
+    global x_train, y_train, x_test, y_test
+    global x_train; global x_test; 
     demo = True
     parentDir = "C:/Users/adoct/Notes for CSCE Classes\\[Fall 2025\\]/Notes for CSCE 585/projectCode" if demo == False else os.getcwd().replace("\\","/")
     filePathToModelDir = f"{parentDir}/projectCode/MLLifecycle/ModelDevelopmentAndTraining/preparedDataset.csv" if inNoteBook == False else "preparedDataset.csv"
@@ -84,128 +86,275 @@ def attempt3():
             isExperimentSetup3_newModelActive = False
             # NOTE: Insert body of newModel here!
             def experimentSetup0_newModel():
-                # This will reference the default settings irrespective to experiments.
-                # 1) Creating the Model.
-                print("---Undergoing Experiment Setup #0_newModel---")
-                # pb.set_trace()
-                # Neccessary Imports
-                
-                from sklearn.datasets import fetch_openml #<-- USed to fetch MNIST Dataset
-                import pdb as pb
-                import numpy as np
-                
-                # End of Neccessary Imports
-                # def main():
-                print("---BEGINNING OF PART 1) of Code Example")
-                pb.set_trace()
-                ## 1) Body of Fetching MNIST Dataset
-                mnist = fetch_openml('mnist_784', version=1)
-                mnist.keys()
-                print("---END OF PART 1) of Code Example")
-                pb.set_trace()
-                ## Part 2) Body of Fetching MNIST Dataset
-                X, y = mnist["data"], mnist["target"]
-                X.shape
-                y.shape
-                
-                import matplotlib as mpl
-                import matplotlib.pyplot as plt
-                
-                # some_digit = X[0] <-- colnd't do this way 
-                some_digit = X.loc[0,:].to_numpy() # <-- colnd't do this way 
-                some_digit_image = some_digit.reshape(28,28) 
-                print(some_digit_image)
-                plt.imshow(some_digit_image,cmap=mpl.cm.binary, interpolation='nearest')
-                plt.axis("off")
-                plt.show()
-                
-                y[0]
-                
-                y = y.astype(np.uint8)
-                
-                X_train, X_test, y_train, y_test = X[:int(6e4)],X[int(6e4):],y[:int(6e4)],y[int(6e4):]
-                
-                
-                
-                y_train_5 = (y_train == 5) # <-- "True for all 5s, False for all other digits"
-                y_test_5 = (y_test == 5) 
-                
-                from sklearn.linear_model import SGDClassifier #<-- NOTE: Can use this in place of model??
-                
-                sgd_clf = SGDClassifier(random_state=42)
-                sgd_clf.fit(X_train, y_train_5)
-                
-                sgd_clf.predict([some_digit]);
-                
-                from sklearn.model_selection import cross_val_score
-                cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy")#<-- this returns the classifer model's accuracy in percentage form
-                
-                from sklearn.base import BaseEstimator
-                
-                class Never5Classifier(BaseEstimator):
-                    def fit(self, X, y=None):
-                        pass
-                    def predict(self, X):
-                        return np.zeros((len(X), 1), dtype=bool)
+                Tutorial = False
+                if(Tutorial):
+                    # This will reference the default settings irrespective to experiments.
+                    # 1) Creating the Model.
+                    print("---Undergoing Experiment Setup #0_newModel---")
+                    print("---BEGINNING OF PART 1) of Code Example")
+                    pb.set_trace()
+                    ## 1) Body of Fetching MNIST Dataset
+                    mnist = fetch_openml('mnist_784', version=1)
+                    mnist.keys()
+                    print("---END OF PART 1) of Code Example")
+                    pb.set_trace()
+                    ## Part 2) Body of Fetching MNIST Dataset
+                    X, y = mnist["data"], mnist["target"]
+                    X.shape
+                    y.shape
+
+                    import matplotlib as mpl
+                    import matplotlib.pyplot as plt
+
+                    # some_digit = X[0] <-- colnd't do this way 
+                    some_digit = X.loc[0,:].to_numpy() # <-- colnd't do this way 
+                    some_digit_image = some_digit.reshape(28,28) 
+                    plt.imshow(some_digit_image,cmap=mpl.cm.binary, interpolation='nearest')
+                    plt.axis("off")
+                    plt.show()
                     
-                never_5_clf = Never5Classifier()
-                cross_val_score(never_5_clf, X_train, y_train_5, cv=3, scoring="accuracy")
-                
-                from sklearn.model_selection import cross_val_predict
-                y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)
-                
-                from sklearn.metrics import confusion_matrix
-                confusion_matrix(y_train_5, y_train_pred)
-                
-                
-                from sklearn.metrics import precision_score, recall_score
-                precision_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{precision} = \frac{TP}{TP + FP}
-                recall_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{recall} = \frac{TP}{TP + FN}
-                
-                from sklearn.metrics import f1_score
-                f1_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{recall} = \frac{TP}{TP + FN}
-                
-                y_scores = sgd_clf.decision_function([some_digit])
-                y_scores
-                
-                threshold = 0
-                y_some_digit_pred = (y_scores > threshold)
-                
-                # Increasing Threshold
-                threshold = 8000
-                y_some_digit_pred = (y_scores > threshold)
-                
-                
-                y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3, method="decision_function")
-                
-                from sklearn.metrics import precision_recall_curve
-                
-                precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores);
-                
-                def plot_precision_recall_vs_threshold(precisions, recalls, thresholds):
-                    plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
-                    plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
-                
-                plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
-                plt.show()
-                
-                
+                    y[0]
+
+                    y = y.astype(np.uint8)
+
+                    X_train, X_test, y_train, y_test = X[:int(6e4)],X[int(6e4):],y[:int(6e4)],y[int(6e4):]
+
+                    
+                    y_train_5 = (y_train == 5) # <-- "True for all 5s, False for all other digits"
+                    y_test_5 = (y_test == 5) 
+
+                    from sklearn.linear_model import SGDClassifier #<-- NOTE: Can use this in place of model??
+
+                    sgd_clf = SGDClassifier(random_state=42)
+                    sgd_clf.fit(X_train, y_train_5) #<-- This command is used to train the model
+
+                    sgd_clf.predict([some_digit]); #<-- This command is used to TEST/evalutate the model. 
+
+                    from sklearn.model_selection import cross_val_score
+                    cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy") #<-- this returns the classifer model's accuracy in percentage form
+
+                    from sklearn.base import BaseEstimator
+
+                    class Never5Classifier(BaseEstimator):
+                        def fit(self, X, y=None):
+                            pass
+                        def predict(self, X):
+                            return np.zeros((len(X), 1), dtype=bool)
+                    
+                    never_5_clf = Never5Classifier()
+                    cross_val_score(never_5_clf, X_train, y_train_5, cv=3, scoring="accuracy")
+
+                    from sklearn.model_selection import cross_val_predict
+                    y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)
+
+                    from sklearn.metrics import confusion_matrix
+                    confusion_matrix(y_train_5, y_train_pred)
+
+
+                    from sklearn.metrics import precision_score, recall_score
+                    precision_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{precision} = \frac{TP}{TP + FP}
+                    recall_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{recall} = \frac{TP}{TP + FN}
+
+                    from sklearn.metrics import f1_score
+                    f1_score(y_train_5, y_train_pred) 
+
+                    y_scores = sgd_clf.decision_function([some_digit])
+                    y_scores
+
+                    threshold = 0
+                    y_some_digit_pred = (y_scores > threshold)
+
+                    # Increasing Threshold
+                    threshold = 8000
+                    y_some_digit_pred = (y_scores > threshold)
+
+
+                    y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3, method="decision_function")
+
+                    from sklearn.metrics import precision_recall_curve
+
+                    precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores);
+
+                    def plot_precision_recall_vs_threshold(precisions, recalls, thresholds):
+                        plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
+                        plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
+
+                        plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
+                        plt.show()
+
+
+                    threshold_90_precision = thresholds[np.argmax(precisions >= 0.9)] # == 7813 
+
+
+                    precision_score(y_train_5, y_train_pred)
+                    recall_score(y_train_5, y_train_pred)
+
+                    
+
+                    print("---END OF PART 2) of Code Example")
+                    print("---BEGINNING OF PART 3) of Code Example")
+                    pb.set_trace()
+                    from sklearn.metrics import roc_curve
+
+                    fpr, tpr, thresholds = roc_curve(y_train_5, y_scores)
+
+                    def plot_roc_curve(fpr, tpr, label=None):
+                        plt.plot(fpr,tpr,linewidth=2,label=label)
+                        plt.plot([0,1], [0,1], 'k--') # "Dashed diagonal"
+                                # [...] #<-- "Add axis labels and grid"
+                        plot_roc_curve(fpr,tpr)
+                        plt.show()
+
+                    from sklearn.metrics import roc_auc_score
+
+                    roc_auc_score(y_train_5, y_scores)
+                    print("---This is the point where I believe all is needed for model development stuff---")
+                    pb.set_trace()
+
+                    from sklearn.ensemble import RandomForestClassifier
+
+                    forest_clf = RandomForestClassifier(random_state=42)
+                    y_probas_forest = cross_val_predict(forest_clf, X_train, y_train_5, cv=3, method="predict_proba")
+
+                    y_scores_forest = y_probas_forest[:,1] # "Score = proba of positive class"
+                    fpr_forest, tpr_forest, thresholds_forest = roc_curve(y_train_5, y_scores_forest)
+
+                    plt.plot(fpr, tpr, "b:", label="SGD")
+                    plot_roc_curve(fpr_forest, tpr_forest, "Random Forest")
+                    plt.legend(loc="lower right")
+                    plt.show()
+
+                    roc_auc_score(y_train_5, y_scores_forest)
+                    p
+
+                    sgd_clf.fit(X_train,y_train) # "y_train, not y_train_5"
+                    sgd_clf.predict([some_digit]) # "y_train, not y_train_5"
+
+                    
+                    some_digits_scores = sgd_clf.decision_function([some_digit])
+
+                    np.argmax(some_digits_scores)
+
+                    sgd_clf.classes_
+                    sgd_clf.classes_[5]
+                    sgd_clf.classes_[np.argmax(some_digits_scores)]
+
+                    from sklearn.multiclass import OneVsOneClassifier
+                    ovo_clf = OneVsOneClassifier(SGDClassifier(random_state=42))
+                    ovo_clf.fit(X_train,y_train)
+                    ovo_clf.predict([some_digit])
+                    len(ovo_clf.estimators)
+
+                    forest_clf.fit(X_train,y_train)
+                    forest_clf.predict([some_digit])
+
+                    forest_clf.predict_proba([some_digit])
+                    
+                    cross_val_score(sgd_clf,X_train,y_train,cv=3,scoring="accuracy")
+
+                    from sklearn.preprocessing import StandardScaler
+                    scaler = StandardScaler()
+                    X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))
+                    cross_val_score(sgd_clf, X_train_scaled, y_train, cv=3, scoring="accuracy")
+
+                    y_train_pred = cross_val_predict(sgd_clf, X_train_scaled, y_train, cv=3)
+                    conf_mx = confusion_matrix(y_train,y_train_pred)
+                    conf_mx
+
+                    plt.matshow(conf_mx, cmap=plt.cm.gray)
+                    plt.show()
+
+                    row_sums = conf_mx.sum(axis=1, keepdims=True)
+                    norm_conf_mx = conf_mx/row_sums
+
+                    np.fill_diagonal(norm_conf_mx, 0)
+                    plt.matshow(norm_conf_mx, cmap=plt.cm.gray)
+                    plt.show()
+                    ## End of 1)
+                    print("---END OF PART 3) of Code Example")
+                    pb.set_trace()
+                    ## Part 2) End of Body of Fetching MNIST Dataset
+                    print("---BEGINNING OF PART 4) of Code Example")
+                    pb.set_trace()
+                    ## Part 3) Body of Fetching MNIST Dataset
+                else:
+                    # Body of loading in data for classifiers to consume to make predictions
+                    print("---Loading in data for classifier consumption---")
+                    # global x_train, y_train, x_test, y_test
+                    # x_train = train_stocks.loc[:,train_stocks.columns != "Optimality"]
+                    # y_train = train_labels
+                    # x_test = test_stocks.loc[:,train_stocks.columns != "Optimality"]
+                    # y_test = test_labels
+                    # ^^ Above ensures that prediction labels are y and x references the data used to make said decision.
+                    # "Compute the number of labels"
+                    # num_labels = len(np.unique(y_train))
+                    # "Convert to one-hot vector"[we converted the labels to one-hot vectors using to_categorical]
+                    # y_train = to_categorical(y_train.index)
+                    # y_test = to_categorical(y_test.index)
+                    # input_size = len(train_stocks.columns)  #<-- input_size refers to number of attributes for each row tuple of data.
+
+                    # ^^ Using above to have table to reference variables to be utilized. 
+                    
+
+                    print("---End of Loading in data for classifier consumption---")
+                    # End of Body of loading in data for classifiers to consume to make predictions
+                    # Body of creating classifiers to be used by model
+                    print("---Creating Classifiers to for model choices---")
+                    from sklearn.linear_model import SGDClassifier #<-- NOTE: Can use this in place of model??
+                    
+                    sgd_clf = SGDClassifier(random_state=42)
+                    sgd_clf.fit(X_train, y_train) #<-- This command is used to train the model
+                    
+                    pb.set_trace()
+                    sgd_clf.predict(y_test); #<-- This command is used to TEST/evalutate the model. 
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    print("---End of Creating Classifiers to for model choices---")
+                    # End of Body of creating classifiers to be used by model
+
+
+                    # Body of evaluating classifier's results via plotting etc
+                    print("---Creating Classifiers to for model choices---")
+                    
+                    from sklearn.model_selection import cross_val_score
+                    cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy") #<-- this returns the classifer model's accuracy in percentage form
+                    
+                    print("---End of Creating Classifiers to for model choices---")
+
+                    
+                    
+                    # End of Body of evaluating classifier's results via plotting etc
+
+                    # Body of tweaking the precison/recall tradeoff to make the perfect classifier model
+                    print("---Tweaking precision/recall tradeoff to make perfect classifier---")
+                    
+                    
+                    print("---End of Tweaking precision/recall tradeoff to make perfect classifier---")
+
+                    
+                    
+                    # End of Body of tweaking the precison/recall tradeoff to make the perfect classifier model
                 print("---End of Experiment Setup #0_newModel---")
                 return
             def experimentSetup1_newModel():
-                # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout
-                print("---Undergoing Experiment Setup #1_newModel---")
-                pb.set_trace()
-                setN = 1 #<-- Change number for this to get values from resp sets.
-                experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), (128,256,0.3), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
-                batch_size = experiment1Tuples[setN][0]
-                hidden_units = experiment1Tuples[setN][1]
-                dropout = experiment1Tuples[setN][2]
-                print("---End of Experiment Setup #1_newModel---")
-                return
+                    # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout
+                    print("---Undergoing Experiment Setup #1_newModel---")
+                    pb.set_trace()
+                    setN = 1 #<-- Change number for this to get values from resp sets.
+                    experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), (128,256,0.3), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
+                    batch_size = experiment1Tuples[setN][0]
+                    hidden_units = experiment1Tuples[setN][1]
+                    dropout = experiment1Tuples[setN][2]
+                    print("---End of Experiment Setup #1_newModel---")
+                    return
             global listVerOfX_train
             listVerOfX_train = x_train.columns[:len(x_train.columns)-1].to_list()
-            # ^^ Utilized to setup experiment #2 whose desc is below.
+                        # ^^ Utilized to setup experiment #2 whose desc is below.
             def experimentSetup2_newModel(numQuantLvls = 2):
                 # Goal of exp: Want to see model performance based on degree of quantanization of data
                 print("---Undergoing Experiment Setup #2_newModel---")
