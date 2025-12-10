@@ -42,4 +42,4 @@ companies: list[str] = [
     "PEP","KO","XOM","CVX","ADBE","CSCO"
 ]
 
-# main(companies)
+main(companies)

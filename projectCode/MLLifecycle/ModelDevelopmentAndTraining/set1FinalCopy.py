@@ -81,24 +81,121 @@ def attempt3():
         if(not modelNew):
             model = Sequential()
         else:
+            isExperimentSetup3_newModelActive = False
             # NOTE: Insert body of newModel here!
-             def experimentSetup0_newModel():
+            def experimentSetup0_newModel():
                 # This will reference the default settings irrespective to experiments.
                 # 1) Creating the Model.
                 print("---Undergoing Experiment Setup #0_newModel---")
-                model.add(Input((x_train.shape[1],)))
-                model.add(Dense(hidden_units))
-                model.add(Activation('relu'))
-                model.add(Dropout(dropout))
-                model.add(Dense(hidden_units))
-                model.add(Activation('relu')) if experimentSetup3_newModel() == None else experimentSetup3_newModel() #<-- This changes the Activation function, adhering to experimentSetup3_newModel!
-                model.add(Dropout(dropout))
-                model.add(Dense(num_labels))
+                # pb.set_trace()
+                # Neccessary Imports
+                
+                from sklearn.datasets import fetch_openml #<-- USed to fetch MNIST Dataset
+                import pdb as pb
+                import numpy as np
+                
+                # End of Neccessary Imports
+                # def main():
+                print("---BEGINNING OF PART 1) of Code Example")
+                pb.set_trace()
+                ## 1) Body of Fetching MNIST Dataset
+                mnist = fetch_openml('mnist_784', version=1)
+                mnist.keys()
+                print("---END OF PART 1) of Code Example")
+                pb.set_trace()
+                ## Part 2) Body of Fetching MNIST Dataset
+                X, y = mnist["data"], mnist["target"]
+                X.shape
+                y.shape
+                
+                import matplotlib as mpl
+                import matplotlib.pyplot as plt
+                
+                # some_digit = X[0] <-- colnd't do this way 
+                some_digit = X.loc[0,:].to_numpy() # <-- colnd't do this way 
+                some_digit_image = some_digit.reshape(28,28) 
+                print(some_digit_image)
+                plt.imshow(some_digit_image,cmap=mpl.cm.binary, interpolation='nearest')
+                plt.axis("off")
+                plt.show()
+                
+                y[0]
+                
+                y = y.astype(np.uint8)
+                
+                X_train, X_test, y_train, y_test = X[:int(6e4)],X[int(6e4):],y[:int(6e4)],y[int(6e4):]
+                
+                
+                
+                y_train_5 = (y_train == 5) # <-- "True for all 5s, False for all other digits"
+                y_test_5 = (y_test == 5) 
+                
+                from sklearn.linear_model import SGDClassifier #<-- NOTE: Can use this in place of model??
+                
+                sgd_clf = SGDClassifier(random_state=42)
+                sgd_clf.fit(X_train, y_train_5)
+                
+                sgd_clf.predict([some_digit]);
+                
+                from sklearn.model_selection import cross_val_score
+                cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy")#<-- this returns the classifer model's accuracy in percentage form
+                
+                from sklearn.base import BaseEstimator
+                
+                class Never5Classifier(BaseEstimator):
+                    def fit(self, X, y=None):
+                        pass
+                    def predict(self, X):
+                        return np.zeros((len(X), 1), dtype=bool)
+                    
+                never_5_clf = Never5Classifier()
+                cross_val_score(never_5_clf, X_train, y_train_5, cv=3, scoring="accuracy")
+                
+                from sklearn.model_selection import cross_val_predict
+                y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)
+                
+                from sklearn.metrics import confusion_matrix
+                confusion_matrix(y_train_5, y_train_pred)
+                
+                
+                from sklearn.metrics import precision_score, recall_score
+                precision_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{precision} = \frac{TP}{TP + FP}
+                recall_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{recall} = \frac{TP}{TP + FN}
+                
+                from sklearn.metrics import f1_score
+                f1_score(y_train_5, y_train_pred) # == 4096/(4096*1522) = \text{recall} = \frac{TP}{TP + FN}
+                
+                y_scores = sgd_clf.decision_function([some_digit])
+                y_scores
+                
+                threshold = 0
+                y_some_digit_pred = (y_scores > threshold)
+                
+                # Increasing Threshold
+                threshold = 8000
+                y_some_digit_pred = (y_scores > threshold)
+                
+                
+                y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3, method="decision_function")
+                
+                from sklearn.metrics import precision_recall_curve
+                
+                precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores);
+                
+                def plot_precision_recall_vs_threshold(precisions, recalls, thresholds):
+                    plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
+                    plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
+                
+                plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
+                plt.show()
+                
+                
                 print("---End of Experiment Setup #0_newModel---")
                 return
-             def experimentSetup1_newModel():
+            def experimentSetup1_newModel():
                 # Goal of exp: Want to see how model params affect the acuaracy of the model by modifying batch size and hidden units and dropout
                 print("---Undergoing Experiment Setup #1_newModel---")
+                pb.set_trace()
                 setN = 1 #<-- Change number for this to get values from resp sets.
                 experiment1Tuples: list[tuple] = [(128,256,0.45), (64,128,0.45), (128,256,0.3), ("""NOTE: Other tuples can change one or more parameters whilst keeping at least one constant""")]
                 batch_size = experiment1Tuples[setN][0]
@@ -106,12 +203,13 @@ def attempt3():
                 dropout = experiment1Tuples[setN][2]
                 print("---End of Experiment Setup #1_newModel---")
                 return
-             global listVerOfX_train
-             listVerOfX_train = x_train.columns[:len(x_train.columns)-1].to_list()
-             # ^^ Utilized to setup experiment #2 whose desc is below.
-             def experimentSetup2_newModel(numQuantLvls = 2):
+            global listVerOfX_train
+            listVerOfX_train = x_train.columns[:len(x_train.columns)-1].to_list()
+            # ^^ Utilized to setup experiment #2 whose desc is below.
+            def experimentSetup2_newModel(numQuantLvls = 2):
                 # Goal of exp: Want to see model performance based on degree of quantanization of data
                 print("---Undergoing Experiment Setup #2_newModel---")
+                pb.set_trace()
                 # NOTE: Below will involve replacing 255 with a different number based on degree of quantanization of data.
                 # Using for loop to iterate through each column to apply this quantinization to each column.
                 global x_train, x_test
@@ -125,19 +223,26 @@ def attempt3():
                     x_test.loc[:,i] = x_test.loc[:,i]/widthsOfQuant[0]
                 print("---End of Experiment Setup #2_newModel---")
                 return
-             def experimentSetup3_newModel():
+            def experimentSetup3_newModel():
                 # Goal of exp: Want to see model performance based on type of activation function from a subset of all possible activation functions.
                 print("---Undergoing Experiment Setup #3_newModel---" if isExperimentSetup3_newModelActive else "---Experiment Setup #3_newModel was skipped---")
                 activationFuncs = ['elu', 'sigmoid', 'tanh' ]
                 print("---End of Experiment Setup #3_newModel---" if isExperimentSetup3_newModelActive else "---End of Experiment Setup #3_newModel was skipped---")
                 return model.add(Activation(activationFuncs[0])) if isExperimentSetup3_newModelActive == True else None
-             def experimentSetup4_newModel():
+            def experimentSetup4_newModel():
                 print("---Undergoing Experiment Setup #4_newModel---")
+                pb.set_trace()
                 # Need to have an experiment that utilizes scaling analysis[in progress]
                 print("---End of Experiment Setup #4_newModel---")
                 return
+            
+            experimentSetup0_newModel()
+            # experimentSetup1_newModel()
+            experimentSetup2_newModel()
              
-    newModelIntegration(False)
+    # newModelIntegration(False)
+    pb.set_trace()
+    newModelIntegration(True)
     def experimentSetup0():
        # This will reference the default settings irrespective to experiments.
        # 1) Creating the Model.
@@ -691,3 +796,4 @@ def ModelTrainingAndDevelopment():
     # end of 6)
     
 # attempt3()
+attempt3()
