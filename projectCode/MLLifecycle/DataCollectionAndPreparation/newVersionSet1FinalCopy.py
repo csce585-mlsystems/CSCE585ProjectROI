@@ -95,7 +95,7 @@ class subsys1:
             print("---")
             print(ticker.info["regularMarketPrice"])
             print(arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[1]])
-            dataFramesToBeShipped[0].loc[0,DependentVars[1]] = ticker.info["regularMarketPrice"]/ticker.info["earningsQuarterlyGrowth"]
+            dataFramesToBeShipped[0].loc[0,DependentVars[1]] = ticker.info["regularMarketPrice"]/(ticker.info["earningsQuarterlyGrowth"] if ticker.info["earningsQuarterlyGrowth"] != None else "NaN")
             dataFramesToBeShipped[0].loc[0,DependentVars[2]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),independentVars[4]] #<-- Here, NCAV comes from balance sheet.
             dataFramesToBeShipped[0].loc[0,DependentVars[3]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[3]] #<-- Here, NCAV comes from balance sheet.
             dataFramesToBeShipped[0].loc[0,DependentVars[4]] = arrOfDataFramesNeeded[1].loc[arrOfDataFramesNeeded[1].index[0].date().isoformat(),arrOfDataFramesNeeded[1].columns[4]] #<-- Here, NCAV comes from balance sheet.
@@ -368,4 +368,4 @@ def dataPrepDeriv(companies: list[str] = [], desiredDateToPullInvestment = None)
         # End of Setting optimality column to be based on alphabetical ordering
         resultantDataFrame.to_csv(f"{filePathToModelDir}")
     # End of Body of handling edge case where all of them are same optimality
-dataPrepDeriv(['GOOG', 'AAPL', 'AMZN', 'MSFT', 'META', 'OTIS', 'HOLX', 'CHRW', 'FITB', 'PANW'])
+dataPrepDeriv(['GOOG', 'AAPL', 'AMZN', 'MSFT', 'META', 'OTIS', 'HOLX', 'CHRW', 'FITB', 'PANW', 'BMY', 'CAG', 'CHRW', 'CME', 'CNP', 'CVX', 'FAST', 'PLTR', 'NXPI', 'HOLX'])
